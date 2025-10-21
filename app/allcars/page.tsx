@@ -1,14 +1,14 @@
 "use client"
 
 import React, { useState } from 'react';
-import { featuredCars } from '@/lib/data';
+import { featuredCars, Car } from '@/lib/data';
 
 export default function Cars() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCar, setSelectedCar] = useState(null);
+  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [formData, setFormData] = useState({ carName: '', name: '', phone: '' });
 
-  const handleBookNow = (car) => {
+  const handleBookNow = (car: Car) => {
     setSelectedCar(car);
     setFormData({ carName: car.name, name: '', phone: '' });
     setIsModalOpen(true);
@@ -20,7 +20,7 @@ export default function Cars() {
     setFormData({ carName: '', name: '', phone: '' });
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -28,9 +28,7 @@ export default function Cars() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
+  const handleSubmit = () => {
     if (!formData.name || !formData.phone) {
       alert('Please fill in all fields');
       return;
@@ -38,7 +36,7 @@ export default function Cars() {
 
     console.log('Booking submitted:', formData);
     alert(`Booking request for ${formData.carName}\nName: ${formData.name}\nPhone: ${formData.phone}`);
-    
+
     handleCloseModal();
   };
 
