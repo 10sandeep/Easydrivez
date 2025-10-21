@@ -108,14 +108,14 @@ export default function Home() {
         {/* Content */}
         <div className="relative z-20 flex flex-col justify-center items-start h-full px-6 sm:px-8 md:px-16 lg:px-32 text-white py-24 md:py-32">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight max-w-xl">
-            Unlock Endless Driving
+            Drive Beyond Limits
             <br />
-            With Easydrivez
+            with EasyDrivez
           </h1>
 
           <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-sm sm:max-w-md leading-relaxed">
-            To contribute to positive change and achieve our sustainability
-            goals with many extraordinary
+           To drive meaningful impact and achieve our sustainability
+               goals through collective innovation.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -367,7 +367,7 @@ export default function Home() {
                       Need Help?
                     </p>
                     <p className="text-sm font-bold text-white">
-                      +91 7978624414
+                      +91 8456834944 
                     </p>
                   </div>
                 </a>

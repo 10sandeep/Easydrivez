@@ -17,9 +17,13 @@ export function Footer() {
 
   const footerLinks = {
     company: [
-      { label: 'About Us', href: '/about' },
-      { label: 'Services', href: '/services' },
-      { label: 'Contact', href: '/contact' },
+      { href: "/", label: "Home" },
+    { href: "/allcars", label: "All Cars" },
+    { href: "/allbikes", label: "All Bikes" },
+    { href: "/about", label: "About" },
+    { href: "/terms", label: "Terms" },
+    { href: "/contact", label: "Contact" },
+    {href:"/gallery",label:"Gallary"}
     ],
     services: [
       { label: 'Car Rentals', href: '/services#rentals' },
