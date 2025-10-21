@@ -1,13 +1,13 @@
 "use client"
 import React, { useState } from 'react';
-import { featuredBikes } from '@/lib/data';
+import { featuredBikes, Bike } from '@/lib/data';
 
 export default function BikeRental() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedBike, setSelectedBike] = useState(null);
+  const [selectedBike, setSelectedBike] = useState<Bike | null>(null);
   const [formData, setFormData] = useState({ bikeName: '', name: '', phone: '' });
 
-  const handleBookNow = (bike) => {
+  const handleBookNow = (bike: Bike) => {
     setSelectedBike(bike);
     setFormData({ bikeName: bike.name, name: '', phone: '' });
     setIsModalOpen(true);
@@ -19,7 +19,7 @@ export default function BikeRental() {
     setFormData({ bikeName: '', name: '', phone: '' });
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -27,7 +27,7 @@ export default function BikeRental() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     
     if (!formData.name || !formData.phone) {
