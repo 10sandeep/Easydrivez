@@ -64,11 +64,11 @@ export default function Home() {
   };
 
   const handleWhatsApp = () => {
-    window.open("https://wa.me/917978624414", "_blank");
+    window.open("https://wa.me/919090089708", "_blank");
   };
 
   const handlePhone = () => {
-    window.location.href = "tel:+917978624414";
+    window.location.href = "tel:+919090089708";
   };
 
   return (
@@ -110,12 +110,12 @@ export default function Home() {
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight max-w-xl">
             Drive Beyond Limits
             <br />
-            with EasyDrivez
+            with Easydrivez
           </h1>
 
           <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-sm sm:max-w-md leading-relaxed">
-           To drive meaningful impact and achieve our sustainability
-               goals through collective innovation.
+            To drive meaningful impact and achieve our sustainability goals
+            through collective innovation.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -272,7 +272,7 @@ export default function Home() {
                 {/* Drop Date */}
                 <div>
                   <label className="block text-xs font-medium text-gray-300 mb-2">
-                    Drop Date
+                    Return Date
                   </label>
                   <input
                     type="date"
@@ -288,7 +288,7 @@ export default function Home() {
                 {/* Drop Time */}
                 <div>
                   <label className="block text-xs font-medium text-gray-300 mb-2">
-                    Drop Time
+                    Return Time
                   </label>
                   <div className="flex gap-2">
                     <input
@@ -344,7 +344,7 @@ export default function Home() {
               {/* Contact Info */}
               <div className="flex justify-center">
                 <a
-                  href="tel:+917978624414"
+                  href="tel:+91 9090089708"
                   className="group flex items-center gap-3"
                 >
                   <div className="h-9 w-9 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition flex-shrink-0">
@@ -367,7 +367,7 @@ export default function Home() {
                       Need Help?
                     </p>
                     <p className="text-sm font-bold text-white">
-                      +91 8456834944 
+                      +91 9090089708
                     </p>
                   </div>
                 </a>

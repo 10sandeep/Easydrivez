@@ -60,7 +60,7 @@ export default function ContactPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
-  <div
+      <div
         className="relative py-24 bg-cover bg-center"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1466096115517-bceecbfb6fde?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170')`,
@@ -85,23 +85,23 @@ export default function ContactPage() {
             {contactInfo.map((info) => (
               <div
                 key={info.title}
-                className="bg-white border border-gray-200 rounded-2xl p-6 text-center hover:shadow-lg hover:border-blue-300 transition-all"
+                className="bg-white border border-gray-300 rounded-lg p-6 text-center hover:shadow-lg transition-all"
               >
-                <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mx-auto mb-4">
+                <div className="h-12 w-12 rounded-lg bg-black flex items-center justify-center mx-auto mb-4">
                   <info.icon className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                <h3 className="text-lg font-bold text-black mb-2">
                   {info.title}
                 </h3>
                 {info.link ? (
                   <a
                     href={info.link}
-                    className="text-gray-600 hover:text-blue-600 transition-colors"
+                    className="text-gray-700 hover:text-black transition-colors"
                   >
                     {info.details}
                   </a>
                 ) : (
-                  <p className="text-gray-600">{info.details}</p>
+                  <p className="text-gray-700">{info.details}</p>
                 )}
               </div>
             ))}
@@ -109,14 +109,14 @@ export default function ContactPage() {
 
           {/* Form and Map */}
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* ✅ Contact Form (fixed) */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+            {/* Contact Form */}
+            <div className="bg-white border border-gray-300 rounded-lg p-8">
+              <h2 className="text-3xl font-bold text-black mb-6">
                 Send us a Message
               </h2>
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="block text-base font-medium text-gray-900 mb-2">
+                  <label className="block text-base font-medium text-black mb-2">
                     Full Name
                   </label>
                   <input
@@ -126,12 +126,15 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded text-black outline-none focus:border-black transition"
+                    style={{
+                      WebkitTextFillColor: 'black',
+                    }}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-base font-medium text-gray-900 mb-2">
+                  <label className="block text-base font-medium text-black mb-2">
                     Email Address
                   </label>
                   <input
@@ -141,12 +144,15 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded text-black outline-none focus:border-black transition"
+                    style={{
+                      WebkitTextFillColor: 'black',
+                    }}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-base font-medium text-gray-900 mb-2">
+                  <label className="block text-base font-medium text-black mb-2">
                     Phone Number
                   </label>
                   <input
@@ -156,12 +162,15 @@ export default function ContactPage() {
                     value={formData.phone}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded text-black outline-none focus:border-black transition"
+                    style={{
+                      WebkitTextFillColor: 'black',
+                    }}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-base font-medium text-gray-900 mb-2">
+                  <label className="block text-base font-medium text-black mb-2">
                     Message
                   </label>
                   <textarea
@@ -171,14 +180,17 @@ export default function ContactPage() {
                     onChange={handleChange}
                     required
                     rows={5}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-none"
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded text-black outline-none focus:border-black transition resize-none"
+                    style={{
+                      WebkitTextFillColor: 'black',
+                    }}
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-3 rounded-lg transition-all flex items-center justify-center gap-2"
+                  className="w-full bg-black hover:bg-gray-800 text-white font-bold py-3 rounded transition-all flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? (
                     "Sending..."
@@ -194,7 +206,7 @@ export default function ContactPage() {
 
             {/* Map and Info Box */}
             <div className="flex flex-col gap-6">
-              <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden h-96">
+              <div className="bg-white border border-gray-300 rounded-lg overflow-hidden h-96">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3739.7461896127505!2d85.8245138!3d20.2961363!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a1912d5e5e5e5e5%3A0x5e5e5e5e5e5e5e5e!2sBhubaneswar%2C%20Odisha!5e0!3m2!1sen!2sin!4v1234567890"
                   width="100%"
@@ -206,8 +218,8 @@ export default function ContactPage() {
                 ></iframe>
               </div>
 
-              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-200 rounded-2xl p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
+              <div className="bg-white border border-gray-300 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-black mb-3">
                   Quick Response
                 </h3>
                 <p className="text-gray-700 mb-4">
@@ -216,7 +228,7 @@ export default function ContactPage() {
                 </p>
                 <a
                   href="tel:+919876543210"
-                  className="inline-flex items-center gap-2 text-blue-600 font-bold text-lg hover:underline"
+                  className="inline-flex items-center gap-2 text-black font-bold text-lg hover:underline"
                 >
                   <Phone className="h-5 w-5" />
                   +91 98765 43210
@@ -228,30 +240,44 @@ export default function ContactPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-cyan-600 py-16 px-4">
+      <section className="bg-black py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold text-white mb-4">
             Ready to Book?
           </h2>
-          <p className="text-lg text-blue-100 mb-8">
+          <p className="text-lg text-gray-300 mb-8">
             Start your rental journey today. We're available 24/7 to assist you.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="tel:+919876543210"
-              className="bg-white text-blue-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition"
+              href="tel:+919090089708"
+              className="bg-white text-black hover:bg-gray-200 font-bold py-3 px-8 rounded transition"
             >
               Call Now
             </a>
             <a
               href="mailto:info@rentalservice.in"
-              className="border-2 border-white text-white hover:bg-white/10 font-bold py-3 px-8 rounded-lg transition"
+              className="border-2 border-white text-white hover:bg-white hover:text-black font-bold py-3 px-8 rounded transition"
             >
               Email Us
             </a>
           </div>
         </div>
       </section>
+
+      <style jsx>{`
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active,
+        textarea:-webkit-autofill,
+        textarea:-webkit-autofill:hover,
+        textarea:-webkit-autofill:focus,
+        textarea:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 30px white inset !important;
+          -webkit-text-fill-color: black !important;
+        }
+      `}</style>
     </div>
   );
 }
