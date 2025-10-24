@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
+import AdminPanel from "./admin/page";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -31,7 +32,7 @@ export default function RootLayout({
         >
           <Navbar />
           <main className="min-h-screen">{children}</main>
-       
+       {/* <AdminPanel/> */}
           <Footer />
           <Toaster />
         </ThemeProvider>

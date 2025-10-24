@@ -17,6 +17,7 @@ import Services from "@/components/service";
 import FeaturedBikesSection from "@/components/featuredbike";
 import FeaturedCarsSection from "@/components/featuredcar";
 import WhytoChooseUs from "@/components/whytochooseus";
+import AdminPanel from "./admin/page";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -383,6 +384,7 @@ export default function Home() {
       <Gallary />
       <Testimonials />
       {/* <WhytoChooseUs/> */}
+      {/* <AdminPanel/> */}
     </div>
   );
 }
