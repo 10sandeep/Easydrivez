@@ -111,7 +111,7 @@ export default function Home() {
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight max-w-xl">
             Drive Beyond Limits
             <br />
-            with Easydrivez
+            with Eazydrivez
           </h1>
 
           <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-sm sm:max-w-md leading-relaxed">
@@ -122,13 +122,13 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               onClick={handleRentCar}
-              className="px-6 py-3 sm:px-8 bg-white text-black font-semibold rounded-md hover:bg-gray-100 transition-colors text-sm sm:text-base"
+              className="px-6 py-3 sm:px-8 bg-yellow-400 text-black font-semibold rounded-md hover:bg-yellow-600 transition-colors text-sm sm:text-base"
             >
               Rent Car
             </button>
             <button
               onClick={handleRentBike}
-              className="px-6 py-3 sm:px-8 bg-transparent border-2 border-white text-white font-semibold rounded-md hover:bg-white hover:text-black transition-colors text-sm sm:text-base"
+              className="px-6 py-3 sm:px-8 bg-transparent border-2 border-white text-white font-semibold rounded-md hover:bg-yellow-600 hover:text-black transition-colors text-sm sm:text-base"
             >
               Rent Bike
             </button>
@@ -318,7 +318,7 @@ export default function Home() {
                 <div>
                   <button
                     onClick={handleSubmit}
-                    className="w-full bg-white hover:bg-gray-100 text-black font-bold py-2.5 px-4 rounded-lg transition-all 
+                    className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-2.5 px-4 rounded-lg transition-all 
                              shadow-lg hover:shadow-xl active:scale-95 text-sm flex items-center justify-center gap-2 mt-6"
                   >
                     <svg

@@ -44,7 +44,7 @@ export default function AboutPage() {
       >
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
-            About Easydrivez
+            About eazydrivez
           </h1>
           <p className="text-lg md:text-xl text-gray-200 drop-shadow-md max-w-3xl mx-auto">
             Your trusted partner for premium car and bike rental services in Bhubaneswar
@@ -77,7 +77,7 @@ export default function AboutPage() {
                 Our Story
               </h2>
               <p className="text-gray-600 mb-4 leading-relaxed">
-                Founded in Bhubaneswar, Easydrivez has been providing reliable and
+                Founded in Bhubaneswar, Eazydrivez has been providing reliable and
                 affordable vehicle rental services to customers across the city. We
                 understand that whether you're a tourist exploring the city or a local
                 in need of temporary transportation, you deserve quality service at
@@ -153,7 +153,7 @@ export default function AboutPage() {
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
                     <MapPin className="h-5 w-5 mt-1 flex-shrink-0" />
-                    <span>Bhubaneswar, Odisha, India</span>
+                    <span>B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd., Bhubaneswar, Odisha 751015</span>
                   </div>
                   <div className="flex items-start gap-3">
                     <Clock className="h-5 w-5 mt-1 flex-shrink-0" />
@@ -163,7 +163,7 @@ export default function AboutPage() {
               </div>
               <div className="flex justify-center">
                 <a
-                  href="tel:+917978624414"
+                  href="tel:+919090089708"
                   className="bg-white text-black px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg inline-flex items-center gap-2"
                 >
                   <svg

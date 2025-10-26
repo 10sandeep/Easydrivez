@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 import {
   Car,
   Facebook,
@@ -10,7 +10,7 @@ import {
   Mail,
   Phone,
   MapPin,
-} from 'lucide-react';
+} from "lucide-react";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -18,25 +18,25 @@ export function Footer() {
   const footerLinks = {
     company: [
       { href: "/", label: "Home" },
-    { href: "/allcars", label: "All Cars" },
-    { href: "/allbikes", label: "All Bikes" },
-    { href: "/about", label: "About" },
-    { href: "/terms", label: "Terms" },
-    { href: "/contact", label: "Contact" },
-    {href:"/gallery",label:"Gallary"}
+      { href: "/allcars", label: "All Cars" },
+      { href: "/allbikes", label: "All Bikes" },
+      { href: "/about", label: "About" },
+      { href: "/terms", label: "Terms" },
+      { href: "/contact", label: "Contact" },
+      { href: "/gallery", label: "Gallary" },
     ],
     services: [
-      { label: 'Car Rentals', href: '/services#rentals' },
-      { label: 'Chauffeur Services', href: '/services#chauffeur' },
-      { label: 'Airport Pickup', href: '/services#airport' },
+      { label: "Car Rentals", href: "/services#rentals" },
+      { label: "Chauffeur Services", href: "/services#chauffeur" },
+      { label: "Airport Pickup", href: "/services#airport" },
     ],
   };
 
   const socialLinks = [
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+    { icon: Facebook, href: "#", label: "Facebook" },
+    { icon: Twitter, href: "#", label: "Twitter" },
+    { icon: Instagram, href: "#", label: "Instagram" },
+    { icon: Linkedin, href: "#", label: "LinkedIn" },
   ];
 
   return (
@@ -117,7 +117,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start space-x-3 text-gray-600">
                 <MapPin className="h-5 w-5 mt-0.5 text-blue-600 flex-shrink-0" />
-                <span>Bhubaneswar</span>
+                <span>B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd., Bhubaneswar, Odisha 751015</span>
               </li>
               <li className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors">
                 <Phone className="h-5 w-5 text-blue-600 flex-shrink-0" />
@@ -125,7 +125,7 @@ export function Footer() {
               </li>
               <li className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors">
                 <Mail className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                <a href="mailto:info@easydrivez.in">info@easydrivez.in</a>
+                <a href="mailto:support@eazydrivez.com">support@eazydrivez.com</a>
               </li>
             </ul>
           </div>
@@ -133,7 +133,7 @@ export function Footer() {
 
         {/* Footer Bottom */}
         <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-600">
-          <p>&copy; {currentYear} Easydrivez. All rights reserved.</p>
+          <p>&copy; {currentYear} eazydrivez. All rights reserved.</p>
         </div>
       </div>
     </footer>

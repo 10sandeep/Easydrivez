@@ -31,6 +31,8 @@ export function Navbar() {
     {href:"/gallery",label:"Gallary"}
   ];
 
+  const faqLink = { href: "/faq", label: "FAQ" };
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
@@ -45,7 +47,7 @@ export function Navbar() {
          <Link href="/" className="flex items-center space-x-2 group">
       <div className="relative">
         <div className="absolute inset-0 bg-blue-600 rounded-lg blur-sm opacity-20 group-hover:opacity-40 transition-opacity"></div>
-        <div className="relative bg-blue-600 rounded-lg p-1.5 group-hover:bg-blue-700 transition-colors">
+        <div className="relative bg-yellow-600 rounded-lg p-1.5 group-hover:bg-blue-700 transition-colors">
           <Car className="h-6 w-6 text-white" />
         </div>
       </div>
@@ -59,23 +61,36 @@ export function Navbar() {
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href}>
                 <span
-                  className={`relative text-sm font-medium transition-colors hover:text-blue-600 dark:hover:text-cyan-400 ${
+                  className={`relative text-sm font-medium transition-colors hover:text-yellow-600 dark:hover:text-yellow-400 ${
                     pathname === link.href
-                      ? "text-blue-600 dark:text-cyan-400"
+                      ? "text-yellow-600 dark:text-yellow-400"
                       : "text-gray-800 dark:text-gray-200"
                   }`}
                 >
                   {link.label}
                   {pathname === link.href && (
-                    <div className="absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full" />
+                    <div className="absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r from-yellow-600 to-yellow-400 rounded-full" />
                   )}
                 </span>
               </Link>
             ))}
           </div>
 
-          {/* Right Side (Theme + Mobile Menu) */}
+          {/* Right Side (FAQ + Mobile Menu) */}
           <div className="flex items-center space-x-4">
+            {/* FAQ Button */}
+            <Link href={faqLink.href} className="hidden md:block">
+              <span
+                className={`relative text-sm font-medium px-4 py-2 rounded-lg transition-all ${
+                  pathname === faqLink.href
+                    ? "bg-yellow-500 text-gray-900 shadow-lg"
+                    : "bg-yellow-400 text-gray-900 hover:bg-yellow-500 shadow-md hover:shadow-lg"
+                }`}
+              >
+                {faqLink.label}
+              </span>
+            </Link>
+
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -111,6 +126,21 @@ export function Navbar() {
                 </Link>
               </div>
             ))}
+            
+            {/* FAQ Button in Mobile Menu */}
+            <div className="pt-2">
+              <Link
+                href={faqLink.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`block py-2 text-lg font-medium rounded-md transition-all hover:pl-2 hover:text-blue-600 dark:hover:text-cyan-400 ${
+                  pathname === faqLink.href
+                    ? "text-blue-600 dark:text-cyan-400"
+                    : "text-gray-800 dark:text-gray-200"
+                }`}
+              >
+                {faqLink.label}
+              </Link>
+            </div>
           </div>
         </div>
       )}

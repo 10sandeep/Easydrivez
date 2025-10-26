@@ -23,6 +23,11 @@ export interface Testimonial {
   image: string;
 }
 
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 export const backgroundImages: string[] = [
   "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=1920&q=80",
   "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1920&q=80",
@@ -384,3 +389,44 @@ export const termsAndConditionsData = {
     }
   ];
 
+
+export const faqs: FAQItem[] = [
+    {
+      question: "What documents do I need to rent?",
+      answer:
+        "You need a valid driver's license, government ID, and a credit/debit card.",
+    },
+    {
+      question: "What is the minimum age to rent?",
+      answer: "21 years for cars and 18 years for bikes.",
+    },
+    {
+      question: "Are vehicles insured?",
+      answer:
+        "Yes, all vehicles come with basic insurance. Additional coverage is available.",
+    },
+    {
+      question: "What payment methods do you accept?",
+      answer:
+        "We accept all major credit cards, debit cards, and digital payments.",
+    },
+    {
+      question: "What is your fuel policy?",
+      answer:
+        "Full-to-full policy. Return the vehicle with a full tank as you received it.",
+    },
+    {
+      question: "Can I cancel my booking?",
+      answer:
+        "Yes, free cancellation up to 24 hours before rental. After that, 50% charge applies.",
+    },
+    {
+      question: "What if the vehicle breaks down?",
+      answer:
+        "Contact our 24/7 support immediately. We'll provide assistance or a replacement.",
+    },
+    {
+      question: "Do I get a helmet with bike rentals?",
+      answer: "Yes, complimentary helmets are provided with all bike rentals.",
+    },
+  ];

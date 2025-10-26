@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function BookingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
   const [carData, setCarData] = useState<any>(null);
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -75,12 +77,17 @@ export default function BookingPage() {
       return;
     }
 
+    if (!acceptTerms) {
+      alert("Please accept the terms and conditions");
+      return;
+    }
+
     const estimatedPrice = calculatePrice();
     const rentalDays = calculateDays();
 
     console.log("Booking submitted:", formData);
     alert(
-      `Booking request for ${carData?.name}\nName: ${formData.name}\nEmail: ${formData.email}\nMobile: ${formData.mobile}\nDuration: ${rentalDays} day(s)\nEstimated Price: ₹${estimatedPrice.toLocaleString()}`
+      `Booking request for ${carData?.name}\nName: ${formData.name}\nEmail: ${formData.email}\nMobile: ${formData.mobile}\nDuration: ${rentalDays} day(s)\nEstimated Price: ₹${estimatedPrice.toLocaleString()}\nPayment: On Site (Cash/UPI)`
     );
 
     // Navigate back or to confirmation page
@@ -105,7 +112,7 @@ export default function BookingPage() {
       <div className="max-w-7xl mx-auto">
         {/* Back Button */}
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.back()}
           className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition"
         >
           <svg
@@ -121,7 +128,7 @@ export default function BookingPage() {
               d="M10 19l-7-7m0 0l7-7m-7 7h18"
             />
           </svg>
-          <span className="font-medium">Back to Cars</span>
+          <span className="font-medium">Back</span>
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -181,7 +188,7 @@ export default function BookingPage() {
               Billing Details
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-5">
               {/* Name */}
               <div>
                 <input
@@ -254,30 +261,15 @@ export default function BookingPage() {
                   required
                 >
                   <option value="">Select time</option>
-                  <option value="12:00 AM">12:00 AM</option>
-                  <option value="1:00 AM">1:00 AM</option>
-                  <option value="2:00 AM">2:00 AM</option>
-                  <option value="3:00 AM">3:00 AM</option>
-                  <option value="4:00 AM">4:00 AM</option>
-                  <option value="5:00 AM">5:00 AM</option>
-                  <option value="6:00 AM">6:00 AM</option>
-                  <option value="7:00 AM">7:00 AM</option>
-                  <option value="8:00 AM">8:00 AM</option>
-                  <option value="9:00 AM">9:00 AM</option>
-                  <option value="10:00 AM">10:00 AM</option>
-                  <option value="11:00 AM">11:00 AM</option>
-                  <option value="12:00 PM">12:00 PM</option>
-                  <option value="1:00 PM">1:00 PM</option>
-                  <option value="2:00 PM">2:00 PM</option>
-                  <option value="3:00 PM">3:00 PM</option>
-                  <option value="4:00 PM">4:00 PM</option>
-                  <option value="5:00 PM">5:00 PM</option>
-                  <option value="6:00 PM">6:00 PM</option>
-                  <option value="7:00 PM">7:00 PM</option>
-                  <option value="8:00 PM">8:00 PM</option>
-                  <option value="9:00 PM">9:00 PM</option>
-                  <option value="10:00 PM">10:00 PM</option>
-                  <option value="11:00 PM">11:00 PM</option>
+                  {Array.from({ length: 24 }, (_, i) => {
+                    const hour = i % 12 || 12;
+                    const period = i < 12 ? 'AM' : 'PM';
+                    return (
+                      <option key={i} value={`${hour}:00 ${period}`}>
+                        {hour}:00 {period}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
 
@@ -311,44 +303,56 @@ export default function BookingPage() {
                   required
                 >
                   <option value="">Select time</option>
-                  <option value="12:00 AM">12:00 AM</option>
-                  <option value="1:00 AM">1:00 AM</option>
-                  <option value="2:00 AM">2:00 AM</option>
-                  <option value="3:00 AM">3:00 AM</option>
-                  <option value="4:00 AM">4:00 AM</option>
-                  <option value="5:00 AM">5:00 AM</option>
-                  <option value="6:00 AM">6:00 AM</option>
-                  <option value="7:00 AM">7:00 AM</option>
-                  <option value="8:00 AM">8:00 AM</option>
-                  <option value="9:00 AM">9:00 AM</option>
-                  <option value="10:00 AM">10:00 AM</option>
-                  <option value="11:00 AM">11:00 AM</option>
-                  <option value="12:00 PM">12:00 PM</option>
-                  <option value="1:00 PM">1:00 PM</option>
-                  <option value="2:00 PM">2:00 PM</option>
-                  <option value="3:00 PM">3:00 PM</option>
-                  <option value="4:00 PM">4:00 PM</option>
-                  <option value="5:00 PM">5:00 PM</option>
-                  <option value="6:00 PM">6:00 PM</option>
-                  <option value="7:00 PM">7:00 PM</option>
-                  <option value="8:00 PM">8:00 PM</option>
-                  <option value="9:00 PM">9:00 PM</option>
-                  <option value="10:00 PM">10:00 PM</option>
-                  <option value="11:00 PM">11:00 PM</option>
+                  {Array.from({ length: 24 }, (_, i) => {
+                    const hour = i % 12 || 12;
+                    const period = i < 12 ? 'AM' : 'PM';
+                    return (
+                      <option key={i} value={`${hour}:00 ${period}`}>
+                        {hour}:00 {period}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
 
-              {/* Submit Button */}
+              {/* Terms and Conditions Checkbox */}
+              <div className="pt-4 border-t border-gray-200">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={acceptTerms}
+                    onChange={(e) => setAcceptTerms(e.target.checked)}
+                    className="mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-700 select-none">
+                    I accept the{" "}
+                    <Link
+                      href="/terms"
+                      target="_blank"
+                      className="text-blue-600 hover:text-blue-700 font-semibold underline"
+                    >
+                      Terms and Conditions
+                    </Link>
+                  </span>
+                </label>
+              </div>
+
+              {/* Submit Button with Payment Info */}
               <div className="pt-4">
                 <button
-                  type="submit"
+                  onClick={handleSubmit}
+                  disabled={!acceptTerms}
                   className="w-full bg-black hover:bg-gray-800 text-white font-bold py-4 px-6 rounded-lg 
-                           transition-all active:scale-95 shadow-lg"
+                           transition-all active:scale-95 shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed
+                           flex flex-col items-center gap-2"
                 >
-                  Confirm Booking
+                  <span className="text-lg">Confirm Booking</span>
+                  <span className="text-sm font-normal opacity-90">
+                    Payment on Site (Cash/UPI)
+                  </span>
                 </button>
               </div>
-            </form>
+            </div>
 
             {/* Contact Info */}
             <div className="mt-6 pt-6 border-t border-gray-200">
