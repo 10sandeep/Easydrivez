@@ -232,7 +232,22 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
           </div>
         </div>
       </header> */}
-
+      <div
+        className="relative py-24 bg-cover bg-center"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=400&fit=crop')`,
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
+            Checkout
+          </h1>
+          {/* <p className="text-lg md:text-xl text-gray-100 drop-shadow-md">
+            Premium bike rental services at affordable prices
+          </p> */}
+        </div>
+      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid lg:grid-cols-2 gap-6">
 
