@@ -7,7 +7,7 @@ import {
   Edit2, Trash2, Eye, Plus, X, CheckCircle, Clock,
   AlertCircle, FileText
 } from "lucide-react";
-
+// import {Vehicle,Booking,dummyVehicles,dummyBookings} from '@/lib/data'
 interface Vehicle {
   id: string;
   name: string;
@@ -465,7 +465,23 @@ export default function AdminPanel() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 ">
+          <div
+        className="relative py-24 bg-cover bg-center"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&h=400&fit=crop')`,
+          backgroundAttachment: "fixed",
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-2 text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
+            Admin Pannel
+          </h1>
+          {/* <p className="text-lg md:text-xl text-gray-100 drop-shadow-md">
+            Premium car rental services at affordable prices
+          </p> */}
+        </div>
+      </div>
       <div className="max-w-7xl mx-auto px-4">
         {/* Sticky Navigation Tabs - Above Content */}
         <div className="bg-white rounded-xl my-14 shadow-sm border border-gray-200 mb-6 sticky top-24 z-40">
@@ -483,7 +499,7 @@ export default function AdminPanel() {
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${activeTab === tab.id
-                        ? "bg-blue-600 text-white shadow-sm"
+                        ? "bg-yellow-600 text-white shadow-sm"
                         : "text-gray-600 hover:bg-gray-100"
                       }`}
                   >
@@ -495,7 +511,7 @@ export default function AdminPanel() {
             </nav>
             <button
               onClick={exportReport}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition font-medium shadow-sm"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white rounded-lg transition font-medium shadow-sm"
             >
               <Download className="h-4 w-4" />
               Export Report
@@ -519,7 +535,7 @@ export default function AdminPanel() {
                     </div>
                   </div>
                   <div className="bg-blue-100 p-3 rounded-lg">
-                    <Package className="h-6 w-6 text-blue-600" />
+                    <Package className="h-6 w-6 text-yellow-600" />
                   </div>
                 </div>
               </div>
@@ -584,7 +600,7 @@ export default function AdminPanel() {
                         <p className="text-xs text-gray-600">{booking.vehicleName}</p>
                       </div>
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${booking.status === "completed" ? "bg-green-100 text-green-700" :
-                          booking.status === "active" ? "bg-blue-100 text-blue-700" :
+                          booking.status === "active" ? "bg-blue-100 text-yellow-700" :
                             booking.status === "pending" ? "bg-yellow-100 text-yellow-700" :
                               booking.status === "confirmed" ? "bg-cyan-100 text-cyan-700" :
                                 "bg-gray-100 text-gray-700"
@@ -658,7 +674,7 @@ export default function AdminPanel() {
               </div>
               <button
                 onClick={() => setIsFormOpen(true)}
-                className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-medium shadow-sm"
+                className="flex items-center gap-2 px-4 py-2.5 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition font-medium shadow-sm"
               >
                 <Plus className="h-4 w-4" />
                 Add Vehicle
