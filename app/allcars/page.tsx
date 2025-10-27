@@ -7,7 +7,8 @@ import { featuredCars, Car } from "@/lib/data";
 export default function AllCars() {
   const getBookingUrl = (car: Car) => {
     const carData = encodeURIComponent(JSON.stringify(car));
-    return `/bookingpage=${carData}`;
+    // ✅ Fixed: Consistent URL structure with FeaturedCarsSection
+    return `/booking/${car.id}?car=${carData}`;
   };
 
   return (

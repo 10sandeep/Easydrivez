@@ -37,6 +37,7 @@ export const backgroundImages: string[] = [
 
 export const featuredCars: Car[] = [
   {
+    id: 1,
     name: "BMW 5 Series",
     type: "Luxury",
     image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80",
@@ -45,6 +46,7 @@ export const featuredCars: Car[] = [
     features: ["Automatic", "AC", "5 Seats"],
   },
   {
+    id: 2,
     name: "Toyota Fortuner",
     type: "SUV",
     image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80",
@@ -53,6 +55,7 @@ export const featuredCars: Car[] = [
     features: ["Automatic", "AC", "7 Seats"],
   },
   {
+    id: 3,
     name: "Honda City",
     type: "Sedan",
     image: "https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=80",
@@ -61,6 +64,7 @@ export const featuredCars: Car[] = [
     features: ["Manual", "AC", "5 Seats"],
   },
   {
+    id: 4,
     name: "Maruti Swift",
     type: "Sedan",
     image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80",
@@ -69,6 +73,7 @@ export const featuredCars: Car[] = [
     features: ["Manual", "AC", "5 Seats"],
   },
   {
+    id: 5,
     name: "BMW 5 Series",
     type: "Luxury",
     image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80",
@@ -77,6 +82,7 @@ export const featuredCars: Car[] = [
     features: ["Automatic", "AC", "5 Seats"],
   },
   {
+    id: 6,
     name: "Toyota Fortuner",
     type: "SUV",
     image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80",
@@ -85,6 +91,7 @@ export const featuredCars: Car[] = [
     features: ["Automatic", "AC", "7 Seats"],
   },
   {
+    id: 7,
     name: "Honda City",
     type: "Sedan",
     image: "https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=80",
@@ -93,6 +100,7 @@ export const featuredCars: Car[] = [
     features: ["Manual", "AC", "5 Seats"],
   },
   {
+    id: 8,
     name: "Maruti Swift",
     type: "Sedan",
     image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80",
@@ -102,8 +110,10 @@ export const featuredCars: Car[] = [
   },
 ];
 
+
 export const featuredBikes: Bike[] = [
   {
+    id: 1,
     name: "Harley Davidson",
     type: "Cruiser",
     image: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=800&q=80",
@@ -112,6 +122,7 @@ export const featuredBikes: Bike[] = [
     features: ["1200cc", "Cruiser", "Premium"],
   },
   {
+    id: 2,
     name: "Kawasaki Ninja",
     type: "Sports",
     image: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=800&q=80",
@@ -120,6 +131,7 @@ export const featuredBikes: Bike[] = [
     features: ["650cc", "Sports", "High Speed"],
   },
   {
+    id: 3,
     name: "Royal Enfield",
     type: "Adventure",
     image: "https://images.unsplash.com/photo-1609630875171-b1321377ee65?w=800&q=80",
@@ -128,6 +140,7 @@ export const featuredBikes: Bike[] = [
     features: ["350cc", "Adventure", "Classic"],
   },
   {
+    id: 4,
     name: "Honda Activa",
     type: "Scooter",
     image: "https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=800&q=80",
@@ -136,6 +149,7 @@ export const featuredBikes: Bike[] = [
     features: ["110cc", "Scooter", "Economy"],
   },
   {
+    id: 5,
     name: "Harley Davidson",
     type: "Cruiser",
     image: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=800&q=80",
@@ -144,6 +158,7 @@ export const featuredBikes: Bike[] = [
     features: ["1200cc", "Cruiser", "Premium"],
   },
   {
+    id: 6,
     name: "Kawasaki Ninja",
     type: "Sports",
     image: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=800&q=80",
@@ -152,6 +167,7 @@ export const featuredBikes: Bike[] = [
     features: ["650cc", "Sports", "High Speed"],
   },
   {
+    id: 7,
     name: "Royal Enfield",
     type: "Adventure",
     image: "https://images.unsplash.com/photo-1609630875171-b1321377ee65?w=800&q=80",
@@ -160,6 +176,7 @@ export const featuredBikes: Bike[] = [
     features: ["350cc", "Adventure", "Classic"],
   },
   {
+    id: 8,
     name: "Honda Activa",
     type: "Scooter",
     image: "https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=800&q=80",
@@ -329,104 +346,104 @@ export const termsAndConditionsData = {
   lastUpdated: 'October 2025'
 };
 
- export const services = [
-    {
-      id: 'car',
-      title: 'Rent A Car',
-      description:
-        'Booking a self-driving car with us is simple and easy. You can browse our selection of vehicles online, choose the car that best fits your needs, and book it for the duration of your choice. Our user-friendly platform allows you to manage your bookings and view your trip history with ease.',
-      image: 'https://images.pexels.com/photos/8673535/pexels-photo-8673535.jpeg',
-      route: '/allcars',
-      features: ['LUXURY', 'COMFORT', 'PROTECTION']
-    },
-    {
-      id: 'bike',
-      title: 'Rent A Bike',
-      description:
-        'Booking a self-driving bike with us is simple and easy. You can browse our selection of vehicles online, choose the bike that best fits your needs, and book it for the duration of your choice. Our user-friendly platform allows you to manage your bookings and view your trip history with ease.',
-      image: 'https://images.pexels.com/photos/17944591/pexels-photo-17944591.jpeg',
-      route: '/allbikes',
-      features: ['LUXURY', 'COMFORT', 'PROTECTION']
-    }
-  ];
+export const services = [
+  {
+    id: 'car',
+    title: 'Rent A Car',
+    description:
+      'Booking a self-driving car with us is simple and easy. You can browse our selection of vehicles online, choose the car that best fits your needs, and book it for the duration of your choice. Our user-friendly platform allows you to manage your bookings and view your trip history with ease.',
+    image: 'https://images.pexels.com/photos/8673535/pexels-photo-8673535.jpeg',
+    route: '/allcars',
+    features: ['LUXURY', 'COMFORT', 'PROTECTION']
+  },
+  {
+    id: 'bike',
+    title: 'Rent A Bike',
+    description:
+      'Booking a self-driving bike with us is simple and easy. You can browse our selection of vehicles online, choose the bike that best fits your needs, and book it for the duration of your choice. Our user-friendly platform allows you to manage your bookings and view your trip history with ease.',
+    image: 'https://images.pexels.com/photos/17944591/pexels-photo-17944591.jpeg',
+    route: '/allbikes',
+    features: ['LUXURY', 'COMFORT', 'PROTECTION']
+  }
+];
 
-  export  const reasons = [
-    {
-      id: 1,
-      icon: "🚗",
-      title: "Wide Fleet Selection",
-      description: "Choose from a variety of well-maintained cars and bikes to suit your needs and budget"
-    },
-    {
-      id: 2,
-      icon: "💰",
-      title: "Affordable Pricing",
-      description: "Competitive rates with no hidden charges. Transparent pricing for every rental"
-    },
-    {
-      id: 3,
-      icon: "⚡",
-      title: "Easy Booking",
-      description: "Simple and quick booking process. Reserve your vehicle in just a few clicks"
-    },
-    {
-      id: 4,
-      icon: "🛡️",
-      title: "Safe & Secure",
-      description: "All vehicles are insured and regularly maintained for your safety and peace of mind"
-    },
-    {
-      id: 5,
-      icon: "🤝",
-      title: "24/7 Customer Support",
-      description: "Our dedicated team is always ready to help you at any time, day or night"
-    },
-    {
-      id: 6,
-      icon: "📍",
-      title: "Multiple Locations",
-      description: "Pick up and drop off at convenient locations across the city"
-    }
-  ];
+export const reasons = [
+  {
+    id: 1,
+    icon: "🚗",
+    title: "Wide Fleet Selection",
+    description: "Choose from a variety of well-maintained cars and bikes to suit your needs and budget"
+  },
+  {
+    id: 2,
+    icon: "💰",
+    title: "Affordable Pricing",
+    description: "Competitive rates with no hidden charges. Transparent pricing for every rental"
+  },
+  {
+    id: 3,
+    icon: "⚡",
+    title: "Easy Booking",
+    description: "Simple and quick booking process. Reserve your vehicle in just a few clicks"
+  },
+  {
+    id: 4,
+    icon: "🛡️",
+    title: "Safe & Secure",
+    description: "All vehicles are insured and regularly maintained for your safety and peace of mind"
+  },
+  {
+    id: 5,
+    icon: "🤝",
+    title: "24/7 Customer Support",
+    description: "Our dedicated team is always ready to help you at any time, day or night"
+  },
+  {
+    id: 6,
+    icon: "📍",
+    title: "Multiple Locations",
+    description: "Pick up and drop off at convenient locations across the city"
+  }
+];
 
 
 export const faqs: FAQItem[] = [
-    {
-      question: "What documents do I need to rent?",
-      answer:
-        "You need a valid driver's license, government ID, and a credit/debit card.",
-    },
-    {
-      question: "What is the minimum age to rent?",
-      answer: "21 years for cars and 18 years for bikes.",
-    },
-    {
-      question: "Are vehicles insured?",
-      answer:
-        "Yes, all vehicles come with basic insurance. Additional coverage is available.",
-    },
-    {
-      question: "What payment methods do you accept?",
-      answer:
-        "We accept all major credit cards, debit cards, and digital payments.",
-    },
-    {
-      question: "What is your fuel policy?",
-      answer:
-        "Full-to-full policy. Return the vehicle with a full tank as you received it.",
-    },
-    {
-      question: "Can I cancel my booking?",
-      answer:
-        "Yes, free cancellation up to 24 hours before rental. After that, 50% charge applies.",
-    },
-    {
-      question: "What if the vehicle breaks down?",
-      answer:
-        "Contact our 24/7 support immediately. We'll provide assistance or a replacement.",
-    },
-    {
-      question: "Do I get a helmet with bike rentals?",
-      answer: "Yes, complimentary helmets are provided with all bike rentals.",
-    },
-  ];
+  {
+    question: "What documents do I need to rent?",
+    answer:
+      "You need a valid driver's license, government ID, and a credit/debit card.",
+  },
+  {
+    question: "What is the minimum age to rent?",
+    answer: "21 years for cars and 18 years for bikes.",
+  },
+  {
+    question: "Are vehicles insured?",
+    answer:
+      "Yes, all vehicles come with basic insurance. Additional coverage is available.",
+  },
+  {
+    question: "What payment methods do you accept?",
+    answer:
+      "We accept all major credit cards, debit cards, and digital payments.",
+  },
+  {
+    question: "What is your fuel policy?",
+    answer:
+      "Full-to-full policy. Return the vehicle with a full tank as you received it.",
+  },
+  {
+    question: "Can I cancel my booking?",
+    answer:
+      "Yes, free cancellation up to 24 hours before rental. After that, 50% charge applies.",
+  },
+  {
+    question: "What if the vehicle breaks down?",
+    answer:
+      "Contact our 24/7 support immediately. We'll provide assistance or a replacement.",
+  },
+  {
+    question: "Do I get a helmet with bike rentals?",
+    answer: "Yes, complimentary helmets are provided with all bike rentals.",
+  },
+];

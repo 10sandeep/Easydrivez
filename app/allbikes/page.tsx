@@ -1,44 +1,15 @@
 "use client"
-import React, { useState } from 'react';
+import React from 'react';
 import { featuredBikes, Bike } from '@/lib/data';
+import { useRouter } from 'next/navigation';
 
 export default function BikeRental() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedBike, setSelectedBike] = useState<Bike | null>(null);
-  const [formData, setFormData] = useState({ bikeName: '', name: '', phone: '' });
+  const router = useRouter();
 
+  // ✅ Navigate to bike booking page with data
   const handleBookNow = (bike: Bike) => {
-    setSelectedBike(bike);
-    setFormData({ bikeName: bike.name, name: '', phone: '' });
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedBike(null);
-    setFormData({ bikeName: '', name: '', phone: '' });
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    
-    if (!formData.name || !formData.phone) {
-      alert('Please fill in all fields');
-      return;
-    }
-
-    console.log('Booking submitted:', formData);
-    alert(`Booking request for ${formData.bikeName}\nName: ${formData.name}\nPhone: ${formData.phone}`);
-    
-    handleCloseModal();
+    const bikeData = encodeURIComponent(JSON.stringify(bike));
+    router.push(`/booking/${bike.id}?bike=${bikeData}`);
   };
 
   return (
@@ -67,7 +38,7 @@ export default function BikeRental() {
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-black">
             Featured Bikes
           </h2>
-          
+
           {/* 3 Column Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredBikes.map((bike, idx) => (
@@ -131,7 +102,7 @@ export default function BikeRental() {
                         </p>
                         <p className="text-sm text-gray-600">for 12 hours</p>
                       </div>
-                      <button 
+                      <button
                         onClick={() => handleBookNow(bike)}
                         className="bg-black hover:bg-gray-800 text-white font-semibold py-2 px-5 rounded transition-colors"
                       >
@@ -148,104 +119,6 @@ export default function BikeRental() {
           </div>
         </div>
       </div>
-
-      {/* Booking Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-300">
-              <h2 className="text-2xl font-bold text-black">Book Bike</h2>
-              <button
-                onClick={handleCloseModal}
-                className="text-gray-500 hover:text-black transition"
-              >
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Modal Content */}
-            <div className="p-6 space-y-4">
-              {/* Bike Name */}
-              <div>
-                <label className="block text-sm font-semibold text-black mb-2">
-                  Bike Name
-                </label>
-                <input
-                  type="text"
-                  value={formData.bikeName}
-                  disabled
-                  className="w-full px-4 py-2.5 bg-gray-100 border border-gray-300 rounded text-gray-700 text-sm font-medium focus:outline-none"
-                />
-              </div>
-
-              {/* Name */}
-              <div>
-                <label className="block text-sm font-semibold text-black mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Enter your full name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded text-black text-sm font-medium focus:outline-none focus:border-black autofill:bg-white autofill:text-black"
-                  style={{
-                    WebkitTextFillColor: 'black',
-                  }}
-                />
-              </div>
-
-              {/* Phone */}
-              <div>
-                <label className="block text-sm font-semibold text-black mb-2">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Enter your phone number"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded text-black text-sm font-medium focus:outline-none focus:border-black autofill:bg-white autofill:text-black"
-                  style={{
-                    WebkitTextFillColor: 'black',
-                  }}
-                />
-              </div>
-
-              {/* Buttons */}
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={handleCloseModal}
-                  className="flex-1 px-4 py-2.5 bg-white border border-gray-300 hover:bg-gray-100 text-black font-semibold rounded transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  className="flex-1 px-4 py-2.5 bg-black hover:bg-gray-800 text-white font-semibold rounded transition"
-                >
-                  Send
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      <style jsx>{`
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover,
-        input:-webkit-autofill:focus,
-        input:-webkit-autofill:active {
-          -webkit-box-shadow: 0 0 0 30px white inset !important;
-          -webkit-text-fill-color: black !important;
-        }
-      `}</style>
     </div>
   );
 }

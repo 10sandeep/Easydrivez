@@ -3,12 +3,11 @@
 import React, { useState } from 'react';
 import { featuredCars } from '@/lib/data';
 import { X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const SectionDivider = () => (
   <div className="flex items-center justify-center gap-4 my-2 mb-10">
     <div className="h-px w-24 bg-gray-300"></div>
-    
-    {/* Car Icon */}
     <svg
       className="h-6 w-6 text-gray-600"
       fill="currentColor"
@@ -16,34 +15,30 @@ const SectionDivider = () => (
     >
       <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm11 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM5 9l1.5-4.5h11L19 9H5z" />
     </svg>
-
     <div className="h-px w-24 bg-gray-300"></div>
   </div>
 );
 
-interface BookingFormData {
-  carName: string;
-  name: string;
-  phone: string;
-}
-
 export default function FeaturedCarsSection() {
+  const router = useRouter();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCar, setSelectedCar] = useState<string>('');
-  const [formData, setFormData] = useState<BookingFormData>({
+  const [formData, setFormData] = useState({
     carName: '',
     name: '',
     phone: '',
   });
 
-  const handleBookClick = (carName: string) => {
-    setSelectedCar(carName);
-    setFormData({
-      carName,
-      name: '',
-      phone: '',
-    });
-    setIsModalOpen(true);
+  // ✅ Navigate to car detail page
+  const handleBookClick = (carId: number) => {
+    const car = featuredCars.find((c) => c.id === carId);
+
+    console.log(car);
+    if (!car) return;
+
+    // Encode full car data in URL
+    const carData = encodeURIComponent(JSON.stringify(car));
+    router.push(`/booking/${carId}?car=${carData}`);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,15 +51,17 @@ export default function FeaturedCarsSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.phone) {
       alert('Please fill in all fields');
       return;
     }
 
     console.log('Booking submitted:', formData);
-    alert(`Booking request for ${formData.carName}\nName: ${formData.name}\nPhone: ${formData.phone}`);
-    
+    alert(
+      `Booking request for ${formData.carName}\nName: ${formData.name}\nPhone: ${formData.phone}`
+    );
+
     setIsModalOpen(false);
     setFormData({ carName: '', name: '', phone: '' });
   };
@@ -140,8 +137,9 @@ export default function FeaturedCarsSection() {
                         </p>
                         <p className="text-xs text-gray-600">for 12 hours</p>
                       </div>
+                      {/* ✅ Navigate to Car Page on click */}
                       <button
-                        onClick={() => handleBookClick(car.name)}
+                        onClick={() => handleBookClick(car.id)}
                         className="bg-black hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg transition-all active:scale-95"
                       >
                         Book
@@ -158,11 +156,10 @@ export default function FeaturedCarsSection() {
         </div>
       </div>
 
-      {/* Booking Modal */}
+      {/* Modal (currently unused since we're navigating instead) */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
-            {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h2 className="text-2xl font-bold text-gray-900">Book Car</h2>
               <button
@@ -172,10 +169,7 @@ export default function FeaturedCarsSection() {
                 <X className="h-6 w-6" />
               </button>
             </div>
-
-            {/* Modal Content */}
             <div className="p-6 space-y-4">
-              {/* Car Name */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Car Name
@@ -186,52 +180,6 @@ export default function FeaturedCarsSection() {
                   disabled
                   className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-600 text-sm font-medium focus:outline-none"
                 />
-              </div>
-
-              {/* Name */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Enter your full name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                />
-              </div>
-
-              {/* Phone */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Enter your phone number"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                />
-              </div>
-
-              {/* Buttons */}
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={handleCloseModal}
-                  className="flex-1 px-4 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold rounded-lg transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  className="flex-1 px-4 py-2.5 bg-black hover:bg-gray-800 text-white font-semibold rounded-lg transition"
-                >
-                  Send
-                </button>
               </div>
             </div>
           </div>
