@@ -60,13 +60,13 @@ const FAQPage: React.FC = () => {
         </div>
 
         {/* Contact */}
-        <div className="mt-12 bg-blue-600 text-white rounded-lg p-8 text-center">
+        {/* <div className="mt-12 bg-yellow-600 text-white rounded-lg p-2 text-center">
           <h2 className="text-2xl font-bold mb-2">Need Help?</h2>
           <p className="mb-4">Contact our support team</p>
           <button className="bg-white text-blue-600 px-6 py-2 rounded font-medium">
             Contact Us
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
