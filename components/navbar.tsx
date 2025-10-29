@@ -26,9 +26,9 @@ export function Navbar() {
     { href: "/allcars", label: "All Cars" },
     { href: "/allbikes", label: "All Bikes" },
     { href: "/about", label: "About" },
-    { href: "/terms", label: "Terms" },
+    { href: "/blog", label: "Blogs" },
     { href: "/contact", label: "Contact" },
-    {href:"/gallery",label:"Gallary"}
+    { href: "/gallery", label: "Gallary" },
   ];
 
   const faqLink = { href: "/faq", label: "FAQ" };
@@ -44,17 +44,17 @@ export function Navbar() {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-         <Link href="/" className="flex items-center space-x-2 group">
-      <div className="relative">
-        <div className="absolute inset-0 bg-blue-600 rounded-lg blur-sm opacity-20 group-hover:opacity-40 transition-opacity"></div>
-        <div className="relative bg-yellow-600 rounded-lg p-1.5 group-hover:bg-blue-700 transition-colors">
-          <Car className="h-6 w-6 text-white" />
-        </div>
-      </div>
-      <span className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-        Easydrivez
-      </span>
-    </Link>
+          <Link href="/" className="flex items-center space-x-2 group">
+            <div className="relative">
+              <div className="absolute inset-0 bg-blue-600 rounded-lg blur-sm opacity-20 group-hover:opacity-40 transition-opacity"></div>
+              <div className="relative bg-yellow-600 rounded-lg p-1.5 group-hover:bg-blue-700 transition-colors">
+                <Car className="h-6 w-6 text-white" />
+              </div>
+            </div>
+            <span className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              Easydrivez
+            </span>
+          </Link>
 
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center space-x-8">
@@ -126,7 +126,7 @@ export function Navbar() {
                 </Link>
               </div>
             ))}
-            
+
             {/* FAQ Button in Mobile Menu */}
             <div className="pt-2">
               <Link

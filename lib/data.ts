@@ -1,4 +1,5 @@
 export interface Car {
+  id: number;
   name: string;
   type: string;
   image: string;
@@ -8,6 +9,7 @@ export interface Car {
 }
 
 export interface Bike {
+  id: number;
   name: string;
   type: string;
   image: string;
@@ -26,6 +28,19 @@ export interface Testimonial {
 export interface FAQItem {
   question: string;
   answer: string;
+}
+
+export interface Blog {
+  id: number;
+  title: string;
+  excerpt: string;
+  author: string;
+  date: string;
+  category: string;
+  tags: string[];
+  image: string;
+  featured?: boolean;
+  content: string;
 }
 
 export const backgroundImages: string[] = [
@@ -446,4 +461,392 @@ export const faqs: FAQItem[] = [
     question: "Do I get a helmet with bike rentals?",
     answer: "Yes, complimentary helmets are provided with all bike rentals.",
   },
+];
+
+
+
+// Mock blog data
+export const blogs: Blog[] = [
+  {
+    id: 1,
+    title: "Explore Odisha with Eazydrivez: Your Ultimate Self-Drive Car Rental",
+    excerpt: "A self-drive car from Eazydrivez is your ticket to exploring more than just the city. Plan your trip and take control of your travel!",
+    author: "Eazydrivez Team",
+    date: "Oct 29, 2025",
+    category: "Travel",
+    tags: ["Self Drive", "Odisha", "Car Rental"],
+    image: "https://images.unsplash.com/photo-1709809996082-331327662f16?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1971",
+    featured: true,
+    content: `
+      <p>A self-drive car from Eazydrivez is your ticket to exploring more than just the city. Plan your trip to discover the beautiful destinations across Odisha. For any journey—be it a short trip or a long-distance adventure—Eazydrivez has the right self-driving car for rent for you. Book your ride with us today and take control of your travel!</p>
+
+      <p><strong>Eazydrivez: The Freedom to Drive, Your Way.</strong></p>
+
+      <h2>Beaches & Coastlines</h2>
+
+      <h3>Puri Beach</h3>
+      <p>A popular spot with golden sands and clear waters, perfect for a relaxing day by the sea.</p>
+
+      <h3>Chandrabhaga Beach</h3>
+      <p>Known for its beautiful shorelines and connection to the Sun Temple, this beach offers stunning views and cultural significance.</p>
+
+      <h3>Gopalpur-on-Sea</h3>
+      <p>A charming beach with a calm ambiance and historical significance, ideal for those seeking tranquility.</p>
+
+      <h3>Talasari Beach</h3>
+      <p>Offers a serene and picturesque coastal experience away from the crowded tourist spots.</p>
+
+      <h3>Chandipur Beach</h3>
+      <p>Famous for its "vanishing" sandbanks, where the sea recedes up to 5 kilometers during low tide, creating a unique phenomenon.</p>
+
+      <h2>Natural Attractions & Waterfalls</h2>
+
+      <h3>Bhitarkanika National Park</h3>
+      <p>A vast wildlife sanctuary with rich biodiversity, ideal for nature lovers who want to experience mangrove forests and spot crocodiles and migratory birds.</p>
+
+      <h3>Chilika Lake</h3>
+      <p>The largest coastal lagoon in India, known for its vastness and beauty. A paradise for bird watchers, especially during winter months.</p>
+
+      <h3>Deojhar Waterfall</h3>
+      <p>A scenic waterfall located in Cuttack's Narasinghpur region, perfect for a day trip with family and friends.</p>
+
+      <h3>Barehipani Falls</h3>
+      <p>One of the highest waterfalls in the country, featuring a multi-tiered cascade that offers breathtaking views.</p>
+
+      <h3>Duduma Waterfalls</h3>
+      <p>A picturesque location for nature and adventure enthusiasts, surrounded by lush greenery.</p>
+
+      <h3>Gudguda Waterfall</h3>
+      <p>A hidden getaway located amidst rocky terrains, offering a peaceful retreat.</p>
+
+      <h3>Deras Dam</h3>
+      <p>A serene picnic destination near Bhubaneswar, perfect for spending quality time with loved ones.</p>
+
+      <h2>Historical & Cultural Sites</h2>
+
+      <h3>Barabati Fort</h3>
+      <p>An ancient fort in Cuttack offering historical insights into the region's rich past.</p>
+
+      <h3>Sun Temple, Konark</h3>
+      <p>A UNESCO World Heritage site, known for its architectural marvel. The temple is designed in the shape of a colossal chariot with intricately carved stone wheels.</p>
+
+      <h3>Nandankanan Zoological Park</h3>
+      <p>A well-known zoo with a white tiger safari, botanical garden, and diverse wildlife species.</p>
+
+      <h3>Khandagiri Caves</h3>
+      <p>Ancient caves with significant historical and spiritual importance, featuring Jain sculptures and inscriptions.</p>
+
+      <h2>Lakes, Dams & Hills</h2>
+
+      <h3>Hirakud Dam</h3>
+      <p>A large dam and a popular picnic spot, one of the longest earthen dams in the world.</p>
+
+      <h3>Rengali Dam</h3>
+      <p>A picturesque reservoir known for its picnic facilities and beautiful surroundings.</p>
+
+      <h3>Barunei Hill</h3>
+      <p>A popular spot with a temple at the top, offering panoramic views of the surrounding landscape.</p>
+
+      <h3>Olasuni Hill</h3>
+      <p>A hill in Cuttack known for its natural beauty and historical significance.</p>
+
+      <h2>Other Notable Spots</h2>
+
+      <h3>Daringbadi</h3>
+      <p>Known as the "Kashmir of Odisha" for its beautiful landscapes and pleasant climate. A perfect hill station getaway.</p>
+
+      <h3>Raghurajpur Artist Village</h3>
+      <p>A vibrant village celebrating Pattachitra paintings, where you can witness traditional art forms and interact with local artists.</p>
+
+      <h2>Why Eazydrivez Car Rental is Your Best Choice for 24-Hour Rental?</h2>
+
+      <p>When it comes to 24-hour car rental in Bhubaneswar, Eazydrivez Car Rental is the best for many reasons:</p>
+
+      <h3>Customer Satisfaction</h3>
+      <p>Eazydrivez Car Rental has a strong reputation for customer satisfaction. Our team goes the extra mile to ensure a hassle-free experience.</p>
+
+      <h3>Self Drive</h3>
+      <p>For those who want complete control over their trip, Eazydrivez Car Rental offers self-drive options. No chauffeur and no schedules, just you and the open road.</p>
+
+      <h3>Reliability</h3>
+      <p>Our vehicles are well-maintained and fully sanitized to ensure your safety and comfort. With Eazydrivez Car Rental you can rely on a car that will perform well throughout your journey.</p>
+
+      <h3>Variety of Cars</h3>
+      <p>We have all the options from budget-friendly options like Swift ZXI and Ignis to luxurious options like KIA Carens and Mahindra Thar.</p>
+
+      <h2>Conclusion</h2>
+
+      <p>Briefly put, 24-hour car rental in Bhubaneswar is the best combination of flexibility, convenience, and affordability for business travelers, tourists, or anyone who needs a car for a day. Eazydrivez Car Rental is your one-stop solution for all your travel needs, with multiple options, transparent pricing, and customer-first service.</p>
+
+      <p>So whether you are heading for a meeting, a weekend road trip, or just want to explore the city, book your 24-hour car rental in Bhubaneswar with Eazydrivez and have a stress-free trip.</p>
+    `
+  },
+  {
+    id: 2,
+    title: "Driving Rules in Bhubaneswar – What You Need to Know",
+    excerpt: "Understanding the traffic laws in Bhubaneswar is a must for all drivers whether you are behind the wheel of a car or a two-wheeler.",
+    author: "Rideez Team",
+    date: "Sep 18, 2025",
+    category: "Safety",
+    tags: ["Driving Rules", "Safety", "Bhubaneswar"],
+    image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=600&q=80",
+    content: `
+      <h2>Basic Traffic Laws</h2>
+      
+      <p>Understanding the traffic laws in Bhubaneswar is a must for all drivers whether you are behind the wheel of a car or a two-wheeler. These regulations not only ensure safety but also reduce the number of accidents. Here are some of the basic rules you should be aware of:</p>
+      
+      <h3>Speed Limits</h3>
+      
+      <p>Adhering to the speed limit is mandatory. For Light Motor Vehicles (LMVs) exceeding speed limit can result in a fine of ₹2,000 for the first time and subsequent offenses. For Heavy Motor Vehicles (HMVs) the fine is ₹4,000.</p>
+      
+      <h3>Seat Belts</h3>
+      
+      <p>All passengers in a four-wheeler must wear seat belts. Not adhering to this rule will result in a fine of ₹1,000. Also, ensure that children below 14 years are properly seated in the back seat and are using child safety seats when applicable.</p>
+      
+      <h3>Mobile Phone Use</h3>
+      
+      <p>Using a mobile phone while driving is strictly prohibited and can result in a fine of ₹5,000 for the first time and ₹10,000 for subsequent offences.</p>
+      
+      <h3>Driving Under the Influence</h3>
+      
+      <p>Driving under the influence of alcohol or any intoxicating substance is a serious offence in Bhubaneswar. It can result in heavy fines which increase for repeat offenders.</p>
+      
+      <p>₹10,000 for the first time.</p>
+      <p>₹15,000 for subsequent offences.</p>
+      
+      <p>If caught driving under the influence you may also face suspension of your driving license, legal actions or even jail time in extreme cases.</p>
+      
+      <h3>Documentation</h3>
+      
+      <p>As a driver always carry the necessary documents:</p>
+      
+      <p>Driving License</p>
+      <p>Vehicle Registration Certificate</p>
+      <p>Insurance Documents</p>
+      <p>Pollution Under Control (PUC) Certificate</p>
+      
+      <p>Failure to produce these documents when asked can result in fines. Driving without a valid driving license will cost you ₹5,000 and not producing the insurance policy can result in a fine of ₹2,000 to ₹4,000.</p>
+      
+      <h2>Navigating Through Bhubaneswar</h2>
+      
+      <p>Bhubaneswar's road network is well developed but like any growing city, it has its share of traffic issues. Here are some tips to help you navigate:</p>
+      
+      <h3>Peak Hours and Congested Areas</h3>
+      
+      <p>Traffic congestion is common during peak hours, typically between 9 AM to 11 AM and 5 PM to 8 PM. During these hours Janpath, Cuttack Road, Rasulgarh and Kharavel Nagar are the major roads that get jammed. If possible avoid these routes during peak hours.</p>
+      
+      <h3>Parking Rules</h3>
+      
+      <p>Bhubaneswar Municipal Corporation (BMC) has designated parking zones. Parking in no-parking zones is strictly prohibited and will attract a fine. In 2015, the Commissionerate Police identified 20 no-parking zones in Bhubaneswar and the fine is ₹500.</p>
+      
+      <h3>Road Signs</h3>
+      
+      <p>Be aware of speed limits, one-way streets and no entry zones. These signs are very important for safe driving and to follow traffic rules. Ignoring road signs can lead to fines and also put your life and other road users in danger.</p>
+      
+      <h2>Specific Regulations to Know</h2>
+      
+      <p>Bhubaneswar has some special rules that you should know:</p>
+      
+      <h3>Festival Restrictions</h3>
+      
+      <p>During big festivals like Durga Puja and Bali Yatra, the city imposes specific traffic restrictions to manage the crowd. These may include road closure, diversion and designated parking. For example during Bali Yatra traffic restrictions are imposed from 2 PM to the time the crowd disperses to ensure public safety.</p>
+      
+      <h3>Vending Zones</h3>
+      
+      <p>The city has designated vending zones for street vendors to enhance aesthetics and traffic flow. These zones are part of Bhubaneswar Municipal Corporation's effort to integrate street vendors into the urban landscape. Parking or driving in these zones is restricted to avoid obstruction and to ensure the safety of pedestrians and vendors.</p>
+      
+      <h2>Safety Tips for Drivers</h2>
+      
+      <p>Road safety is everyone's responsibility. Here are some tips for drivers in Bhubaneswar:</p>
+      
+      <p>Don't Overtake in restricted Zones: Overtaking in no-overtaking zones is prohibited and the fine is ₹5,000 for first time offenders.</p>
+      
+      <p>Emergency: In case of breakdown move your vehicle to the side of the road and use hazard lights. For accidents, contact local authorities and wait for help.</p>
+      
+      <p>Maintain Safe Distance: Keep a reasonable distance from the vehicle ahead, especially in congested areas.</p>
+      
+      <p>Use Indicators: Always signal your intention whether you are turning or changing lanes to inform other drivers and pedestrians.</p>
+      
+      <p>Avoid Distractions: Don't use mobile or engage in any activity that takes your attention away from driving.</p>
+      
+      <p>Follow Lane Discipline: Stick to your lane and don't make sudden lane changes, especially in heavy traffic.</p>
+      
+      <h2>Conclusion</h2>
+      
+      <p>Understanding and complying with Bhubaneswar's rules and regulations to have a safe and pleasant journey. Follow traffic rules, know the no-parking zones and practice defensive driving to contribute towards the city's road safety and your journey will be enjoyable.</p>
+      
+      <p>For those looking for reliable and flexible self-drive car rental options, be it luxury car rentals or the usual hatchbacks, Rideez Car Rental has a diverse fleet to fit your requirements and have a comfortable and stress-free journey to Temple City.</p> `
+  },
+  {
+  id: 3,
+  title: "Looking for a Weekend Escape from Bhubaneswar?",
+  excerpt: "Discover 5 must-do road trips from Bhubaneswar that are perfect for a weekend escape with self-drive car or bike rental.",
+  author: "Eazydrivez Team",
+  date: "Aug 15, 2018",
+  category: "Travel",
+  tags: ["Road Trips", "Weekend Getaway", "Bhubaneswar", "Self Drive"],
+  image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&q=80",
+  content: `
+    <h2>Introduction</h2>
+    
+    <p>Bhubaneswar, the "Temple City of India," is a fantastic hub for exploration. But the real magic of Odisha lies just a few hours' drive away, in its ancient temples, serene beaches, and lush green landscapes.</p>
+    
+    <p>Tired of expensive cabs and rigid tour schedules? With a best self-drive car or bike rental from Eazydrivez, you have the freedom to craft your own adventure. No deadlines, no strangers, just you, the open road, and the beauty of Odisha.</p>
+    
+    <p>Here are 5 must-do road trips from Bhubaneswar that are perfect for a weekend escape, all easily accessible with our affordable rentals.</p>
+    
+    <h2>1. The Golden Triangle: Puri-Konark-Bhubaneswar</h2>
+    
+    <p>This is the most famous tourist circuit in Odisha for a reason. It's a perfect blend of culture, history, and natural beauty.</p>
+    
+    <h3>The Route</h3>
+    
+    <p>Start from Bhubaneswar, head to Puri (around 60 km) to visit the majestic Jagannath Temple, and then take the scenic Marine Drive to Konark (about 35 km) to see the breathtaking Sun Temple.</p>
+    
+    <h3>Why Eazydrivez is Perfect</h3>
+    
+    <p>The Puri-Konark Marine Drive is a driver's paradise. Renting a car from us lets you stop for photos, a quick snack, or a moment to enjoy the sea breeze along this picturesque coastal road.</p>
+    
+    <h2>2. The Serene Escape: Chilika Lake</h2>
+    
+    <p>Asia's largest brackish water lagoon is a paradise for nature lovers and birdwatchers.</p>
+    
+    <h3>The Route</h3>
+    
+    <p>Drive south from Bhubaneswar for about 100 km to reach Barkul or Satapada.</p>
+    
+    <h3>Why Eazydrivez is Perfect</h3>
+    
+    <p>The drive is smooth and beautiful. Once you arrive, a self-drive car allows you to easily explore the different entry points and jetties around the lake to find the perfect spot for dolphin watching or a boat ride.</p>
+    
+    <h2>3. The Hidden Gem: Daringbadi</h2>
+    
+    <p>Known as the "Kashmir of Odisha," Daringbadi is a cool, misty hill station with coffee plantations and pine forests.</p>
+    
+    <h3>The Route</h3>
+    
+    <p>This is a longer but incredibly rewarding road trip, about 250 km from Bhubaneswar.</p>
+    
+    <h3>Why Eazydrivez is Perfect</h3>
+    
+    <p>This road trip is all about the journey. Our well-maintained cars are perfect for the winding, forested roads, allowing you to enjoy the cool weather and stunning scenery at your own pace.</p>
+    
+    <h2>4. The Coastal Retreat: Gopalpur-on-Sea</h2>
+    
+    <p>For a relaxing beach holiday away from the crowds, head to the tranquil town of Gopalpur.</p>
+    
+    <h3>The Route</h3>
+    
+    <p>A scenic 170 km drive south from Bhubaneswar.</p>
+    
+    <h3>Why Eazydrivez is Perfect</h3>
+    
+    <p>Your own vehicle gives you the flexibility to visit other nearby attractions like the beautiful lighthouse and the famous Chilika Lake on the way.</p>
+    
+    <h2>5. The Cultural Ride: Pipli & Raghurajpur</h2>
+    
+    <p>For art enthusiasts and cultural explorers, this route offers a glimpse into Odisha's vibrant handicraft traditions.</p>
+    
+    <h3>The Route</h3>
+    
+    <p>A short and sweet trip just 30-40 km from Bhubaneswar.</p>
+    
+    <h3>Why Eazydrivez is Perfect</h3>
+    
+    <p>A bike from Eazydrivez is the ideal way to navigate the smaller roads and charming lanes of these artisan villages, giving you a truly immersive and personal experience.</p>
+    
+    <h2>Book Your Adventure</h2>
+    
+    <p>With Eazydrivez, your next unforgettable adventure in Odisha is just a ride away. Stop planning and start driving!</p>
+    
+    <p>For the best self-drive car and bike rental experience in Bhubaneswar, choose Eazydrivez. Affordable rates, well-maintained vehicles, and complete freedom to explore Odisha at your own pace.</p>
+  `
+},
+{
+  id: 4,
+  title: "The Ultimate Guide to the Best Road Trips from Bhubaneswar for Every Kind of Traveler",
+  excerpt: "Discover the heart and soul of Odisha with our comprehensive guide to road trips from Bhubaneswar, tailored for every type of traveler.",
+  author: "Eazydrivez Team",
+  date: "Aug 15, 2018",
+  category: "Motobike",
+  tags: ["Road Trips", "Travel Guide", "Bhubaneswar", "Adventure"],
+  image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&q=80",
+  content: `
+    <h2>Introduction</h2>
+    
+    <p>There's no better way to discover the heart and soul of Odisha than by hitting the open road. As your journey begins in Bhubaneswar, the "Temple City," you're perfectly positioned to explore the state's diverse landscapes—from its sacred temples to its serene beaches and lush hills.</p>
+    
+    <p>At Eazydrivez, we believe the best adventures are the ones you create yourself. That's why we've put together this guide to the best road trips from Bhubaneswar, catering to every type of traveler.</p>
+    
+    <h2>For the Spiritual & Coastal Soul: The Puri-Konark Circuit</h2>
+    
+    <p><strong>Best for:</strong> First-time visitors, families, and culture enthusiasts.</p>
+    
+    <p><strong>Ideal Vehicle:</strong> A comfortable car for the family or a reliable bike for a solo rider.</p>
+    
+    <h3>The Route</h3>
+    
+    <p><strong>Bhubaneswar to Puri (Approx. 60 km):</strong> A smooth drive on NH-316 brings you to the holy city of Puri. Visit the world-famous Jagannath Temple, and spend time strolling along the Golden Beach.</p>
+    
+    <p><strong>Puri to Konark (Approx. 35 km):</strong> The Puri-Konark Marine Drive is the highlight of this trip. This scenic road with the Bay of Bengal on one side is an experience in itself. Stop at Chandrabhaga Beach before reaching the UNESCO World Heritage Site of Konark Sun Temple.</p>
+    
+    <h3>Why Eazydrivez?</h3>
+    
+    <p>Our well-maintained cars provide a comfortable ride, and our bikes are perfect for navigating local traffic and stopping at every scenic viewpoint on the Marine Drive.</p>
+    
+    <h2>For the Nature & Wildlife Lover: A Trip to Chilika Lake</h2>
+    
+    <p><strong>Best for:</strong> Birdwatchers, photographers, and those seeking a peaceful escape.</p>
+    
+    <p><strong>Ideal Vehicle:</strong> A fuel-efficient car for a smooth and uninterrupted journey.</p>
+    
+    <h3>The Route</h3>
+    
+    <p>Head south from Bhubaneswar for about 100 km to reach the shores of Chilika Lake at Barkul or Satapada.</p>
+    
+    <h3>Highlights</h3>
+    
+    <p><strong>Nalbana Bird Sanctuary:</strong> During the winter, this place is a temporary home to thousands of migratory birds.</p>
+    
+    <p><strong>Dolphin Spotting:</strong> Take a boat ride to catch a glimpse of the playful Irrawaddy dolphins.</p>
+    
+    <h3>Why Eazydrivez?</h3>
+    
+    <p>With a rental from us, you're not tied to tour bus schedules. You can arrive early to beat the crowds and enjoy the tranquil beauty of the lake at your own pace.</p>
+    
+    <h2>For the Offbeat Explorer: The Hills of Daringbadi</h2>
+    
+    <p><strong>Best for:</strong> Adventure seekers, trekkers, and people who love cool weather.</p>
+    
+    <p><strong>Ideal Vehicle:</strong> A car with good ground clearance, or a powerful bike for the winding mountain roads.</p>
+    
+    <h3> <strong>The Route</strong></h3>
+    
+    <p>This is a longer but very rewarding trip, approximately 250 km from Bhubaneswar, leading you to the "Kashmir of Odisha."</p>
+    
+    <h3><strong>Highlights</strong></h3>
+    
+    <p>Enjoy the lush green valleys, sprawling coffee plantations, and the cool, misty climate.</p>
+    
+    <h3> <strong>Why Eazydrivez?</strong></h3>
+    
+    <p>Our diverse fleet ensures you have the right vehicle for this terrain, giving you the confidence to explore this beautiful hill station and its waterfalls.</p>
+    
+    <h2>  <strong>For a Quick City Break:</strong> Cuttack & Dhauli Shanti Stupa</h2>
+    
+    <p><strong>Best for:</strong> Short trips, history buffs, and those with a few hours to spare.</p>
+    
+    <p><strong>Ideal Vehicle:</strong> A nimble bike or a compact car for easy city navigation.</p>
+    
+    <h3>The Route</h3>
+    
+    <p><strong>Bhubaneswar to Cuttack (Approx. 30 km):</strong> Drive to the "Silver City" of Cuttack. Explore the ancient Barabati Fort and visit the Odisha State Maritime Museum.</p>
+    
+    <p><strong>Dhauli Shanti Stupa:</strong> On your way back, stop at the Dhauli hills to visit the stunning white peace pagoda, offering a panoramic view of the city.</p>
+    
+    <h3>Why Eazydrivez?</h3>
+    
+    <p>Our easy-to-rent bikes and cars are perfect for spontaneous trips. Just book and go, whether it's for a few hours or a whole day.</p>
+  `
+}
 ];
