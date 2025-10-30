@@ -100,7 +100,7 @@ export default function BikeRental() {
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
       <div
-        className="relative py-24 bg-cover bg-center"
+        className="relative py-20 bg-cover bg-center"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=400&fit=crop')`,
           backgroundAttachment: "fixed",

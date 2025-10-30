@@ -43,12 +43,12 @@ export interface Blog {
   content: string;
 }
 
-export const backgroundImages: string[] = [
-  "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=1920&q=80",
-  "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1920&q=80",
-  "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1920&q=80",
-  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80",
-];
+// export const backgroundImages: string[] = [
+//   "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=1920&q=80",
+//   "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1920&q=80",
+//   "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1920&q=80",
+//   "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80",
+// ];
 
 export const featuredCars: Car[] = [
   {
