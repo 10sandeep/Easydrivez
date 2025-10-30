@@ -57,7 +57,7 @@ export default function BikeRental() {
   };
 
   // ✅ Render states
-if (loading) {
+if (error) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-red-50 via-white to-orange-50 text-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
@@ -82,7 +82,7 @@ if (loading) {
   }
 
   // ✅ Loading State
-  if (error)
+  if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-600 bg-gradient-to-br from-blue-50 via-white to-orange-50">
         <div className="text-center">
