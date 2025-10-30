@@ -9,6 +9,7 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
 
   const [vehicle, setVehicle] = useState<any>(null);
   const [isBike, setIsBike] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -32,9 +33,12 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
         const decoded = JSON.parse(decodeURIComponent(rawData));
         setVehicle(decoded);
         setIsBike(!!bikeParam);
+      } else {
+        setError("No vehicle data found in URL parameters.");
       }
     } catch (err) {
       console.error("Error decoding vehicle data:", err);
+      setError("Failed to decode vehicle data from URL.");
     }
   }, [searchParams]);
 
@@ -166,6 +170,31 @@ Drop-off: ${formData.dropoffDate} ${formData.dropoffTime}
     window.location.href = "tel:+919090089708";
   };
   // ✅ Loading
+ if (error) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-red-50 via-white to-orange-50 text-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
+          <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-4xl">⚠️</span>
+          </div>
+          <p className="text-red-600 text-xl font-semibold mb-3">
+            Oops! {error}
+          </p>
+          <p className="text-gray-600 text-sm mb-6">
+            We couldn't load the vehicle details. Please try again.
+          </p>
+          <button
+            onClick={() => location.reload()}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-lg hover:scale-105 active:scale-95"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ Loading State
   if (!vehicle)
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-600 bg-gradient-to-br from-blue-50 via-white to-orange-50">

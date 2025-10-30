@@ -57,30 +57,63 @@ export default function BikeRental() {
   };
 
   // ✅ Render states
-  if (loading) {
+if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-white text-black">
-        <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
-        <p className="text-lg font-medium">Loading bikes, please wait...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-red-50 via-white to-orange-50 text-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
+          <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-4xl">⚠</span>
+          </div>
+          <p className="text-red-600 text-xl font-semibold mb-3">
+            Oops! {error}
+          </p>
+          <p className="text-gray-600 text-sm mb-6">
+            We couldn't load the vehicle details. Please try again.
+          </p>
+          <button
+            onClick={() => location.reload()}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-lg hover:scale-105 active:scale-95"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
 
-  if (error) {
+  // ✅ Loading State
+  if (error)
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-white text-center p-4">
-        <p className="text-red-600 text-xl font-semibold mb-3">
-          Oops! {error}
-        </p>
-        <button
-          onClick={() => location.reload()}
-          className="bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800 transition-colors"
-        >
-          Retry
-        </button>
+      <div className="min-h-screen flex items-center justify-center text-gray-600 bg-gradient-to-br from-blue-50 via-white to-orange-50">
+        <div className="text-center">
+          <div className="relative w-24 h-24 mx-auto mb-6">
+            {/* Animated wheel */}
+            <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-t-blue-600 border-r-orange-500 border-b-transparent border-l-transparent animate-spin"></div>
+            {/* Inner hub */}
+            <div className="absolute inset-6 rounded-full bg-gradient-to-br from-blue-600 to-orange-500 flex items-center justify-center">
+              <div className="w-4 h-4 rounded-full bg-white"></div>
+            </div>
+            {/* Spokes effect */}
+            <div className="absolute inset-8 flex items-center justify-center">
+              <div className="w-full h-0.5 bg-white/50 rotate-45"></div>
+              <div className="w-full h-0.5 bg-white/50 -rotate-45 absolute"></div>
+            </div>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            Getting Your Ride Ready
+          </h2>
+          <p className="text-gray-600 flex items-center justify-center gap-2">
+            <span>Loading vehicle details</span>
+            <span className="inline-flex gap-1">
+              <span className="animate-bounce">.</span>
+              <span className="animate-bounce delay-100">.</span>
+              <span className="animate-bounce delay-200">.</span>
+            </span>
+          </p>
+        </div>
       </div>
     );
-  }
 
   if (bikes.length === 0) {
     return (
