@@ -2,52 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-
-type Vehicle = {
-  _id?: string;
-  id?: string;
-  brand?: string;
-  model?: string;
-  modelName?: string;
-  image?: string;
-  carPicturate?: string;
-  bikeImage?: string;
-  price12?: string;
-  price24?: string;
-  cc?: number;
-  seater?: number;
-  fuelType?: string;
-  transmission?: string;
-  type?: string;
-  category?: string;
-  [key: string]: any;
-};
-
-type BookingPayload = {
-  vehicleId: string;
-  vehicleType: string;
-  vehicleDetails: Vehicle;
-  customer: {
-    name: string;
-    email: string;
-    mobile: string;
-  };
-  rental: {
-    pickupDate: string;
-    pickupTime: string;
-    dropoffDate: string;
-    dropoffTime: string;
-    duration: string;
-    totalPrice: string;
-  };
-};
-
+import { MessageCircle, Phone } from "lucide-react";
 export default function CarDetailsClient({ params }: { params: { id: string } }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [isBike, setIsBike] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -79,12 +41,11 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
         setVehicle(decoded);
         setIsBike(!!bikeParam);
       } else {
-        // If vehicle is not passed in search params, you may fetch by params.id server-side.
-        // For now we assume vehicle data present in search params as per your previous flow.
+        setError("No vehicle data found in URL parameters.");
       }
     } catch (err) {
       console.error("Error decoding vehicle data:", err);
-      setErrorMessage("Failed to load vehicle details.");
+      setError("Failed to decode vehicle data from URL.");
     }
   }, [searchParams]);
 
@@ -196,133 +157,68 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
     const rounded = Math.round(hoursFloat * 10) / 10;
     return `${rounded} hours`;
   };
-
-  const buildBookingPayload = (): BookingPayload | null => {
-    if (!vehicle) return null;
-    const vehicleIdFromParams = params?.id || vehicle._id || vehicle.id || "";
-
-    if (!vehicleIdFromParams) {
-      setErrorMessage("Missing vehicle id.");
-      return null;
-    }
-
-    return {
-      vehicleId: String(vehicleIdFromParams),
-      vehicleType: isBike ? "bike" : "car",
-      vehicleDetails: {
-        brand: vehicle.brand,
-        model: vehicle.model || vehicle.modelName,
-        image: vehicle.carPicturate || vehicle.bikeImage || vehicle.image,
-        type: vehicle.type || vehicle.category,
-        cc: vehicle.cc,
-        seater: vehicle.seater,
-        category: vehicle.category,
-      },
-      customer: {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        mobile: formData.mobile.trim(),
-      },
-      rental: {
-        pickupDate: formData.pickupDate,
-        pickupTime: formData.pickupTime,
-        dropoffDate: formData.dropoffDate,
-        dropoffTime: formData.dropoffTime,
-        duration: formatDurationString(priceDetails.hours),
-        totalPrice: priceDetails.display,
-      },
-    };
+  const handleWhatsApp = () => {
+    window.open("https://wa.me/919090089708", "_blank");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage(null);
-
-    if (!formData.acceptTerms) {
-      setErrorMessage("Please accept the terms and conditions.");
-      return;
-    }
-
-    const duration = calculateDurationHours();
-    if (duration <= 0) {
-      setErrorMessage("Drop-off time must be after pickup time.");
-      return;
-    }
-
-    if (!vehicle) {
-      setErrorMessage("Vehicle data not loaded yet.");
-      return;
-    }
-
-    if (!formData.name || !formData.email || !formData.mobile) {
-      setErrorMessage("Please fill name, email, and mobile.");
-      return;
-    }
-
-    const payload = buildBookingPayload();
-    if (!payload) return;
-
-    setSubmitting(true);
-    try {
-      const res = await fetch("/api/bookings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        console.error("Booking error:", data);
-        setErrorMessage(
-          data?.message || "Failed to create booking. Please try again."
-        );
-        setSubmitting(false);
-        return;
-      }
-
-      // Successful booking — show modal dialog with booking details (no redirect)
-      setBookingResponse(data);
-      setBookingSuccess(true);
-      setSubmitting(false);
-    } catch (err) {
-      console.error("Network error while creating booking:", err);
-      setErrorMessage("Network or server error. Please try later.");
-      setSubmitting(false);
-    }
+  const handlePhone = () => {
+    window.location.href = "tel:+919090089708";
   };
+  // ✅ Loading
+ if (error) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-red-50 via-white to-orange-50 text-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
+          <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-4xl">⚠️</span>
+          </div>
+          <p className="text-red-600 text-xl font-semibold mb-3">
+            Oops! {error}
+          </p>
+          <p className="text-gray-600 text-sm mb-6">
+            We couldn't load the vehicle details. Please try again.
+          </p>
+          <button
+            onClick={() => location.reload()}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-lg hover:scale-105 active:scale-95"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-  const closeModal = () => {
-    setBookingSuccess(false);
-    // Optionally clear form or navigate; keeping on same page per request
-  };
-
-  const copyBookingId = async () => {
-    try {
-      const bookingId =
-        bookingResponse?.booking?._id || bookingResponse?.booking?.id || "";
-      if (!bookingId) return;
-      await navigator.clipboard.writeText(bookingId);
-      // small UI feedback could be added; using alert for simplicity
-      alert("Booking ID copied to clipboard");
-    } catch (err) {
-      console.error("Copy failed", err);
-      alert("Failed to copy. Please copy manually.");
-    }
-  };
-
-  // Loading placeholder while vehicle is not available
+  // ✅ Loading State
   if (!vehicle)
     return (
-      <div className="min-h-screen flex items-center justify-center text-gray-600 bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center text-gray-600 bg-gradient-to-br from-blue-50 via-white to-orange-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-lg">Loading vehicle details...</p>
-          {errorMessage && (
-            <p className="text-sm text-red-600 mt-2">{errorMessage}</p>
-          )}
+          <div className="relative w-24 h-24 mx-auto mb-6">
+            {/* Animated wheel */}
+            <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-t-blue-600 border-r-orange-500 border-b-transparent border-l-transparent animate-spin"></div>
+            {/* Inner hub */}
+            <div className="absolute inset-6 rounded-full bg-gradient-to-br from-blue-600 to-orange-500 flex items-center justify-center">
+              <div className="w-4 h-4 rounded-full bg-white"></div>
+            </div>
+            {/* Spokes effect */}
+            <div className="absolute inset-8 flex items-center justify-center">
+              <div className="w-full h-0.5 bg-white/50 rotate-45"></div>
+              <div className="w-full h-0.5 bg-white/50 -rotate-45 absolute"></div>
+            </div>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            Getting Your Ride Ready
+          </h2>
+          <p className="text-gray-600 flex items-center justify-center gap-2">
+            <span>Loading vehicle details</span>
+            <span className="inline-flex gap-1">
+              <span className="animate-bounce">.</span>
+              <span className="animate-bounce delay-100">.</span>
+              <span className="animate-bounce delay-200">.</span>
+            </span>
+          </p>
         </div>
       </div>
     );
@@ -509,7 +405,7 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
                     onChange={handleChange}
                     min={new Date().toISOString().split("T")[0]}
                     required
-                    className="w-full px-3 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-sm"
+                    className="w-full px-3 py-2.5 bg-gray-100 text-gray-900 border border-gray-300 rounded-lg text-sm [color-scheme:light]"
                   />
                 </div>
                 <div>
@@ -522,7 +418,7 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
                     value={formData.pickupTime}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-lg text-sm"
+                    className="w-full px-3 py-2.5 bg-gray-100 text-gray-900 border border-gray-300 rounded-lg text-sm [color-scheme:light]"
                   />
                 </div>
               </div>
@@ -530,7 +426,7 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-gray-900 text-sm mb-1 font-medium">
-                    Drop off Date
+                    Return Date
                   </label>
                   <input
                     type="date"
@@ -539,12 +435,12 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
                     onChange={handleChange}
                     min={formData.pickupDate}
                     required
-                    className="w-full px-3 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-sm"
+                    className="w-full px-3 py-2.5 bg-gray-100 text-gray-900 border border-gray-300 rounded-lg text-sm [color-scheme:light]"
                   />
                 </div>
                 <div>
                   <label className="block text-gray-900 text-sm mb-1 font-medium">
-                    Drop off Time
+                    Return Time
                   </label>
                   <input
                     type="time"
@@ -552,7 +448,7 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
                     value={formData.dropoffTime}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-lg text-sm"
+                    className="w-full px-3 py-2.5 bg-gray-100 text-gray-900 border border-gray-300 rounded-lg text-sm [color-scheme:light]"
                   />
                 </div>
               </div>
@@ -597,7 +493,7 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
       </div>
 
       {/* Floating Buttons */}
-      <div className="fixed bottom-6 left-6 flex flex-col gap-3 z-50">
+      {/* <div className="fixed bottom-6 left-6 flex flex-col gap-3 z-50">
         <a
           href="tel:+919876543210"
           className="w-12 h-12 bg-green-500 hover:bg-green-600 rounded-full shadow-xl flex items-center justify-center text-white text-xl hover:scale-110 transition-all"
@@ -612,6 +508,25 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
         >
           💬
         </a>
+      </div> */}
+       <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
+        {/* WhatsApp Button */}
+        <button
+          onClick={handleWhatsApp}
+          className="h-14 w-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
+          title="Chat on WhatsApp"
+        >
+          <MessageCircle className="h-6 w-6" />
+        </button>
+
+        {/* Phone Button */}
+        <button
+          onClick={handlePhone}
+          className="h-14 w-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
+          title="Call us"
+        >
+          <Phone className="h-6 w-6" />
+        </button>
       </div>
 
       {/* SUCCESS MODAL (in-page) */}

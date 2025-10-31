@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MessageCircle, Phone } from "lucide-react";
-import {
-  featuredCars,
-  featuredBikes,
-  backgroundImages,
-  galleryImages,
-  services,
-} from "@/lib/data";
+// import {
+//   featuredCars,
+//   featuredBikes,
+//   backgroundImages,
+//   galleryImages,
+//   services,
+// } from "@/lib/data";
 import HeroImage from "@/assets/hero.png";
 import Testimonials from "@/components/testimonial";
 import Gallary from "@/components/gallary";
@@ -39,12 +39,12 @@ export default function Home() {
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % backgroundImages.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentSlide((prev) => (prev + 1) % backgroundImages.length);
+  //   }, 5000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const handleSubmit = () => {
     alert("Searching for available vehicles...");

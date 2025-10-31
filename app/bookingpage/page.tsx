@@ -276,7 +276,7 @@ export default function BookingPage() {
               {/* Drop off Date */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Drop off Date *
+                  Return Date *
                 </label>
                 <input
                   type="date"
@@ -292,7 +292,7 @@ export default function BookingPage() {
               {/* Drop off Time */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Drop off Time*
+                Return Time*
                 </label>
                 <select
                   name="dropTime"
