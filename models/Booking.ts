@@ -25,7 +25,7 @@ export interface IBooking extends Document {
         duration: string;
         totalPrice: string;
     };
-    status: "pending" | "approved" | "rejected";
+    status: "pending" | "approved" | "rejected" | "completed";
     createdAt: Date;
 }
 

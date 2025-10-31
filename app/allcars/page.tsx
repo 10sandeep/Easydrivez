@@ -1,19 +1,106 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import { featuredCars, Car } from "@/lib/data";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+interface Car {
+  _id: string;
+  carPicturate: string;
+  brand: string;
+  modelName: string;
+  seater: number;
+  type: string;
+  fuelType: string;
+  transmission: string;
+  price12: string;
+  price24: string;
+  rating: number;
+  category: string;
+  available: boolean;
+}
 
 export default function AllCars() {
-  const getBookingUrl = (car: Car) => {
+  const router = useRouter();
+  const [cars, setCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // ✅ Fetch all cars from backend
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const res = await fetch("/api/car", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to fetch cars");
+
+        const data = await res.json();
+        if (data.status && data.cars) {
+          setCars(data.cars);
+        } else {
+          throw new Error(data.message || "Unexpected response from server");
+        }
+      } catch (err: any) {
+        console.error("Error fetching cars:", err);
+        setError(err.message || "Something went wrong while fetching cars.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCars();
+  }, []);
+
+  // ✅ Navigate to booking page with car data
+  const handleBookNow = (car: Car) => {
     const carData = encodeURIComponent(JSON.stringify(car));
-    // ✅ Fixed: Consistent URL structure with FeaturedCarsSection
-    return `/booking/${car.id}?car=${carData}`;
+    router.push(`/booking/${car._id}?car=${carData}`);
   };
 
+  // ✅ Render loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white text-black">
+        <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin mb-4"></div>
+        <p className="text-lg font-medium">Loading cars, please wait...</p>
+      </div>
+    );
+  }
+
+  // ✅ Render error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white text-center p-4">
+        <p className="text-red-600 text-xl font-semibold mb-3">
+          Oops! {error}
+        </p>
+        <button
+          onClick={() => location.reload()}
+          className="bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800 transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  // ✅ No cars available
+  if (cars.length === 0) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white text-black">
+        <p className="text-xl font-medium mb-4">No cars available right now 🚗</p>
+        <p className="text-gray-600">
+          Please check back later or contact our support team.
+        </p>
+      </div>
+    );
+  }
+
+  // ✅ Render All Cars Page
   return (
     <div className="bg-white min-h-screen">
-      {/* Hero Section with Faded Background */}
+      {/* Hero Section */}
       <div
         className="relative py-24 bg-cover bg-center"
         style={{
@@ -31,25 +118,24 @@ export default function AllCars() {
         </div>
       </div>
 
-      {/* Featured Cars Section - Simple White Background */}
+      {/* Cars List */}
       <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-black">
-            Featured Cars
+            Available Cars
           </h2>
 
-          {/* 3 Column Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredCars.map((car, idx) => (
+            {cars.map((car) => (
               <div
-                key={idx}
+                key={car._id}
                 className="border border-gray-300 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300"
               >
-                {/* Image Section */}
+                {/* Image */}
                 <div className="relative overflow-hidden bg-gray-100 h-64">
                   <img
-                    src={car.image}
-                    alt={car.name}
+                    src={car.carPicturate}
+                    alt={car.modelName}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute bottom-3 left-3">
@@ -59,56 +145,59 @@ export default function AllCars() {
                   </div>
                 </div>
 
-                {/* Content Section */}
+                {/* Content */}
                 <div className="p-6">
-                  {/* Title and Rating */}
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="text-xl font-bold text-black flex-1">
-                      {car.name}
+                      {car.brand} {car.modelName}
                     </h3>
                     <div className="flex items-center gap-1 ml-2">
                       <svg className="h-4 w-4 fill-black" viewBox="0 0 24 24">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                       </svg>
-                      <span className="text-sm font-bold text-black">4.8</span>
+                      <span className="text-sm font-bold text-black">
+                        {car.rating?.toFixed(1) || "4.8"}
+                      </span>
                     </div>
                   </div>
 
-                  <p className="text-gray-700 mb-4 text-sm">
-                    Premium rental service
+                  <p className="text-gray-700 mb-4 text-sm capitalize">
+                    Category: {car.category}
                   </p>
 
                   {/* Features */}
-                  <div className="flex gap-2 mb-4 flex-wrap">
-                    {car.features.map((f, i) => (
-                      <span
-                        key={i}
-                        className="border border-gray-300 text-black px-3 py-1 rounded text-sm"
-                      >
-                        {f}
-                      </span>
-                    ))}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="border border-gray-300 text-black px-3 py-1 rounded text-sm">
+                      {car.seater} Seater
+                    </span>
+                    <span className="border border-gray-300 text-black px-3 py-1 rounded text-sm">
+                      {car.fuelType}
+                    </span>
+                    <span className="border border-gray-300 text-black px-3 py-1 rounded text-sm">
+                      {car.transmission}
+                    </span>
                   </div>
 
-                  {/* Pricing and Button */}
+                  {/* Pricing + Book Button */}
                   <div className="border-t border-gray-300 pt-4">
                     <div className="flex justify-between items-center mb-3">
                       <div>
-                        <p className="text-sm text-gray-600">from</p>
+                        <p className="text-sm text-gray-600">starting from</p>
                         <p className="text-2xl font-bold text-black">
                           {car.price12}
                         </p>
                         <p className="text-sm text-gray-600">for 12 hours</p>
                       </div>
-                      <Link
-                        href={getBookingUrl(car)}
+                      <button
+                        onClick={() => handleBookNow(car)}
                         className="bg-black hover:bg-gray-800 text-white font-semibold py-2 px-5 rounded transition-colors"
                       >
                         Book Now
-                      </Link>
+                      </button>
                     </div>
                     <p className="text-sm text-gray-700">
-                      24 hours: <span className="font-bold">{car.price24}</span>
+                      24 hours:{" "}
+                      <span className="font-bold">{car.price24}</span>
                     </p>
                   </div>
                 </div>
