@@ -72,7 +72,7 @@ const BookingSchema = new Schema<IBooking>(
         rental: { type: RentalSchema, required: true },
         status: {
             type: String,
-            enum: ["pending", "approved", "rejected"],
+            enum: ["pending", "approved", "rejected", "completed"],
             default: "pending",
         },
     },

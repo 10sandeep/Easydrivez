@@ -3,6 +3,34 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { MessageCircle, Phone } from "lucide-react";
+
+interface Vehicle {
+  // Common fields for both car and bike
+  brand: string;
+  modelName?: string;
+  model?: string;
+  image?: string;
+  carPicturate?: string;
+  bikeImage?: string;
+  type?: string;
+  category?: string;
+  cc?: number;
+  seater?: number;
+  fuelType?: string;
+  transmission?: string;
+  price12?: string;
+  price24?: string;
+  // Add other fields as needed
+}
+
+interface BookingResponse {
+  booking?: {
+    _id?: string;
+    id?: string;
+  };
+  // Add other response fields as needed
+}
+
 export default function CarDetailsClient({ params }: { params: { id: string } }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -27,7 +55,7 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
 
   // Success modal state
   const [bookingSuccess, setBookingSuccess] = useState(false);
-  const [bookingResponse, setBookingResponse] = useState<any | null>(null);
+  const [bookingResponse, setBookingResponse] = useState<BookingResponse | null>(null);
 
   // Decode vehicle passed in search params (car or bike)
   useEffect(() => {
@@ -157,6 +185,7 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
     const rounded = Math.round(hoursFloat * 10) / 10;
     return `${rounded} hours`;
   };
+
   const handleWhatsApp = () => {
     window.open("https://wa.me/919090089708", "_blank");
   };
@@ -164,8 +193,96 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
   const handlePhone = () => {
     window.location.href = "tel:+919090089708";
   };
+
+  const closeModal = () => {
+    setBookingSuccess(false);
+    setBookingResponse(null);
+  };
+
+  const copyBookingId = () => {
+    const bookingId = bookingResponse?.booking?._id || bookingResponse?.booking?.id;
+    if (bookingId) {
+      navigator.clipboard.writeText(bookingId).then(() => {
+        // Optional: Show a toast or alert for copy success
+        console.log("Booking ID copied to clipboard");
+      });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setErrorMessage(null);
+
+    if (!formData.acceptTerms) {
+      setErrorMessage("Please accept the terms and conditions.");
+      setSubmitting(false);
+      return;
+    }
+
+    if (priceDetails.hours <= 0) {
+      setErrorMessage("Please select valid pickup and drop-off times.");
+      setSubmitting(false);
+      return;
+    }
+
+    // Construct the request body
+    const requestBody = {
+      vehicleId: params.id,
+      vehicleType: isBike ? "bike" : "car",
+      vehicleDetails: {
+        brand: vehicle?.brand || "",
+        model: vehicle?.modelName || vehicle?.model || "",
+        image: vehicle?.carPicturate || vehicle?.bikeImage || vehicle?.image || "",
+        type: vehicle?.type || vehicle?.category || "",
+        cc: vehicle?.cc,
+        seater: vehicle?.seater,
+        category: vehicle?.category,
+      },
+      customer: {
+        name: formData.name,
+        email: formData.email,
+        mobile: formData.mobile,
+      },
+      rental: {
+        pickupDate: formData.pickupDate,
+        pickupTime: formData.pickupTime,
+        dropoffDate: formData.dropoffDate,
+        dropoffTime: formData.dropoffTime,
+        duration: formatDurationString(priceDetails.hours),
+        totalPrice: priceDetails.display,
+      },
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setBookingResponse(data);
+      setBookingSuccess(true);
+
+      // Optional: Reset form or redirect after success
+      // setFormData({ ...formData, /* reset fields */ });
+    } catch (error) {
+      console.error("Booking creation failed:", error);
+      setErrorMessage("Failed to create booking. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   // ✅ Loading
- if (error) {
+  if (error) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-red-50 via-white to-orange-50 text-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
@@ -492,24 +609,7 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
         </div>
       </div>
 
-      {/* Floating Buttons */}
-      {/* <div className="fixed bottom-6 left-6 flex flex-col gap-3 z-50">
-        <a
-          href="tel:+919876543210"
-          className="w-12 h-12 bg-green-500 hover:bg-green-600 rounded-full shadow-xl flex items-center justify-center text-white text-xl hover:scale-110 transition-all"
-        >
-          📞
-        </a>
-        <a
-          href="https://wa.me/919876543210"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-12 h-12 bg-green-400 hover:bg-green-500 rounded-full shadow-xl flex items-center justify-center text-white text-xl hover:scale-110 transition-all"
-        >
-          💬
-        </a>
-      </div> */}
-       <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
+      <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
         {/* WhatsApp Button */}
         <button
           onClick={handleWhatsApp}
@@ -586,7 +686,7 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
                 >
                   Copy Booking ID
                 </button>
-{/* 
+                {/* 
                 <button
                   onClick={() => router.push("/my-bookings")}
                   className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"

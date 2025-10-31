@@ -372,6 +372,7 @@ export default function AdminPanel() {
         category: b.category,
       });
     }
+    setEditingVehicle({ item, type });
     setIsFormOpen(true);
   };
 
@@ -386,14 +387,10 @@ export default function AdminPanel() {
       return;
     }
 
-    if (editingVehicle) {
-      // Update
-      const body: any = {
-        id: editingVehicle.item._id,
-      };
+    try {
+      let body: any = {};
 
       if (formType === "car") {
-        const c = editingVehicle.item as Car;
         body.brand = formData.brand;
         body.modelName = formData.model;
         body.carPicturate = formData.image;
@@ -405,7 +402,6 @@ export default function AdminPanel() {
         body.priceFor12Hours = parseInt(formData.priceFor12Hours);
         body.priceFor24Hours = parseInt(formData.priceFor24Hours);
       } else {
-        const b = editingVehicle.item as Bike;
         body.brand = formData.brand;
         body.model = formData.model;
         body.bikeImage = formData.image;
@@ -417,67 +413,33 @@ export default function AdminPanel() {
         body.category = formData.category;
       }
 
-      try {
-        const res = await fetch(`/api/${formType}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        });
-
-        const data = await res.json();
-
-        if (data.status) {
-          fetchVehicles(); // Refresh list
-          alert("Vehicle updated successfully!");
-          setIsFormOpen(false);
-          setEditingVehicle(null);
-        } else {
-          alert("Failed to update vehicle");
-        }
-      } catch (error) {
-        console.error("Error updating vehicle:", error);
-        alert("Error updating vehicle");
+      if (editingVehicle) {
+        // Update
+        body.id = editingVehicle.item._id;
       }
-    } else {
-      // Add new (local state)
-      const newItem: Car | Bike = formType === "car" ? {
-        _id: `temp:${Date.now()}`,
-        brand: formData.brand,
-        modelName: formData.model,
-        carPicturate: formData.image,
-        vehicleType: formData.vehicleType,
-        fuelType: formData.fuelType,
-        transmission: formData.transmission,
-        seatingCapacity: parseInt(formData.seatingCapacity),
-        priceFor12Hours: parseInt(formData.priceFor12Hours),
-        priceFor24Hours: parseInt(formData.priceFor24Hours),
-        available: formData.available,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      } : {
-        _id: `temp:${Date.now()}`,
-        brand: formData.brand,
-        model: formData.model,
-        bikeImage: formData.image,
-        seater: parseInt(formData.seater),
-        type: formData.bikeType,
-        cc: parseInt(formData.cc),
-        rating: parseFloat(formData.rating),
-        category: formData.category,
-        available: formData.available,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
+      // For create, no id in body
 
-      if (formType === "car") {
-        setCars([...cars, newItem as Car]);
+      const res = await fetch(`/api/${formType}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json();
+
+      if (data.status) {
+        fetchVehicles(); // Refresh list
+        alert(editingVehicle ? "Vehicle updated successfully!" : "Vehicle added successfully!");
+        setIsFormOpen(false);
+        setEditingVehicle(null);
       } else {
-        setBikes([...bikes, newItem as Bike]);
+        alert(editingVehicle ? "Failed to update vehicle" : "Failed to add vehicle");
       }
-      alert("Vehicle added successfully!");
-      setIsFormOpen(false);
+    } catch (error) {
+      console.error("Error handling vehicle:", error);
+      alert("Error handling vehicle");
     }
 
     // Reset form
@@ -1035,13 +997,13 @@ export default function AdminPanel() {
                   placeholder="Search bookings..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  className="w-full pl-10 pr-4 py-2.5 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                 />
               </div>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                className="px-4 text-black py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               >
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
@@ -1130,13 +1092,22 @@ export default function AdminPanel() {
                                 </>
                               )}
                               {booking.status === "approved" && (
-                                <button
-                                  onClick={() => updateBookingStatus(booking._id, "completed")}
-                                  className="p-2 hover:bg-purple-50 rounded-lg transition"
-                                  title="Mark as Completed"
-                                >
-                                  <CheckCircle className="h-4 w-4 text-purple-600" />
-                                </button>
+                                <>
+                                  <button
+                                    onClick={() => updateBookingStatus(booking._id, "completed")}
+                                    className="p-2 hover:bg-purple-50 rounded-lg transition"
+                                    title="Mark as Completed"
+                                  >
+                                    <CheckCircle className="h-4 w-4 text-purple-600" />
+                                  </button>
+                                  <button
+                                    onClick={() => updateBookingStatus(booking._id, "rejected")}
+                                    className="p-2 hover:bg-red-50 rounded-lg transition"
+                                    title="Cancel Booking"
+                                  >
+                                    <X className="h-4 w-4 text-red-600" />
+                                  </button>
+                                </>
                               )}
                             </div>
                           </td>
@@ -1605,15 +1576,26 @@ export default function AdminPanel() {
                     </>
                   )}
                   {selectedBooking.status === "approved" && (
-                    <button
-                      onClick={() => {
-                        updateBookingStatus(selectedBooking._id, "completed");
-                        setSelectedBooking(null);
-                      }}
-                      className="flex-1 px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition"
-                    >
-                      Mark as Completed
-                    </button>
+                    <>
+                      <button
+                        onClick={() => {
+                          updateBookingStatus(selectedBooking._id, "completed");
+                          setSelectedBooking(null);
+                        }}
+                        className="flex-1 px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition"
+                      >
+                        Mark as Completed
+                      </button>
+                      <button
+                        onClick={() => {
+                          updateBookingStatus(selectedBooking._id, "rejected");
+                          setSelectedBooking(null);
+                        }}
+                        className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition"
+                      >
+                        Cancel Booking
+                      </button>
+                    </>
                   )}
                 </div>
               </div>

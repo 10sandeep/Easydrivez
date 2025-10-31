@@ -32,14 +32,14 @@ export async function GET(request: Request, { params }: Params) {
     }
 }
 
-// 🧾 PATCH: Approve / Reject Booking
+// 🧾 PATCH: Approve / Reject / Completed Booking
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
     try {
         await ConnectDb();
         const { id } = params;
         const { status } = await req.json();
 
-        if (!["approved", "rejected"].includes(status)) {
+        if (!["approved", "rejected", "completed"].includes(status)) {
             return NextResponse.json(
                 { success: false, message: "Invalid status value" },
                 { status: 400 }
