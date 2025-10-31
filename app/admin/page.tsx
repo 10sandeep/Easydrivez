@@ -1,17 +1,51 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Car, Bike, Users, Package, TrendingUp, Calendar,
   DollarSign, BarChart3, Filter, Download, Search,
   Edit2, Trash2, Eye, Plus, X, CheckCircle, Clock,
-  AlertCircle, FileText
+  AlertCircle, FileText, LogOut, User, Shield
 } from "lucide-react";
-// import {Vehicle,Booking,dummyVehicles,dummyBookings} from '@/lib/data'
-interface Vehicle {
+
+interface Car {
+  _id: string;
+  carPicturate: string;
+  vehicleType: string;
+  brand: string;
+  modelName: string;
+  fuelType: string;
+  transmission: string;
+  seatingCapacity: number;
+  priceFor12Hours: number;
+  priceFor24Hours: number;
+  available: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v?: number;
+}
+
+interface Bike {
+  _id: string;
+  bikeImage: string;
+  brand: string;
+  model: string;
+  seater: number;
+  type: string;
+  cc: number;
+  rating: number;
+  category: string;
+  available: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v?: number;
+}
+
+interface VehicleDisplay {
   id: string;
   name: string;
-  type: string;
+  type: "Car" | "Bike";
   category: string;
   image: string;
   price12: string;
@@ -20,344 +54,249 @@ interface Vehicle {
   fuelType: string;
   seating: string;
   features: string[];
+  available: boolean;
+  rating?: number;
+  cc?: number;
 }
 
 interface Booking {
-  id: string;
+  _id: string;
   vehicleId: string;
-  vehicleName: string;
-  vehicleType: string;
-  customerName: string;
-  customerPhone: string;
-  customerEmail: string;
-  pickupDate: string;
-  returnDate: string;
-  duration: string;
-  totalAmount: string;
-  status: "pending" | "confirmed" | "active" | "completed" | "cancelled";
-  bookingDate: string;
+  vehicleType: "car" | "bike";
+  vehicleDetails: {
+    brand: string;
+    model: string;
+    image?: string;
+    type?: string;
+    cc?: number;
+    seater?: number;
+    category?: string;
+  };
+  customer: {
+    name: string;
+    email: string;
+    mobile: string;
+  };
+  rental: {
+    pickupDate: string;
+    pickupTime: string;
+    dropoffDate: string;
+    dropoffTime: string;
+    duration: string;
+    totalPrice: string;
+  };
+  status: "pending" | "approved" | "rejected" | "completed";
+  createdAt: string;
+  updatedAt?: string;
 }
 
-// Dummy Data
-const dummyVehicles: Vehicle[] = [
-  {
-    id: "vehicle:1",
-    name: "Toyota Fortuner",
-    type: "Car",
-    category: "SUV",
-    image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=400&h=300&fit=crop",
-    price12: "₹2500",
-    price24: "₹4000",
-    pricePerDay: 4000,
-    fuelType: "diesel",
-    seating: "7",
-    features: ["7 Seater", "Automatic", "Diesel"]
-  },
-  {
-    id: "vehicle:2",
-    name: "Honda City",
-    type: "Car",
-    category: "SEDAN",
-    image: "https://images.unsplash.com/photo-1590362891991-f776e747a588?w=400&h=300&fit=crop",
-    price12: "₹1500",
-    price24: "₹2500",
-    pricePerDay: 2500,
-    fuelType: "petrol",
-    seating: "5",
-    features: ["5 Seater", "Manual", "Petrol"]
-  },
-  {
-    id: "vehicle:3",
-    name: "Maruti Swift",
-    type: "Car",
-    category: "HATCHBACK",
-    image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&h=300&fit=crop",
-    price12: "₹1200",
-    price24: "₹2000",
-    pricePerDay: 2000,
-    fuelType: "petrol",
-    seating: "5",
-    features: ["5 Seater", "Manual", "Petrol"]
-  },
-  {
-    id: "vehicle:4",
-    name: "Hyundai Creta",
-    type: "Car",
-    category: "SUV",
-    image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=400&h=300&fit=crop",
-    price12: "₹2000",
-    price24: "₹3500",
-    pricePerDay: 3500,
-    fuelType: "diesel",
-    seating: "5",
-    features: ["5 Seater", "Automatic", "Diesel"]
-  },
-  {
-    id: "vehicle:5",
-    name: "Royal Enfield Classic 350",
-    type: "Bike",
-    category: "CRUISER",
-    image: "https://images.unsplash.com/photo-1558980664-3a031cf67ea8?w=400&h=300&fit=crop",
-    price12: "₹600",
-    price24: "₹1000",
-    pricePerDay: 1000,
-    fuelType: "petrol",
-    seating: "2",
-    features: ["2 Seater", "Manual", "Petrol"]
-  },
-  {
-    id: "vehicle:6",
-    name: "Honda Activa 6G",
-    type: "Bike",
-    category: "SCOOTER",
-    image: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=400&h=300&fit=crop",
-    price12: "₹400",
-    price24: "₹700",
-    pricePerDay: 700,
-    fuelType: "petrol",
-    seating: "2",
-    features: ["2 Seater", "Automatic", "Petrol"]
-  },
-  {
-    id: "vehicle:7",
-    name: "KTM Duke 390",
-    type: "Bike",
-    category: "SPORT",
-    image: "https://images.unsplash.com/photo-1591608971362-f08b2a75731a?w=400&h=300&fit=crop",
-    price12: "₹800",
-    price24: "₹1300",
-    pricePerDay: 1300,
-    fuelType: "petrol",
-    seating: "2",
-    features: ["2 Seater", "Manual", "Petrol"]
-  },
-  {
-    id: "vehicle:8",
-    name: "Yamaha FZ-S",
-    type: "Bike",
-    category: "STANDARD",
-    image: "https://images.unsplash.com/photo-1609630875171-b1321377ee65?w=400&h=300&fit=crop",
-    price12: "₹500",
-    price24: "₹900",
-    pricePerDay: 900,
-    fuelType: "petrol",
-    seating: "2",
-    features: ["2 Seater", "Manual", "Petrol"]
-  },
-  {
-    id: "vehicle:9",
-    name: "BMW 5 Series",
-    type: "Car",
-    category: "LUXURY",
-    image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400&h=300&fit=crop",
-    price12: "₹5000",
-    price24: "₹8000",
-    pricePerDay: 8000,
-    fuelType: "diesel",
-    seating: "5",
-    features: ["5 Seater", "Automatic", "Diesel"]
-  },
-  {
-    id: "vehicle:10",
-    name: "Mahindra Thar",
-    type: "Car",
-    category: "SUV",
-    image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400&h=300&fit=crop",
-    price12: "₹2200",
-    price24: "₹3800",
-    pricePerDay: 3800,
-    fuelType: "diesel",
-    seating: "4",
-    features: ["4 Seater", "Manual", "Diesel"]
-  }
-];
-
-const dummyBookings: Booking[] = [
-  {
-    id: "booking:1",
-    vehicleId: "vehicle:1",
-    vehicleName: "Toyota Fortuner",
-    vehicleType: "Car",
-    customerName: "Rahul Sharma",
-    customerPhone: "+91 98765 43210",
-    customerEmail: "rahul.sharma@email.com",
-    pickupDate: "2025-10-28",
-    returnDate: "2025-10-30",
-    duration: "2 Days",
-    totalAmount: "₹8000",
-    status: "active",
-    bookingDate: "2025-10-25"
-  },
-  {
-    id: "booking:2",
-    vehicleId: "vehicle:2",
-    vehicleName: "Honda City",
-    vehicleType: "Car",
-    customerName: "Priya Patel",
-    customerPhone: "+91 87654 32109",
-    customerEmail: "priya.patel@email.com",
-    pickupDate: "2025-10-27",
-    returnDate: "2025-10-28",
-    duration: "1 Day",
-    totalAmount: "₹2500",
-    status: "pending",
-    bookingDate: "2025-10-26"
-  },
-  {
-    id: "booking:3",
-    vehicleId: "vehicle:5",
-    vehicleName: "Royal Enfield Classic 350",
-    vehicleType: "Bike",
-    customerName: "Amit Kumar",
-    customerPhone: "+91 98765 12345",
-    customerEmail: "amit.kumar@email.com",
-    pickupDate: "2025-10-26",
-    returnDate: "2025-10-27",
-    duration: "1 Day",
-    totalAmount: "₹1000",
-    status: "completed",
-    bookingDate: "2025-10-24"
-  },
-  {
-    id: "booking:4",
-    vehicleId: "vehicle:3",
-    vehicleName: "Maruti Swift",
-    vehicleType: "Car",
-    customerName: "Sneha Reddy",
-    customerPhone: "+91 91234 56789",
-    customerEmail: "sneha.reddy@email.com",
-    pickupDate: "2025-10-29",
-    returnDate: "2025-10-31",
-    duration: "2 Days",
-    totalAmount: "₹4000",
-    status: "confirmed",
-    bookingDate: "2025-10-27"
-  },
-  {
-    id: "booking:5",
-    vehicleId: "vehicle:7",
-    vehicleName: "KTM Duke 390",
-    vehicleType: "Bike",
-    customerName: "Vikram Singh",
-    customerPhone: "+91 99887 76655",
-    customerEmail: "vikram.singh@email.com",
-    pickupDate: "2025-10-27",
-    returnDate: "2025-10-29",
-    duration: "2 Days",
-    totalAmount: "₹2600",
-    status: "active",
-    bookingDate: "2025-10-26"
-  },
-  {
-    id: "booking:6",
-    vehicleId: "vehicle:4",
-    vehicleName: "Hyundai Creta",
-    vehicleType: "Car",
-    customerName: "Anjali Gupta",
-    customerPhone: "+91 98123 45678",
-    customerEmail: "anjali.gupta@email.com",
-    pickupDate: "2025-10-25",
-    returnDate: "2025-10-26",
-    duration: "1 Day",
-    totalAmount: "₹3500",
-    status: "completed",
-    bookingDate: "2025-10-23"
-  },
-  {
-    id: "booking:7",
-    vehicleId: "vehicle:6",
-    vehicleName: "Honda Activa 6G",
-    vehicleType: "Bike",
-    customerName: "Deepak Mehta",
-    customerPhone: "+91 97654 32100",
-    customerEmail: "deepak.mehta@email.com",
-    pickupDate: "2025-10-28",
-    returnDate: "2025-10-28",
-    duration: "12 Hours",
-    totalAmount: "₹400",
-    status: "pending",
-    bookingDate: "2025-10-27"
-  },
-  {
-    id: "booking:8",
-    vehicleId: "vehicle:9",
-    vehicleName: "BMW 5 Series",
-    vehicleType: "Car",
-    customerName: "Rohan Kapoor",
-    customerPhone: "+91 98888 77777",
-    customerEmail: "rohan.kapoor@email.com",
-    pickupDate: "2025-10-24",
-    returnDate: "2025-10-26",
-    duration: "2 Days",
-    totalAmount: "₹16000",
-    status: "completed",
-    bookingDate: "2025-10-22"
-  },
-  {
-    id: "booking:9",
-    vehicleId: "vehicle:8",
-    vehicleName: "Yamaha FZ-S",
-    vehicleType: "Bike",
-    customerName: "Neha Verma",
-    customerPhone: "+91 96543 21098",
-    customerEmail: "neha.verma@email.com",
-    pickupDate: "2025-10-27",
-    returnDate: "2025-10-28",
-    duration: "1 Day",
-    totalAmount: "₹900",
-    status: "active",
-    bookingDate: "2025-10-26"
-  },
-  {
-    id: "booking:10",
-    vehicleId: "vehicle:10",
-    vehicleName: "Mahindra Thar",
-    vehicleType: "Car",
-    customerName: "Karan Malhotra",
-    customerPhone: "+91 95432 10987",
-    customerEmail: "karan.malhotra@email.com",
-    pickupDate: "2025-10-30",
-    returnDate: "2025-11-02",
-    duration: "3 Days",
-    totalAmount: "₹11400",
-    status: "confirmed",
-    bookingDate: "2025-10-27"
-  }
-];
+interface FormData {
+  brand: string;
+  model: string;
+  image: string;
+  available: boolean;
+  vehicleType: string;
+  fuelType: string;
+  transmission: string;
+  seatingCapacity: string;
+  priceFor12Hours: string;
+  priceFor24Hours: string;
+  seater: string;
+  bikeType: string;
+  cc: string;
+  rating: string;
+  category: string;
+}
 
 export default function AdminPanel() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"dashboard" | "vehicles" | "bookings" | "reports">("dashboard");
-  const [vehicles, setVehicles] = useState<Vehicle[]>(dummyVehicles);
-  const [bookings, setBookings] = useState<Booking[]>(dummyBookings);
+  const [cars, setCars] = useState<Car[]>([]);
+  const [bikes, setBikes] = useState<Bike[]>([]);
+  const [vehicleSubTab, setVehicleSubTab] = useState<"car" | "bike">("car");
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
+  const [editingVehicle, setEditingVehicle] = useState<{ item: Car | Bike; type: "car" | "bike" } | null>(null);
+  const [formType, setFormType] = useState<"car" | "bike">("car");
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    type: "car",
-    category: "sedan",
+  const [adminEmail, setAdminEmail] = useState<string>("");
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [bookingsLoading, setBookingsLoading] = useState(true);
+  const [vehiclesLoading, setVehiclesLoading] = useState(true);
+  const [formData, setFormData] = useState<FormData>({
+    brand: "",
+    model: "",
     image: "",
-    price12: "",
-    price24: "",
-    fuelType: "petrol",
-    seating: "5",
-    transmission: "manual",
+    available: true,
+    vehicleType: "",
+    fuelType: "",
+    transmission: "",
+    seatingCapacity: "5",
+    priceFor12Hours: "",
+    priceFor24Hours: "",
+    seater: "2",
+    bikeType: "",
+    cc: "",
+    rating: "",
+    category: "",
   });
 
-  // Statistics Calculations
+  // ✅ Check authentication on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      console.log("🔍 [AdminPanel] Checking authentication...");
+
+      try {
+        const token = localStorage.getItem("adminToken");
+
+        if (!token) {
+          console.log("❌ [AdminPanel] No token found in localStorage");
+          router.push("/adminlogin");
+          return;
+        }
+
+        console.log("🎫 [AdminPanel] Token found, verifying...");
+
+        const res = await fetch("/api/adminverify", {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+          credentials: "include",
+          cache: "no-store",
+        });
+
+        const data = await res.json();
+        console.log("📡 [AdminPanel] Verification response:", data);
+
+        if (data.status && data.admin) {
+          console.log("✅ [AdminPanel] Authentication successful");
+          setAdminEmail(data.admin.email || "admin@example.com");
+          setIsAuthenticated(true);
+        } else {
+          console.log("❌ [AdminPanel] Authentication failed, redirecting...");
+          localStorage.removeItem("adminToken");
+          router.push("/adminlogin");
+        }
+      } catch (error) {
+        console.error("❌ [AdminPanel] Auth check error:", error);
+        localStorage.removeItem("adminToken");
+        router.push("/adminlogin");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  // ✅ Fetch vehicles from API
+  const fetchVehicles = async () => {
+    if (!isAuthenticated) return;
+
+    try {
+      setVehiclesLoading(true);
+      console.log("📡 [AdminPanel] Fetching vehicles...");
+
+      const [carRes, bikeRes] = await Promise.all([
+        fetch("/api/car", { cache: "no-store" }),
+        fetch("/api/bike", { cache: "no-store" })
+      ]);
+
+      const carData = await carRes.json();
+      const bikeData = await bikeRes.json();
+
+      console.log("🚗 [AdminPanel] Cars response:", carData);
+      console.log("🏍️ [AdminPanel] Bikes response:", bikeData);
+
+      if (carData.status && carData.cars) {
+        setCars(carData.cars);
+      }
+      if (bikeData.status && bikeData.bikes) {
+        setBikes(bikeData.bikes);
+      }
+    } catch (error) {
+      console.error("❌ [AdminPanel] Error fetching vehicles:", error);
+    } finally {
+      setVehiclesLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchVehicles();
+  }, [isAuthenticated]);
+
+  // ✅ Fetch bookings from API
+  useEffect(() => {
+    const fetchBookings = async () => {
+      if (!isAuthenticated) return;
+
+      try {
+        setBookingsLoading(true);
+        console.log("📡 [AdminPanel] Fetching bookings...");
+
+        const res = await fetch("/api/bookings", {
+          cache: "no-store",
+        });
+
+        const data = await res.json();
+        console.log("📦 [AdminPanel] Bookings response:", data);
+
+        if (data.success && data.bookings) {
+          setBookings(data.bookings);
+          console.log("✅ [AdminPanel] Bookings loaded:", data.bookings.length);
+        } else {
+          console.error("❌ [AdminPanel] Failed to fetch bookings");
+        }
+      } catch (error) {
+        console.error("❌ [AdminPanel] Error fetching bookings:", error);
+      } finally {
+        setBookingsLoading(false);
+      }
+    };
+
+    fetchBookings();
+  }, [isAuthenticated]);
+
+  // ✅ Logout handler
+  const handleLogout = () => {
+    if (confirm("Are you sure you want to logout?")) {
+      console.log("🚪 [AdminPanel] Logging out...");
+
+      // Clear localStorage
+      localStorage.removeItem("adminToken");
+
+      // Clear cookies
+      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+      console.log("✅ [AdminPanel] Logout successful, redirecting...");
+
+      // Redirect to login
+      window.location.href = "/adminlogin";
+    }
+  };
+
+  // ✅ Calculate Statistics from Real Data
   const stats = {
-    totalVehicles: vehicles.length,
-    totalCars: vehicles.filter(v => v.type.toLowerCase() === "car").length,
-    totalBikes: vehicles.filter(v => v.type.toLowerCase() === "bike").length,
+    totalVehicles: cars.length + bikes.length,
+    totalCars: cars.length,
+    totalBikes: bikes.length,
     totalBookings: bookings.length,
-    activeBookings: bookings.filter(b => b.status === "active").length,
+    activeBookings: bookings.filter(b => b.status === "approved").length,
     completedBookings: bookings.filter(b => b.status === "completed").length,
     pendingBookings: bookings.filter(b => b.status === "pending").length,
+    rejectedBookings: bookings.filter(b => b.status === "rejected").length,
     totalRevenue: bookings
       .filter(b => b.status === "completed")
-      .reduce((sum, b) => sum + parseFloat(b.totalAmount.replace(/[^0-9]/g, "")), 0),
+      .reduce((sum, b) => {
+        const price = b.rental.totalPrice.replace(/[^0-9]/g, "");
+        return sum + parseFloat(price || "0");
+      }, 0),
+    totalCarsBooked: bookings.filter(b => b.vehicleType === "car").length,
+    totalBikesBooked: bookings.filter(b => b.vehicleType === "bike").length,
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -365,83 +304,211 @@ export default function AdminPanel() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    if (!formData.name || !formData.image || !formData.price12 || !formData.price24) {
-      alert("Please fill in all required fields");
-      return;
-    }
-
-    const vehicleId = editingVehicle ? editingVehicle.id : `vehicle:${Date.now()}`;
-    const features = [
-      formData.type === "car" ? `${formData.seating} Seater` : "2 Seater",
-      formData.transmission.charAt(0).toUpperCase() + formData.transmission.slice(1),
-      formData.fuelType.charAt(0).toUpperCase() + formData.fuelType.slice(1),
-    ];
-
-    const newVehicle: Vehicle = {
-      id: vehicleId,
-      name: formData.name,
-      type: formData.type === "car" ? "Car" : "Bike",
-      category: formData.category.toUpperCase(),
-      image: formData.image,
-      price12: formData.price12.startsWith("₹") ? formData.price12 : `₹${formData.price12}`,
-      price24: formData.price24.startsWith("₹") ? formData.price24 : `₹${formData.price24}`,
-      pricePerDay: parseInt(formData.price24.replace(/[^0-9]/g, "")) || 0,
-      fuelType: formData.fuelType,
-      seating: formData.seating,
-      features: features,
-    };
-
-    if (editingVehicle) {
-      setVehicles(vehicles.map(v => v.id === vehicleId ? newVehicle : v));
-      alert("Vehicle updated successfully!");
-    } else {
-      setVehicles([...vehicles, newVehicle]);
-      alert("Vehicle added successfully!");
-    }
-
-    setFormData({
-      name: "", type: "car", category: "sedan", image: "", price12: "", price24: "",
-      fuelType: "petrol", seating: "5", transmission: "manual",
-    });
-    setIsFormOpen(false);
-    setEditingVehicle(null);
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, available: e.target.checked }));
   };
 
-  const handleEdit = (vehicle: Vehicle) => {
-    setEditingVehicle(vehicle);
+  const handleAdd = () => {
+    setEditingVehicle(null);
+    setFormType(vehicleSubTab);
     setFormData({
-      name: vehicle.name,
-      type: vehicle.type.toLowerCase(),
-      category: vehicle.category.toLowerCase(),
-      image: vehicle.image,
-      price12: vehicle.price12.replace("₹", ""),
-      price24: vehicle.price24.replace("₹", ""),
-      fuelType: vehicle.fuelType.toLowerCase(),
-      seating: vehicle.seating,
-      transmission: vehicle.features.some(f => f.toLowerCase().includes("automatic")) ? "automatic" : "manual",
+      brand: "",
+      model: "",
+      image: "",
+      available: true,
+      vehicleType: "",
+      fuelType: "Petrol",
+      transmission: "Automatic",
+      seatingCapacity: "5",
+      priceFor12Hours: "",
+      priceFor24Hours: "",
+      seater: "2",
+      bikeType: "",
+      cc: "",
+      rating: "4.5",
+      category: "",
     });
     setIsFormOpen(true);
   };
 
-  const handleDelete = (vehicleId: string) => {
+  const handleEdit = (item: Car | Bike, type: "car" | "bike") => {
+    setFormType(type);
+    if (type === "car") {
+      const c = item as Car;
+      setFormData({
+        brand: c.brand,
+        model: c.modelName,
+        image: c.carPicturate,
+        available: c.available,
+        vehicleType: c.vehicleType,
+        fuelType: c.fuelType,
+        transmission: c.transmission,
+        seatingCapacity: c.seatingCapacity.toString(),
+        priceFor12Hours: c.priceFor12Hours.toString(),
+        priceFor24Hours: c.priceFor24Hours.toString(),
+        seater: "2",
+        bikeType: "",
+        cc: "",
+        rating: "",
+        category: "",
+      });
+    } else {
+      const b = item as Bike;
+      setFormData({
+        brand: b.brand,
+        model: b.model,
+        image: b.bikeImage,
+        available: b.available,
+        vehicleType: "",
+        fuelType: "",
+        transmission: "",
+        seatingCapacity: "5",
+        priceFor12Hours: "",
+        priceFor24Hours: "",
+        seater: b.seater.toString(),
+        bikeType: b.type,
+        cc: b.cc.toString(),
+        rating: b.rating.toString(),
+        category: b.category,
+      });
+    }
+    setEditingVehicle({ item, type });
+    setIsFormOpen(true);
+  };
+
+  const handleSubmit = async () => {
+    if (!formData.brand || !formData.model || !formData.image) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    if (formType === "car" && (!formData.priceFor12Hours || !formData.priceFor24Hours)) {
+      alert("Please fill in price fields for car");
+      return;
+    }
+
+    try {
+      let body: any = {};
+
+      if (formType === "car") {
+        body.brand = formData.brand;
+        body.modelName = formData.model;
+        body.carPicturate = formData.image;
+        body.available = formData.available;
+        body.vehicleType = formData.vehicleType;
+        body.fuelType = formData.fuelType;
+        body.transmission = formData.transmission;
+        body.seatingCapacity = parseInt(formData.seatingCapacity);
+        body.priceFor12Hours = parseInt(formData.priceFor12Hours);
+        body.priceFor24Hours = parseInt(formData.priceFor24Hours);
+      } else {
+        body.brand = formData.brand;
+        body.model = formData.model;
+        body.bikeImage = formData.image;
+        body.available = formData.available;
+        body.seater = parseInt(formData.seater);
+        body.type = formData.bikeType;
+        body.cc = parseInt(formData.cc);
+        body.rating = parseFloat(formData.rating);
+        body.category = formData.category;
+      }
+
+      if (editingVehicle) {
+        // Update
+        body.id = editingVehicle.item._id;
+      }
+      // For create, no id in body
+
+      const res = await fetch(`/api/${formType}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json();
+
+      if (data.status) {
+        fetchVehicles(); // Refresh list
+        alert(editingVehicle ? "Vehicle updated successfully!" : "Vehicle added successfully!");
+        setIsFormOpen(false);
+        setEditingVehicle(null);
+      } else {
+        alert(editingVehicle ? "Failed to update vehicle" : "Failed to add vehicle");
+      }
+    } catch (error) {
+      console.error("Error handling vehicle:", error);
+      alert("Error handling vehicle");
+    }
+
+    // Reset form
+    setFormData({
+      brand: "",
+      model: "",
+      image: "",
+      available: true,
+      vehicleType: "",
+      fuelType: "",
+      transmission: "",
+      seatingCapacity: "5",
+      priceFor12Hours: "",
+      priceFor24Hours: "",
+      seater: "2",
+      bikeType: "",
+      cc: "",
+      rating: "",
+      category: "",
+    });
+  };
+
+  const handleDelete = (id: string, type: "car" | "bike") => {
     if (confirm("Are you sure you want to delete this vehicle?")) {
-      setVehicles(vehicles.filter(v => v.id !== vehicleId));
+      if (type === "car") {
+        setCars(cars.filter(c => c._id !== id));
+      } else {
+        setBikes(bikes.filter(b => b._id !== id));
+      }
       alert("Vehicle deleted successfully!");
     }
   };
 
-  const updateBookingStatus = (bookingId: string, newStatus: Booking["status"]) => {
-    setBookings(bookings.map(b => b.id === bookingId ? { ...b, status: newStatus } : b));
-    alert("Booking status updated!");
+  // ✅ Update booking status via API
+  const updateBookingStatus = async (bookingId: string, newStatus: "pending" | "approved" | "rejected" | "completed") => {
+    try {
+      console.log(`🔄 [AdminPanel] Updating booking ${bookingId} to ${newStatus}...`);
+
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setBookings(bookings.map(b => b._id === bookingId ? { ...b, status: newStatus } : b));
+        alert(`Booking ${newStatus} successfully!`);
+        console.log("✅ [AdminPanel] Booking updated successfully");
+      } else {
+        alert("Failed to update booking status");
+        console.error("❌ [AdminPanel] Failed to update booking");
+      }
+    } catch (error) {
+      console.error("❌ [AdminPanel] Error updating booking:", error);
+      alert("Error updating booking status");
+    }
   };
 
   const exportReport = () => {
     const reportData = {
       generatedAt: new Date().toISOString(),
       statistics: stats,
-      vehicles: vehicles,
-      bookings: bookings,
+      cars,
+      bikes,
+      bookings,
     };
     const dataStr = JSON.stringify(reportData, null, 2);
     const dataBlob = new Blob([dataStr], { type: "application/json" });
@@ -452,38 +519,109 @@ export default function AdminPanel() {
     link.click();
   };
 
-  const filteredVehicles = vehicles.filter(v =>
-    v.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    v.type.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const mapCarToDisplay = (car: Car): VehicleDisplay => ({
+    id: car._id,
+    name: `${car.brand} ${car.modelName}`,
+    type: "Car",
+    category: car.vehicleType,
+    image: car.carPicturate,
+    price12: `₹${car.priceFor12Hours.toLocaleString()}`,
+    price24: `₹${car.priceFor24Hours.toLocaleString()}`,
+    pricePerDay: car.priceFor24Hours,
+    fuelType: car.fuelType.toLowerCase(),
+    seating: car.seatingCapacity.toString(),
+    features: [
+      `${car.seatingCapacity} Seater`,
+      car.transmission.charAt(0).toUpperCase() + car.transmission.slice(1),
+      car.fuelType.charAt(0).toUpperCase() + car.fuelType.slice(1),
+    ],
+    available: car.available,
+  });
+
+  const mapBikeToDisplay = (bike: Bike): VehicleDisplay => ({
+    id: bike._id,
+    name: `${bike.brand} ${bike.model}`,
+    type: "Bike",
+    category: bike.category,
+    image: bike.bikeImage,
+    price12: `₹${Math.round(bike.cc * 1.5).toLocaleString()}`,
+    price24: `₹${Math.round(bike.cc * 2.5).toLocaleString()}`,
+    pricePerDay: Math.round(bike.cc * 2.5),
+    fuelType: "petrol",
+    seating: bike.seater.toString(),
+    features: [
+      `${bike.seater} Seater`,
+      "Manual",
+      "Petrol",
+      `${bike.cc}cc`,
+      `Rating: ${bike.rating}`,
+    ],
+    available: bike.available,
+    rating: bike.rating,
+    cc: bike.cc,
+  });
+
+  const getFilteredVehicles = (): VehicleDisplay[] => {
+    const list = vehicleSubTab === "car" ? cars : bikes;
+    const searchLower = searchTerm.toLowerCase();
+    return list
+      .filter((item) => {
+        const name = `${item.brand} ${vehicleSubTab === "car" ? (item as Car).modelName : (item as Bike).model}`.toLowerCase();
+        return name.includes(searchLower);
+      })
+      .map((item) =>
+        vehicleSubTab === "car"
+          ? mapCarToDisplay(item as Car)
+          : mapBikeToDisplay(item as Bike)
+      );
+  };
 
   const filteredBookings = bookings.filter(b => {
-    const matchesSearch = b.vehicleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      b.customerName.toLowerCase().includes(searchTerm.toLowerCase());
+    const vehicleName = `${b.vehicleDetails.brand} ${b.vehicleDetails.model}`;
+    const matchesSearch = vehicleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      b.customer.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === "all" || b.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
 
+  // ✅ Show loading screen while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mb-4"></div>
+          <p className="text-gray-600 font-medium">Verifying authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ Don't render anything if not authenticated (will redirect)
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 ">
-          <div
-        className="relative py-20 bg-cover bg-center"
+    <div className="min-h-screen bg-gray-50">
+      <div
+        className="relative py-24 bg-cover bg-center"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&h=400&fit=crop')`,
           backgroundAttachment: "fixed",
         }}
       >
         <div className="max-w-7xl mx-auto px-2 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
-            Admin Pannel
+          <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold text-white mb-4 drop-shadow-lg">
+            Admin Panel
           </h1>
-          {/* <p className="text-lg md:text-xl text-gray-100 drop-shadow-md">
-            Premium car rental services at affordable prices
-          </p> */}
+
+          {/* ✅ Admin Badge in Header */}
+
         </div>
       </div>
+
       <div className="max-w-7xl mx-auto px-4">
-        {/* Sticky Navigation Tabs - Above Content */}
+        {/* Sticky Navigation Tabs with Profile Menu */}
         <div className="bg-white rounded-xl my-14 shadow-sm border border-gray-200 mb-6 sticky top-24 z-40">
           <div className="flex items-center justify-between p-4">
             <nav className="flex gap-2">
@@ -499,8 +637,8 @@ export default function AdminPanel() {
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${activeTab === tab.id
-                        ? "bg-yellow-600 text-white shadow-sm"
-                        : "text-gray-600 hover:bg-gray-100"
+                      ? "bg-yellow-600 text-white shadow-sm"
+                      : "text-gray-600 hover:bg-gray-100"
                       }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -509,13 +647,62 @@ export default function AdminPanel() {
                 );
               })}
             </nav>
-            <button
-              onClick={exportReport}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white rounded-lg transition font-medium shadow-sm"
-            >
-              <Download className="h-4 w-4" />
-              Export Report
-            </button>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={exportReport}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white rounded-lg transition font-medium shadow-sm"
+              >
+                <Download className="h-4 w-4" />
+                Export Report
+              </button>
+
+              {/* ✅ Admin Profile Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
+                >
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+                    <User className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700 hidden md:block">
+                    Admin
+                  </span>
+                </button>
+
+                {/* Dropdown Menu */}
+                {showProfileMenu && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setShowProfileMenu(false)}
+                    ></div>
+                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-50">
+                      <div className="px-4 py-3 border-b border-gray-200">
+                        <p className="text-sm font-semibold text-gray-900">Admin Account</p>
+                        <p className="text-xs text-gray-600 mt-1">{adminEmail}</p>
+                      </div>
+                      <div className="px-2 py-2">
+                        <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-green-50">
+                          <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+                          <span className="text-sm text-green-700 font-medium">Active Session</span>
+                        </div>
+                      </div>
+                      <div className="border-t border-gray-200 mt-2">
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 transition text-sm font-medium"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Logout
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -545,9 +732,9 @@ export default function AdminPanel() {
                   <div>
                     <p className="text-sm text-gray-600 font-medium">Total Bookings</p>
                     <p className="text-3xl font-bold text-gray-900 mt-2">{stats.totalBookings}</p>
-                    <p className="text-xs text-green-600 mt-3 flex items-center gap-1">
-                      <TrendingUp className="h-3 w-3" />
-                      +12% from last month
+                    <p className="text-xs text-gray-600 mt-3 flex items-center gap-1">
+                      <Car className="h-3 w-3" />
+                      {stats.totalCarsBooked} Cars | {stats.totalBikesBooked} Bikes
                     </p>
                   </div>
                   <div className="bg-green-100 p-3 rounded-lg">
@@ -592,64 +779,85 @@ export default function AdminPanel() {
               {/* Recent Bookings */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Bookings</h3>
-                <div className="space-y-3">
-                  {bookings.slice(0, 5).map((booking) => (
-                    <div key={booking.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-semibold text-gray-900 text-sm">{booking.customerName}</p>
-                        <p className="text-xs text-gray-600">{booking.vehicleName}</p>
-                      </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${booking.status === "completed" ? "bg-green-100 text-green-700" :
-                          booking.status === "active" ? "bg-blue-100 text-yellow-700" :
+                {bookingsLoading ? (
+                  <div className="text-center py-8">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
+                    <p className="text-sm text-gray-600 mt-2">Loading bookings...</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {bookings.slice(0, 5).map((booking) => (
+                      <div key={booking._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                          <p className="font-semibold text-gray-900 text-sm">{booking.customer.name}</p>
+                          <p className="text-xs text-gray-600">{booking.vehicleDetails.brand} {booking.vehicleDetails.model}</p>
+                        </div>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${booking.status === "completed" ? "bg-green-100 text-green-700" :
+                          booking.status === "approved" ? "bg-blue-100 text-blue-700" :
                             booking.status === "pending" ? "bg-yellow-100 text-yellow-700" :
-                              booking.status === "confirmed" ? "bg-cyan-100 text-cyan-700" :
-                                "bg-gray-100 text-gray-700"
-                        }`}>
-                        {booking.status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                              "bg-red-100 text-red-700"
+                          }`}>
+                          {booking.status}
+                        </span>
+                      </div>
+                    ))}
+                    {bookings.length === 0 && (
+                      <p className="text-center text-gray-500 py-8">No bookings found</p>
+                    )}
+                  </div>
+                )}
               </div>
 
-              {/* Vehicle Status */}
+              {/* Booking Status Overview */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Fleet Overview</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Booking Status Overview</h3>
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="text-gray-600">Cars</span>
-                      <span className="font-semibold text-gray-900">{stats.totalCars} / {stats.totalVehicles}</span>
+                      <span className="text-gray-600">Pending</span>
+                      <span className="font-semibold text-gray-900">{stats.pendingBookings}</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-yellow-600 h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${stats.totalBookings > 0 ? (stats.pendingBookings / stats.totalBookings) * 100 : 0}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-gray-600">Approved/Active</span>
+                      <span className="font-semibold text-gray-900">{stats.activeBookings}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-blue-600 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${(stats.totalCars / stats.totalVehicles) * 100}%` }}
+                        style={{ width: `${stats.totalBookings > 0 ? (stats.activeBookings / stats.totalBookings) * 100 : 0}%` }}
                       ></div>
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="text-gray-600">Bikes</span>
-                      <span className="font-semibold text-gray-900">{stats.totalBikes} / {stats.totalVehicles}</span>
+                      <span className="text-gray-600">Completed</span>
+                      <span className="font-semibold text-gray-900">{stats.completedBookings}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="bg-purple-600 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${(stats.totalBikes / stats.totalVehicles) * 100}%` }}
+                        className="bg-green-600 h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${stats.totalBookings > 0 ? (stats.completedBookings / stats.totalBookings) * 100 : 0}%` }}
                       ></div>
                     </div>
                   </div>
-                  <div className="pt-4 border-t border-gray-200">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-3 bg-green-50 rounded-lg">
-                        <p className="text-2xl font-bold text-green-600">{stats.activeBookings}</p>
-                        <p className="text-xs text-gray-600 mt-1">On Rent</p>
-                      </div>
-                      <div className="text-center p-3 bg-blue-50 rounded-lg">
-                        <p className="text-2xl font-bold text-blue-600">{stats.totalVehicles - stats.activeBookings}</p>
-                        <p className="text-xs text-gray-600 mt-1">Available</p>
-                      </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-gray-600">Rejected</span>
+                      <span className="font-semibold text-gray-900">{stats.rejectedBookings}</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-red-600 h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${stats.totalBookings > 0 ? (stats.rejectedBookings / stats.totalBookings) * 100 : 0}%` }}
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -673,63 +881,108 @@ export default function AdminPanel() {
                 />
               </div>
               <button
-                onClick={() => setIsFormOpen(true)}
+                onClick={handleAdd}
                 className="flex items-center gap-2 px-4 py-2.5 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition font-medium shadow-sm"
               >
                 <Plus className="h-4 w-4" />
-                Add Vehicle
+                Add {vehicleSubTab === "car" ? "Car" : "Bike"}
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredVehicles.map((vehicle) => (
-                <div key={vehicle.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
-                  <div className="relative h-48">
-                    <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-cover" />
-                    <span className="absolute top-3 left-3 px-3 py-1 bg-white rounded-full text-xs font-semibold text-gray-900 shadow-sm">
-                      {vehicle.type}
-                    </span>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-bold text-gray-900 text-lg mb-1">{vehicle.name}</h3>
-                    <p className="text-sm text-gray-600 mb-3">{vehicle.category}</p>
-                    <div className="flex gap-2 mb-3 flex-wrap">
-                      {vehicle.features.map((f, i) => (
-                        <span key={i} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
-                          {f}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex justify-between items-center pt-3 border-t border-gray-200">
-                      <div>
-                        <p className="text-xs text-gray-600">12 hrs</p>
-                        <p className="font-bold text-gray-900">{vehicle.price12}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-600">24 hrs</p>
-                        <p className="font-bold text-gray-900">{vehicle.price24}</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-2 mt-4">
-                      <button
-                        onClick={() => handleEdit(vehicle)}
-                        className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition text-sm font-medium"
-                      >
-                        <Edit2 className="h-4 w-4" />
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(vehicle.id)}
-                        className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition text-sm font-medium"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="flex gap-2 mb-6">
+              <button
+                onClick={() => setVehicleSubTab("car")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${vehicleSubTab === "car"
+                  ? "bg-yellow-600 text-white shadow-sm"
+                  : "text-gray-600 hover:bg-gray-100"
+                  }`}
+              >
+                <Car className="h-4 w-4" />
+                Cars ({cars.length})
+              </button>
+              <button
+                onClick={() => setVehicleSubTab("bike")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${vehicleSubTab === "bike"
+                  ? "bg-yellow-600 text-white shadow-sm"
+                  : "text-gray-600 hover:bg-gray-100"
+                  }`}
+              >
+                <Bike className="h-4 w-4" />
+                Bikes ({bikes.length})
+              </button>
             </div>
+
+            {vehiclesLoading ? (
+              <div className="text-center py-8">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600 mx-auto mb-4"></div>
+                <p className="text-sm text-gray-600">Loading vehicles...</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {getFilteredVehicles().map((vehicle) => {
+                  const originalItem = vehicleSubTab === "car"
+                    ? cars.find(c => c._id === vehicle.id)
+                    : bikes.find(b => b._id === vehicle.id);
+                  return (
+                    <div key={vehicle.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition relative">
+                      <div className="relative h-48">
+                        <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-cover" />
+                        <span className="absolute top-3 left-3 px-3 py-1 bg-white rounded-full text-xs font-semibold text-gray-900 shadow-sm">
+                          {vehicle.type}
+                        </span>
+                        {!vehicle.available && (
+                          <span className="absolute top-3 right-3 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                            Unavailable
+                          </span>
+                        )}
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-bold text-gray-900 text-lg mb-1">{vehicle.name}</h3>
+                        <p className="text-sm text-gray-600 mb-3">{vehicle.category}</p>
+                        <div className="flex gap-2 mb-3 flex-wrap">
+                          {vehicle.features.map((f, i) => (
+                            <span key={i} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                              {f}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="flex justify-between items-center pt-3 border-t border-gray-200">
+                          <div>
+                            <p className="text-xs text-gray-600">12 hrs</p>
+                            <p className="font-bold text-gray-900">{vehicle.price12}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-600">24 hrs</p>
+                            <p className="font-bold text-gray-900">{vehicle.price24}</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2 mt-4">
+                          <button
+                            onClick={() => originalItem && handleEdit(originalItem, vehicleSubTab)}
+                            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition text-sm font-medium"
+                          >
+                            <Edit2 className="h-4 w-4" />
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(vehicle.id, vehicleSubTab)}
+                            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition text-sm font-medium"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+                {getFilteredVehicles().length === 0 && (
+                  <div className="col-span-full text-center py-12">
+                    <p className="text-gray-500">No {vehicleSubTab} found</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
@@ -744,95 +997,132 @@ export default function AdminPanel() {
                   placeholder="Search bookings..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  className="w-full pl-10 pr-4 py-2.5 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                 />
               </div>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                className="px-4 text-black py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               >
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="active">Active</option>
+                <option value="approved">Approved</option>
                 <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
+                <option value="rejected">Rejected</option>
               </select>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
-                    <tr>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Booking ID</th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Customer</th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Vehicle</th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Duration</th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Amount</th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {filteredBookings.map((booking) => (
-                      <tr key={booking.id} className="hover:bg-gray-50 transition">
-                        <td className="px-6 py-4">
-                          <p className="text-sm font-medium text-gray-900">#{booking.id.split(':')[1]}</p>
-                          <p className="text-xs text-gray-600">{new Date(booking.bookingDate).toLocaleDateString()}</p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <p className="text-sm font-medium text-gray-900">{booking.customerName}</p>
-                          <p className="text-xs text-gray-600">{booking.customerPhone}</p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <p className="text-sm font-medium text-gray-900">{booking.vehicleName}</p>
-                          <p className="text-xs text-gray-600">{booking.vehicleType}</p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <p className="text-sm text-gray-900">{booking.duration}</p>
-                          <p className="text-xs text-gray-600">{booking.pickupDate} to {booking.returnDate}</p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <p className="text-sm font-bold text-gray-900">{booking.totalAmount}</p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${booking.status === "completed" ? "bg-green-100 text-green-700" :
-                              booking.status === "active" ? "bg-blue-100 text-blue-700" :
-                                booking.status === "confirmed" ? "bg-cyan-100 text-cyan-700" :
-                                  booking.status === "pending" ? "bg-yellow-100 text-yellow-700" :
-                                    "bg-red-100 text-red-700"
-                            }`}>
-                            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => setSelectedBooking(booking)}
-                              className="p-2 hover:bg-gray-100 rounded-lg transition"
-                              title="View Details"
-                            >
-                              <Eye className="h-4 w-4 text-gray-600" />
-                            </button>
-                            {booking.status === "pending" && (
-                              <button
-                                onClick={() => updateBookingStatus(booking.id, "confirmed")}
-                                className="p-2 hover:bg-green-50 rounded-lg transition"
-                                title="Confirm Booking"
-                              >
-                                <CheckCircle className="h-4 w-4 text-green-600" />
-                              </button>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {bookingsLoading ? (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mb-4"></div>
+                <p className="text-gray-600 font-medium">Loading bookings...</p>
               </div>
-            </div>
+            ) : (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Booking ID</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Customer</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Vehicle</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Duration</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Amount</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {filteredBookings.map((booking) => (
+                        <tr key={booking._id} className="hover:bg-gray-50 transition">
+                          <td className="px-6 py-4">
+                            <p className="text-sm font-medium text-gray-900">#{booking._id.slice(-6)}</p>
+                            <p className="text-xs text-gray-600">{new Date(booking.createdAt).toLocaleDateString()}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="text-sm font-medium text-gray-900">{booking.customer.name}</p>
+                            <p className="text-xs text-gray-600">{booking.customer.mobile}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="text-sm font-medium text-gray-900">{booking.vehicleDetails.brand} {booking.vehicleDetails.model}</p>
+                            <p className="text-xs text-gray-600">{booking.vehicleType}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="text-sm text-gray-900">{booking.rental.duration}</p>
+                            <p className="text-xs text-gray-600">{booking.rental.pickupDate}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="text-sm font-bold text-gray-900">{booking.rental.totalPrice}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${booking.status === "completed" ? "bg-green-100 text-green-700" :
+                              booking.status === "approved" ? "bg-blue-100 text-blue-700" :
+                                booking.status === "pending" ? "bg-yellow-100 text-yellow-700" :
+                                  "bg-red-100 text-red-700"
+                              }`}>
+                              {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => setSelectedBooking(booking)}
+                                className="p-2 hover:bg-gray-100 rounded-lg transition"
+                                title="View Details"
+                              >
+                                <Eye className="h-4 w-4 text-gray-600" />
+                              </button>
+                              {booking.status === "pending" && (
+                                <>
+                                  <button
+                                    onClick={() => updateBookingStatus(booking._id, "approved")}
+                                    className="p-2 hover:bg-green-50 rounded-lg transition"
+                                    title="Approve Booking"
+                                  >
+                                    <CheckCircle className="h-4 w-4 text-green-600" />
+                                  </button>
+                                  <button
+                                    onClick={() => updateBookingStatus(booking._id, "rejected")}
+                                    className="p-2 hover:bg-red-50 rounded-lg transition"
+                                    title="Reject Booking"
+                                  >
+                                    <X className="h-4 w-4 text-red-600" />
+                                  </button>
+                                </>
+                              )}
+                              {booking.status === "approved" && (
+                                <>
+                                  <button
+                                    onClick={() => updateBookingStatus(booking._id, "completed")}
+                                    className="p-2 hover:bg-purple-50 rounded-lg transition"
+                                    title="Mark as Completed"
+                                  >
+                                    <CheckCircle className="h-4 w-4 text-purple-600" />
+                                  </button>
+                                  <button
+                                    onClick={() => updateBookingStatus(booking._id, "rejected")}
+                                    className="p-2 hover:bg-red-50 rounded-lg transition"
+                                    title="Cancel Booking"
+                                  >
+                                    <X className="h-4 w-4 text-red-600" />
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {filteredBookings.length === 0 && (
+                    <div className="text-center py-12">
+                      <p className="text-gray-500">No bookings found</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -855,15 +1145,15 @@ export default function AdminPanel() {
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <p className="text-xs text-gray-600 mb-1">From Cars</p>
                       <p className="text-lg font-bold text-gray-900">
-                        ₹{bookings.filter(b => b.vehicleType.toLowerCase() === "car" && b.status === "completed")
-                          .reduce((sum, b) => sum + parseFloat(b.totalAmount.replace(/[^0-9]/g, "")), 0).toLocaleString()}
+                        ₹{bookings.filter(b => b.vehicleType === "car" && b.status === "completed")
+                          .reduce((sum, b) => sum + parseFloat(b.rental.totalPrice.replace(/[^0-9]/g, "") || "0"), 0).toLocaleString()}
                       </p>
                     </div>
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <p className="text-xs text-gray-600 mb-1">From Bikes</p>
                       <p className="text-lg font-bold text-gray-900">
-                        ₹{bookings.filter(b => b.vehicleType.toLowerCase() === "bike" && b.status === "completed")
-                          .reduce((sum, b) => sum + parseFloat(b.totalAmount.replace(/[^0-9]/g, "")), 0).toLocaleString()}
+                        ₹{bookings.filter(b => b.vehicleType === "bike" && b.status === "completed")
+                          .reduce((sum, b) => sum + parseFloat(b.rental.totalPrice.replace(/[^0-9]/g, "") || "0"), 0).toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -877,8 +1167,9 @@ export default function AdminPanel() {
                   {[
                     { label: "Total Bookings", value: stats.totalBookings, color: "text-blue-600" },
                     { label: "Completed", value: stats.completedBookings, color: "text-green-600" },
-                    { label: "Active", value: stats.activeBookings, color: "text-orange-600" },
+                    { label: "Active/Approved", value: stats.activeBookings, color: "text-orange-600" },
                     { label: "Pending", value: stats.pendingBookings, color: "text-yellow-600" },
+                    { label: "Rejected", value: stats.rejectedBookings, color: "text-red-600" },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <span className="text-sm text-gray-600">{item.label}</span>
@@ -895,7 +1186,7 @@ export default function AdminPanel() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
                   <Users className="h-8 w-8 text-blue-600 mx-auto mb-3" />
-                  <p className="text-3xl font-bold text-blue-600">{new Set(bookings.map(b => b.customerPhone)).size}</p>
+                  <p className="text-3xl font-bold text-blue-600">{new Set(bookings.map(b => b.customer.mobile)).size}</p>
                   <p className="text-sm text-gray-600 mt-2">Total Customers</p>
                 </div>
                 <div className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
@@ -905,287 +1196,413 @@ export default function AdminPanel() {
                 </div>
                 <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
                   <Package className="h-8 w-8 text-purple-600 mx-auto mb-3" />
-                  <p className="text-3xl font-bold text-purple-600">₹{stats.totalRevenue > 0 ? Math.round(stats.totalRevenue / stats.completedBookings).toLocaleString() : 0}</p>
+                  <p className="text-3xl font-bold text-purple-600">₹{stats.totalRevenue > 0 && stats.completedBookings > 0 ? Math.round(stats.totalRevenue / stats.completedBookings).toLocaleString() : 0}</p>
                   <p className="text-sm text-gray-600 mt-2">Avg. Booking Value</p>
                 </div>
               </div>
             </div>
           </div>
         )}
-      </div>
 
-      {/* Vehicle Form Modal */}
-      {isFormOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full my-8">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900">
-                {editingVehicle ? "Edit Vehicle" : "Add New Vehicle"}
-              </h2>
-              <button
-                onClick={() => {
-                  setIsFormOpen(false);
-                  setEditingVehicle(null);
-                }}
-                className="p-2 hover:bg-gray-100 rounded-lg transition"
-              >
-                <X className="h-5 w-5 text-gray-600" />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Vehicle Name *</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Toyota Fortuner"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Type *</label>
-                  <select
-                    name="type"
-                    value={formData.type}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="car">Car</option>
-                    <option value="bike">Bike</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
-                  <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {formData.type === "car" ? (
-                      <>
-                        <option value="sedan">Sedan</option>
-                        <option value="suv">SUV</option>
-                        <option value="hatchback">Hatchback</option>
-                        <option value="luxury">Luxury</option>
-                      </>
-                    ) : (
-                      <>
-                        <option value="standard">Standard</option>
-                        <option value="sport">Sport</option>
-                        <option value="cruiser">Cruiser</option>
-                        <option value="scooter">Scooter</option>
-                      </>
-                    )}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Fuel Type *</label>
-                  <select
-                    name="fuelType"
-                    value={formData.fuelType}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="petrol">Petrol</option>
-                    <option value="diesel">Diesel</option>
-                    <option value="electric">Electric</option>
-                    <option value="hybrid">Hybrid</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">12 Hours Price *</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
-                    <input
-                      type="text"
-                      name="price12"
-                      value={formData.price12}
-                      onChange={handleChange}
-                      placeholder="1200"
-                      className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">24 Hours Price *</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
-                    <input
-                      type="text"
-                      name="price24"
-                      value={formData.price24}
-                      onChange={handleChange}
-                      placeholder="2000"
-                      className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                </div>
-
-                {formData.type === "car" && (
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Seating *</label>
-                    <select
-                      name="seating"
-                      value={formData.seating}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="2">2 Seater</option>
-                      <option value="4">4 Seater</option>
-                      <option value="5">5 Seater</option>
-                      <option value="7">7 Seater</option>
-                    </select>
-                  </div>
-                )}
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Transmission *</label>
-                  <select
-                    name="transmission"
-                    value={formData.transmission}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="manual">Manual</option>
-                    <option value="automatic">Automatic</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Image URL *</label>
-                <input
-                  type="url"
-                  name="image"
-                  value={formData.image}
-                  onChange={handleChange}
-                  placeholder="https://example.com/image.jpg"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                {formData.image && (
-                  <img src={formData.image} alt="Preview" className="mt-3 h-32 w-full object-cover rounded-lg" />
-                )}
-              </div>
-
-              <div className="flex gap-3 pt-4">
+        {/* Vehicle Form Modal */}
+        {isFormOpen && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full my-8">
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {editingVehicle ? `Edit ${formType.charAt(0).toUpperCase() + formType.slice(1)}` : `Add New ${formType.charAt(0).toUpperCase() + formType.slice(1)}`} Vehicle
+                </h2>
                 <button
                   onClick={() => {
                     setIsFormOpen(false);
                     setEditingVehicle(null);
                   }}
-                  className="flex-1 px-4 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold rounded-lg transition"
+                  className="p-2 hover:bg-gray-100 rounded-lg transition"
                 >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition"
-                >
-                  {editingVehicle ? "Update Vehicle" : "Add Vehicle"}
+                  <X className="h-5 w-5 text-gray-600" />
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* Booking Details Modal */}
-      {selectedBooking && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900">Booking Details</h2>
-              <button
-                onClick={() => setSelectedBooking(null)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition"
-              >
-                <X className="h-5 w-5 text-gray-600" />
-              </button>
-            </div>
+              <div className="p-6 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+                <div className="space-y-4">
+                  {/* Common Fields */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Brand *</label>
+                      <input
+                        type="text"
+                        name="brand"
+                        value={formData.brand}
+                        onChange={handleChange}
+                        placeholder="Honda"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Model *</label>
+                      <input
+                        type="text"
+                        name="model"
+                        value={formData.model}
+                        onChange={handleChange}
+                        placeholder="City ZX"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
 
-            <div className="p-6 space-y-6">
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Booking ID</p>
-                  <p className="font-semibold text-gray-900">#{selectedBooking.id.split(':')[1]}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Status</p>
-                  <span className={`inline-flex px-3 py-1 rounded-full text-sm font-semibold ${selectedBooking.status === "completed" ? "bg-green-100 text-green-700" :
-                      selectedBooking.status === "active" ? "bg-blue-100 text-blue-700" :
-                        selectedBooking.status === "confirmed" ? "bg-cyan-100 text-cyan-700" :
-                          "bg-yellow-100 text-yellow-700"
-                    }`}>
-                    {selectedBooking.status.charAt(0).toUpperCase() + selectedBooking.status.slice(1)}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Customer Name</p>
-                  <p className="font-semibold text-gray-900">{selectedBooking.customerName}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Phone</p>
-                  <p className="font-semibold text-gray-900">{selectedBooking.customerPhone}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Email</p>
-                  <p className="font-semibold text-gray-900">{selectedBooking.customerEmail}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Vehicle</p>
-                  <p className="font-semibold text-gray-900">{selectedBooking.vehicleName}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Pickup Date</p>
-                  <p className="font-semibold text-gray-900">{selectedBooking.pickupDate}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Return Date</p>
-                  <p className="font-semibold text-gray-900">{selectedBooking.returnDate}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Duration</p>
-                  <p className="font-semibold text-gray-900">{selectedBooking.duration}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Amount</p>
-                  <p className="text-2xl font-bold text-green-600">{selectedBooking.totalAmount}</p>
-                </div>
-              </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Image URL *</label>
+                    <input
+                      type="url"
+                      name="image"
+                      value={formData.image}
+                      onChange={handleChange}
+                      placeholder="https://example.com/image.jpg"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    {formData.image && (
+                      <img src={formData.image} alt="Preview" className="mt-3 h-32 w-full object-cover rounded-lg" />
+                    )}
+                  </div>
 
-              <div className="flex gap-3 pt-4 border-t border-gray-200">
-                <button
-                  onClick={() => setSelectedBooking(null)}
-                  className="flex-1 px-4 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold rounded-lg transition"
-                >
-                  Close
-                </button>
-                {selectedBooking.status === "pending" && (
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Available</label>
+                    <input
+                      type="checkbox"
+                      checked={formData.available}
+                      onChange={handleCheckboxChange}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                  </div>
+
+                  {/* Car Specific Fields */}
+                  {formType === "car" && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Vehicle Type *</label>
+                        <select
+                          name="vehicleType"
+                          value={formData.vehicleType}
+                          onChange={handleChange}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Select Type</option>
+                          <option value="Sedan">Sedan</option>
+                          <option value="SUV">SUV</option>
+                          <option value="Hatchback">Hatchback</option>
+                          <option value="Luxury">Luxury</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Fuel Type *</label>
+                        <select
+                          name="fuelType"
+                          value={formData.fuelType}
+                          onChange={handleChange}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Select Fuel</option>
+                          <option value="Petrol">Petrol</option>
+                          <option value="Diesel">Diesel</option>
+                          <option value="Electric">Electric</option>
+                          <option value="Hybrid">Hybrid</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Transmission *</label>
+                        <select
+                          name="transmission"
+                          value={formData.transmission}
+                          onChange={handleChange}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Select Transmission</option>
+                          <option value="Manual">Manual</option>
+                          <option value="Automatic">Automatic</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Seating Capacity *</label>
+                        <select
+                          name="seatingCapacity"
+                          value={formData.seatingCapacity}
+                          onChange={handleChange}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="4">4 Seater</option>
+                          <option value="5">5 Seater</option>
+                          <option value="7">7 Seater</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">12 Hours Price *</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
+                          <input
+                            type="text"
+                            name="priceFor12Hours"
+                            value={formData.priceFor12Hours}
+                            onChange={handleChange}
+                            placeholder="2000"
+                            className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">24 Hours Price *</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
+                          <input
+                            type="text"
+                            name="priceFor24Hours"
+                            value={formData.priceFor24Hours}
+                            onChange={handleChange}
+                            placeholder="3500"
+                            className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Bike Specific Fields */}
+                  {formType === "bike" && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Bike Type *</label>
+                        <select
+                          name="bikeType"
+                          value={formData.bikeType}
+                          onChange={handleChange}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Select Type</option>
+                          <option value="Cruise">Cruise</option>
+                          <option value="Standard">Standard</option>
+                          <option value="Sport">Sport</option>
+                          <option value="Scooter">Scooter</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                        <select
+                          name="category"
+                          value={formData.category}
+                          onChange={handleChange}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Select Category</option>
+                          <option value="Premium">Premium</option>
+                          <option value="Standard">Standard</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Seater *</label>
+                        <select
+                          name="seater"
+                          value={formData.seater}
+                          onChange={handleChange}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="1">1 Seater</option>
+                          <option value="2">2 Seater</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">CC *</label>
+                        <input
+                          type="number"
+                          name="cc"
+                          value={formData.cc}
+                          onChange={handleChange}
+                          placeholder="350"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Rating</label>
+                        <input
+                          type="number"
+                          name="rating"
+                          value={formData.rating}
+                          onChange={handleChange}
+                          min="0"
+                          max="5"
+                          step="0.1"
+                          placeholder="4.8"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex gap-3 pt-4">
                   <button
                     onClick={() => {
-                      updateBookingStatus(selectedBooking.id, "confirmed");
-                      setSelectedBooking(null);
+                      setIsFormOpen(false);
+                      setEditingVehicle(null);
                     }}
-                    className="flex-1 px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition"
+                    className="flex-1 px-4 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold rounded-lg transition"
                   >
-                    Confirm Booking
+                    Cancel
                   </button>
-                )}
+                  <button
+                    onClick={handleSubmit}
+                    className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition"
+                  >
+                    {editingVehicle ? "Update Vehicle" : "Add Vehicle"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Booking Details Modal */}
+        {selectedBooking && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
+                <h2 className="text-2xl font-bold text-gray-900">Booking Details</h2>
+                <button
+                  onClick={() => setSelectedBooking(null)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition"
+                >
+                  <X className="h-5 w-5 text-gray-600" />
+                </button>
+              </div>
+
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Booking ID</p>
+                    <p className="font-semibold text-gray-900">#{selectedBooking._id.slice(-8)}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Status</p>
+                    <span className={`inline-flex px-3 py-1 rounded-full text-sm font-semibold ${selectedBooking.status === "completed" ? "bg-green-100 text-green-700" :
+                      selectedBooking.status === "approved" ? "bg-blue-100 text-blue-700" :
+                        selectedBooking.status === "pending" ? "bg-yellow-100 text-yellow-700" :
+                          "bg-red-100 text-red-700"
+                      }`}>
+                      {selectedBooking.status.charAt(0).toUpperCase() + selectedBooking.status.slice(1)}
+                    </span>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-sm text-gray-600 mb-1">Vehicle</p>
+                    <div className="flex items-center gap-3">
+                      {selectedBooking.vehicleDetails.image && (
+                        <img
+                          src={selectedBooking.vehicleDetails.image}
+                          alt={`${selectedBooking.vehicleDetails.brand} ${selectedBooking.vehicleDetails.model}`}
+                          className="w-20 h-20 object-cover rounded-lg"
+                        />
+                      )}
+                      <div>
+                        <p className="font-semibold text-gray-900">{selectedBooking.vehicleDetails.brand} {selectedBooking.vehicleDetails.model}</p>
+                        <p className="text-sm text-gray-600">{selectedBooking.vehicleType} | {selectedBooking.vehicleDetails.category}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Customer Name</p>
+                    <p className="font-semibold text-gray-900">{selectedBooking.customer.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Phone</p>
+                    <p className="font-semibold text-gray-900">{selectedBooking.customer.mobile}</p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-sm text-gray-600 mb-1">Email</p>
+                    <p className="font-semibold text-gray-900">{selectedBooking.customer.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Pickup Date & Time</p>
+                    <p className="font-semibold text-gray-900">{selectedBooking.rental.pickupDate} at {selectedBooking.rental.pickupTime}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Return Date & Time</p>
+                    <p className="font-semibold text-gray-900">{selectedBooking.rental.dropoffDate} at {selectedBooking.rental.dropoffTime}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Duration</p>
+                    <p className="font-semibold text-gray-900">{selectedBooking.rental.duration}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Total Amount</p>
+                    <p className="text-2xl font-bold text-green-600">{selectedBooking.rental.totalPrice}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Booked On</p>
+                    <p className="font-semibold text-gray-900">{new Date(selectedBooking.createdAt).toLocaleString()}</p>
+                  </div>
+                  {selectedBooking.updatedAt && (
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Last Updated</p>
+                      <p className="font-semibold text-gray-900">{new Date(selectedBooking.updatedAt).toLocaleString()}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex gap-3 pt-4 border-t border-gray-200">
+                  <button
+                    onClick={() => setSelectedBooking(null)}
+                    className="flex-1 px-4 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold rounded-lg transition"
+                  >
+                    Close
+                  </button>
+                  {selectedBooking.status === "pending" && (
+                    <>
+                      <button
+                        onClick={() => {
+                          updateBookingStatus(selectedBooking._id, "approved");
+                          setSelectedBooking(null);
+                        }}
+                        className="flex-1 px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition"
+                      >
+                        Approve Booking
+                      </button>
+                      <button
+                        onClick={() => {
+                          updateBookingStatus(selectedBooking._id, "rejected");
+                          setSelectedBooking(null);
+                        }}
+                        className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition"
+                      >
+                        Reject Booking
+                      </button>
+                    </>
+                  )}
+                  {selectedBooking.status === "approved" && (
+                    <>
+                      <button
+                        onClick={() => {
+                          updateBookingStatus(selectedBooking._id, "completed");
+                          setSelectedBooking(null);
+                        }}
+                        className="flex-1 px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition"
+                      >
+                        Mark as Completed
+                      </button>
+                      <button
+                        onClick={() => {
+                          updateBookingStatus(selectedBooking._id, "rejected");
+                          setSelectedBooking(null);
+                        }}
+                        className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition"
+                      >
+                        Cancel Booking
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

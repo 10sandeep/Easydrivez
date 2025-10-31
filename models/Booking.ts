@@ -25,7 +25,7 @@ export interface IBooking extends Document {
         duration: string;
         totalPrice: string;
     };
-    status: "pending" | "approved" | "rejected";
+    status: "pending" | "approved" | "rejected" | "completed";
     createdAt: Date;
 }
 
@@ -72,7 +72,7 @@ const BookingSchema = new Schema<IBooking>(
         rental: { type: RentalSchema, required: true },
         status: {
             type: String,
-            enum: ["pending", "approved", "rejected"],
+            enum: ["pending", "approved", "rejected", "completed"],
             default: "pending",
         },
     },

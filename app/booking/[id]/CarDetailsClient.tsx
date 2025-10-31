@@ -3,11 +3,39 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { MessageCircle, Phone } from "lucide-react";
+
+interface Vehicle {
+  // Common fields for both car and bike
+  brand: string;
+  modelName?: string;
+  model?: string;
+  image?: string;
+  carPicturate?: string;
+  bikeImage?: string;
+  type?: string;
+  category?: string;
+  cc?: number;
+  seater?: number;
+  fuelType?: string;
+  transmission?: string;
+  price12?: string;
+  price24?: string;
+  // Add other fields as needed
+}
+
+interface BookingResponse {
+  booking?: {
+    _id?: string;
+    id?: string;
+  };
+  // Add other response fields as needed
+}
+
 export default function CarDetailsClient({ params }: { params: { id: string } }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [vehicle, setVehicle] = useState<any>(null);
+  const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [isBike, setIsBike] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,7 +50,14 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
     acceptTerms: false,
   });
 
-  // ✅ Detect car/bike from params and decode it
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Success modal state
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [bookingResponse, setBookingResponse] = useState<BookingResponse | null>(null);
+
+  // Decode vehicle passed in search params (car or bike)
   useEffect(() => {
     try {
       const carParam = searchParams.get("car");
@@ -46,14 +81,14 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
 
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
-    });
+    }));
   };
 
-  // ✅ Calculate rental duration
-  const calculateDuration = () => {
+  // Calculate rental duration in hours (float)
+  const calculateDurationHours = (): number => {
     if (
       !formData.pickupDate ||
       !formData.pickupTime ||
@@ -68,23 +103,23 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
     return Math.max(0, durationMs / (1000 * 60 * 60)); // hours
   };
 
-  // ✅ Calculate dynamic pricing for both Car & Bike
+  // Price calculation (same logic)
   const calculatePrice = () => {
     if (!vehicle) return { amount: 0, display: "₹ 0", hours: 0, breakdown: "" };
 
-    const hours = calculateDuration();
+    const hours = calculateDurationHours();
     const BASE_FEE = 1000;
     let rentalPrice = 0;
     let breakdown = "";
 
     if (isBike) {
-      const rate12 = Math.floor(vehicle.cc * 3);
-      const rate24 = Math.floor(vehicle.cc * 4.5);
+      const rate12 = Math.floor((vehicle.cc || 0) * 3);
+      const rate24 = Math.floor((vehicle.cc || 0) * 4.5);
 
       if (hours <= 0) {
         return {
           amount: BASE_FEE,
-          display: `₹ ${BASE_FEE}`,
+          display: `₹ ${BASE_FEE.toLocaleString("en-IN")}`,
           hours: 0,
           breakdown: "Base booking fee",
         };
@@ -102,13 +137,15 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
         breakdown = `Base (₹${BASE_FEE}) + ${fullDays} day(s) @ ₹${rate24}/day`;
       }
     } else {
-      const price12 = parseInt(vehicle.price12?.replace(/[^0-9]/g, "")) || 0;
-      const price24 = parseInt(vehicle.price24?.replace(/[^0-9]/g, "")) || 0;
+      const price12 =
+        parseInt(String(vehicle.price12 || "").replace(/[^0-9]/g, "")) || 0;
+      const price24 =
+        parseInt(String(vehicle.price24 || "").replace(/[^0-9]/g, "")) || 0;
 
       if (hours <= 0) {
         return {
           amount: BASE_FEE,
-          display: `₹ ${BASE_FEE}`,
+          display: `₹ ${BASE_FEE.toLocaleString("en-IN")}`,
           hours: 0,
           breakdown: "Base booking fee",
         };
@@ -138,30 +175,17 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
 
   const priceDetails = calculatePrice();
 
-  // ✅ Handle form submit (fake booking for now)
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const formatDurationString = (hoursFloat: number) => {
+    if (hoursFloat <= 0) return "0 hours";
 
-    if (!formData.acceptTerms)
-      return alert("Please accept the terms and conditions.");
-
-    const duration = calculateDuration();
-    if (duration <= 0)
-      return alert("Drop-off time must be after pickup time.");
-
-    const bookingSummary = `
-✅ Booking Confirmed!
-
-${isBike ? "Bike" : "Car"}: ${vehicle.brand} ${vehicle.modelName || vehicle.model}
-Duration: ${priceDetails.hours} hours
-Total Price: ${priceDetails.display}
-
-Pickup: ${formData.pickupDate} ${formData.pickupTime}
-Drop-off: ${formData.dropoffDate} ${formData.dropoffTime}
-`;
-
-    alert(bookingSummary);
+    if (hoursFloat >= 24 && hoursFloat % 24 === 0) {
+      const days = Math.floor(hoursFloat / 24);
+      return `${days * 24} hours`;
+    }
+    const rounded = Math.round(hoursFloat * 10) / 10;
+    return `${rounded} hours`;
   };
+
   const handleWhatsApp = () => {
     window.open("https://wa.me/919090089708", "_blank");
   };
@@ -169,8 +193,96 @@ Drop-off: ${formData.dropoffDate} ${formData.dropoffTime}
   const handlePhone = () => {
     window.location.href = "tel:+919090089708";
   };
+
+  const closeModal = () => {
+    setBookingSuccess(false);
+    setBookingResponse(null);
+  };
+
+  const copyBookingId = () => {
+    const bookingId = bookingResponse?.booking?._id || bookingResponse?.booking?.id;
+    if (bookingId) {
+      navigator.clipboard.writeText(bookingId).then(() => {
+        // Optional: Show a toast or alert for copy success
+        console.log("Booking ID copied to clipboard");
+      });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setErrorMessage(null);
+
+    if (!formData.acceptTerms) {
+      setErrorMessage("Please accept the terms and conditions.");
+      setSubmitting(false);
+      return;
+    }
+
+    if (priceDetails.hours <= 0) {
+      setErrorMessage("Please select valid pickup and drop-off times.");
+      setSubmitting(false);
+      return;
+    }
+
+    // Construct the request body
+    const requestBody = {
+      vehicleId: params.id,
+      vehicleType: isBike ? "bike" : "car",
+      vehicleDetails: {
+        brand: vehicle?.brand || "",
+        model: vehicle?.modelName || vehicle?.model || "",
+        image: vehicle?.carPicturate || vehicle?.bikeImage || vehicle?.image || "",
+        type: vehicle?.type || vehicle?.category || "",
+        cc: vehicle?.cc,
+        seater: vehicle?.seater,
+        category: vehicle?.category,
+      },
+      customer: {
+        name: formData.name,
+        email: formData.email,
+        mobile: formData.mobile,
+      },
+      rental: {
+        pickupDate: formData.pickupDate,
+        pickupTime: formData.pickupTime,
+        dropoffDate: formData.dropoffDate,
+        dropoffTime: formData.dropoffTime,
+        duration: formatDurationString(priceDetails.hours),
+        totalPrice: priceDetails.display,
+      },
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setBookingResponse(data);
+      setBookingSuccess(true);
+
+      // Optional: Reset form or redirect after success
+      // setFormData({ ...formData, /* reset fields */ });
+    } catch (error) {
+      console.error("Booking creation failed:", error);
+      setErrorMessage("Failed to create booking. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   // ✅ Loading
- if (error) {
+  if (error) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-red-50 via-white to-orange-50 text-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
@@ -234,7 +346,7 @@ Drop-off: ${formData.dropoffDate} ${formData.dropoffTime}
       <div
         className="relative py-24 bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=400&fit=crop')`,
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=400&fit=crop')`,
           backgroundAttachment: "fixed",
         }}
       >
@@ -303,7 +415,9 @@ Drop-off: ${formData.dropoffDate} ${formData.dropoffTime}
                   <span className="text-gray-700 font-medium text-sm">
                     Base booking fee:
                   </span>
-                  <span className="text-base font-bold text-gray-900">₹ 1,000</span>
+                  <span className="text-base font-bold text-gray-900">
+                    ₹ 1,000
+                  </span>
                 </div>
 
                 {!isBike && (
@@ -360,6 +474,10 @@ Drop-off: ${formData.dropoffDate} ${formData.dropoffTime}
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
               BILLING DETAILS
             </h2>
+
+            {errorMessage && (
+              <div className="text-sm text-red-600 mb-4">{errorMessage}</div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
@@ -476,36 +594,23 @@ Drop-off: ${formData.dropoffDate} ${formData.dropoffTime}
 
               <button
                 type="submit"
-                disabled={!formData.acceptTerms || priceDetails.hours <= 0}
+                disabled={
+                  submitting || !formData.acceptTerms || priceDetails.hours <= 0
+                }
                 className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold text-sm px-6 py-3 rounded-lg transition-all shadow-lg active:scale-95 mt-5"
               >
-                {priceDetails.hours > 0
-                  ? `Payment On Site - ${priceDetails.display}`
-                  : "Payment On Site"}
+                {submitting
+                  ? "Booking..."
+                  : priceDetails.hours > 0
+                    ? `Payment On Site - ${priceDetails.display}`
+                    : "Payment On Site"}
               </button>
             </form>
           </div>
         </div>
       </div>
 
-      {/* Floating Buttons */}
-      {/* <div className="fixed bottom-6 left-6 flex flex-col gap-3 z-50">
-        <a
-          href="tel:+919876543210"
-          className="w-12 h-12 bg-green-500 hover:bg-green-600 rounded-full shadow-xl flex items-center justify-center text-white text-xl hover:scale-110 transition-all"
-        >
-          📞
-        </a>
-        <a
-          href="https://wa.me/919876543210"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-12 h-12 bg-green-400 hover:bg-green-500 rounded-full shadow-xl flex items-center justify-center text-white text-xl hover:scale-110 transition-all"
-        >
-          💬
-        </a>
-      </div> */}
-       <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
+      <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
         {/* WhatsApp Button */}
         <button
           onClick={handleWhatsApp}
@@ -524,6 +629,83 @@ Drop-off: ${formData.dropoffDate} ${formData.dropoffTime}
           <Phone className="h-6 w-6" />
         </button>
       </div>
+
+      {/* SUCCESS MODAL (in-page) */}
+      {bookingSuccess && (
+        <div
+          role="dialog"
+          aria-labelledby="booking-success-title"
+          className="fixed inset-0 z-60 flex items-center justify-center bg-black/50 p-4"
+        >
+          <div className="max-w-lg w-full bg-white rounded-xl shadow-2xl overflow-hidden">
+            <div className="p-6">
+              <h2
+                id="booking-success-title"
+                className="text-2xl font-bold text-green-600 mb-2"
+              >
+                Booking Confirmed 🎉
+              </h2>
+              <p className="text-gray-700 mb-4">
+                Your booking was created successfully. We'll email you the
+                details shortly.
+              </p>
+
+              <div className="bg-gray-50 rounded-md p-4 mb-4">
+                <div className="text-sm text-gray-700 mb-2">
+                  <strong>Vehicle:</strong>{" "}
+                  {vehicle.brand} {vehicle.modelName || vehicle.model}
+                </div>
+                <div className="text-sm text-gray-700 mb-2">
+                  <strong>Pickup:</strong> {formData.pickupDate} {formData.pickupTime}
+                </div>
+                <div className="text-sm text-gray-700 mb-2">
+                  <strong>Drop-off:</strong> {formData.dropoffDate} {formData.dropoffTime}
+                </div>
+                <div className="text-sm text-gray-700 mb-2">
+                  <strong>Duration:</strong> {priceDetails.hours} hours
+                </div>
+                <div className="text-sm text-gray-700 mb-2">
+                  <strong>Total:</strong> {priceDetails.display}
+                </div>
+
+                {bookingResponse?.booking && (
+                  <div className="mt-3 text-xs text-gray-600">
+                    <div>
+                      <strong>Booking ID:</strong>{" "}
+                      <span className="font-mono">
+                        {bookingResponse.booking._id || bookingResponse.booking.id}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={copyBookingId}
+                  className="px-4 py-2 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-800"
+                >
+                  Copy Booking ID
+                </button>
+                {/* 
+                <button
+                  onClick={() => router.push("/my-bookings")}
+                  className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  View My Bookings
+                </button> */}
+
+                <button
+                  onClick={closeModal}
+                  className="px-4 py-2 rounded-md bg-green-50 border border-green-200 text-green-800"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
