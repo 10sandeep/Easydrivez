@@ -467,7 +467,7 @@ export default function AdminPanel() {
   return (
     <div className="min-h-screen bg-gray-50 ">
           <div
-        className="relative py-24 bg-cover bg-center"
+        className="relative py-20 bg-cover bg-center"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&h=400&fit=crop')`,
           backgroundAttachment: "fixed",

@@ -5,10 +5,10 @@ import { Blog, blogs } from '@/lib/data';
 import { MessageCircle, Phone } from "lucide-react";
 const categories = [
   "All",
-  "Design",
-  "Gen Z Stuff",
-  "User Interface",
-  "User Experience",
+  "Cars",
+  "Bikes",
+  "Driving ",
+  "Safety ",
 ];
 
 const App = () => {

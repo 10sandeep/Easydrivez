@@ -16,8 +16,7 @@ import Gallary from "@/components/gallary";
 import Services from "@/components/service";
 import FeaturedBikesSection from "@/components/featuredbike";
 import FeaturedCarsSection from "@/components/featuredcar";
-import WhytoChooseUs from "@/components/whytochooseus";
-import AdminPanel from "./admin/page";
+
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -39,12 +38,7 @@ export default function Home() {
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setCurrentSlide((prev) => (prev + 1) % backgroundImages.length);
-  //   }, 5000);
-  //   return () => clearInterval(interval);
-  // }, []);
+  
 
   const handleSubmit = () => {
     alert("Searching for available vehicles...");
