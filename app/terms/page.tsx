@@ -2,11 +2,12 @@
 
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
-import { termsAndConditionsData } from '@/lib/data';
+import { termsAndConditionsData, contact } from '@/lib/data';
 
 export default function Terms() {
-  const [expandedSection, setExpandedSection] = React.useState<string | null>(null);
-  const { header, sections, contact, acknowledgment, lastUpdated } = termsAndConditionsData;
+   const [expandedSection, setExpandedSection] = React.useState<string | null>(null);
+   const { header, sections } = termsAndConditionsData;
+   const { phone, email, address, hours, acknowledgment, lastUpdated } = contact;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50">
@@ -72,18 +73,18 @@ export default function Terms() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <p className="text-gray-600 mb-1">
-                <span className="font-bold text-gray-900">Phone:</span> {contact.phone}
+                <span className="font-bold text-gray-900">Phone:</span> {phone.join(', ')}
               </p>
               <p className="text-gray-600 mb-1">
-                <span className="font-bold text-gray-900">Email:</span> {contact.email}
+                <span className="font-bold text-gray-900">Email:</span> {email}
               </p>
             </div>
             <div>
               <p className="text-gray-600 mb-1">
-                <span className="font-bold text-gray-900">Address:</span> {contact.address}
+                <span className="font-bold text-gray-900">Address:</span> {address.join(', ')}
               </p>
               <p className="text-gray-600">
-                <span className="font-bold text-gray-900">Hours:</span> {contact.hours}
+                <span className="font-bold text-gray-900">Hours:</span> {hours}
               </p>
             </div>
           </div>
