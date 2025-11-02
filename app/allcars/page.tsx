@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -8,24 +7,22 @@ interface Car {
   carPicturate: string;
   brand: string;
   modelName: string;
-  seater: number;
-  type: string;
+  vehicleType: string;
   fuelType: string;
   transmission: string;
-  price12: string;
-  price24: string;
-  rating: number;
-  category: string;
+  seatingCapacity: number;
+  priceFor12Hours: number;
+  priceFor24Hours: number;
   available: boolean;
 }
 
-export default function AllCars() {
+export default function CarRental() {
   const router = useRouter();
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // ✅ Fetch all cars from backend
+  // ✅ Fetch cars from API
   useEffect(() => {
     const fetchCars = async () => {
       try {
@@ -39,7 +36,7 @@ export default function AllCars() {
         if (data.status && data.cars) {
           setCars(data.cars);
         } else {
-          throw new Error(data.message || "Unexpected response from server");
+          throw new Error(data.message || "Unexpected API response");
         }
       } catch (err: any) {
         console.error("Error fetching cars:", err);
@@ -52,29 +49,47 @@ export default function AllCars() {
     fetchCars();
   }, []);
 
-  // ✅ Navigate to booking page with car data
+  // ✅ Navigate to booking page
   const handleBookNow = (car: Car) => {
     const carData = encodeURIComponent(JSON.stringify(car));
     router.push(`/booking/${car._id}?car=${carData}`);
   };
 
-  // ✅ Render loading state
+  // ✅ Error State
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-red-50 via-white to-orange-50 text-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
+          <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-4xl">⚠</span>
+          </div>
+          <p className="text-red-600 text-xl font-semibold mb-3">
+            Oops! {error}
+          </p>
+          <p className="text-gray-600 text-sm mb-6">
+            We couldn't load the vehicle details. Please try again.
+          </p>
+          <button
+            onClick={() => location.reload()}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-lg hover:scale-105 active:scale-95"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ Loading State
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-600 bg-gradient-to-br from-blue-50 via-white to-orange-50">
         <div className="text-center">
           <div className="relative w-24 h-24 mx-auto mb-6">
-            {/* Animated wheel */}
             <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
             <div className="absolute inset-0 rounded-full border-4 border-t-blue-600 border-r-orange-500 border-b-transparent border-l-transparent animate-spin"></div>
-            {/* Inner hub */}
             <div className="absolute inset-6 rounded-full bg-gradient-to-br from-blue-600 to-orange-500 flex items-center justify-center">
               <div className="w-4 h-4 rounded-full bg-white"></div>
-            </div>
-            {/* Spokes effect */}
-            <div className="absolute inset-8 flex items-center justify-center">
-              <div className="w-full h-0.5 bg-white/50 rotate-45"></div>
-              <div className="w-full h-0.5 bg-white/50 -rotate-45 absolute"></div>
             </div>
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
@@ -92,43 +107,28 @@ export default function AllCars() {
       </div>
     );
 
-  // ✅ Render error state
-  if (error) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-white text-center p-4">
-        <p className="text-red-600 text-xl font-semibold mb-3">
-          Oops! {error}
-        </p>
-        <button
-          onClick={() => location.reload()}
-          className="bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800 transition-colors"
-        >
-          Retry
-        </button>
-      </div>
-    );
-  }
-
-  // ✅ No cars available
+  // ✅ No Cars Found
   if (cars.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white text-black">
-        <p className="text-xl font-medium mb-4">No cars available right now 🚗</p>
+        <p className="text-xl font-medium mb-4">
+          No cars available right now 🚗
+        </p>
         <p className="text-gray-600">
-          Please check back later or contact our support team.
+          Please check back later or contact support.
         </p>
       </div>
     );
   }
 
-  // ✅ Render All Cars Page
+  // ✅ Main Render
   return (
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
       <div
-        className="relative py-24 bg-cover bg-center"
+        className="relative py-20 bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&h=400&fit=crop')`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1502877338535-766e1452684a?w=1200&h=400&fit=crop')`,
           backgroundAttachment: "fixed",
         }}
       >
@@ -142,7 +142,7 @@ export default function AllCars() {
         </div>
       </div>
 
-      {/* Cars List */}
+      {/* Cars Section */}
       <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-black">
@@ -164,7 +164,7 @@ export default function AllCars() {
                   />
                   <div className="absolute bottom-3 left-3">
                     <span className="text-black text-sm font-medium bg-white px-3 py-1 rounded">
-                      {car.type}
+                      {car.vehicleType}
                     </span>
                   </div>
                 </div>
@@ -175,42 +175,42 @@ export default function AllCars() {
                     <h3 className="text-xl font-bold text-black flex-1">
                       {car.brand} {car.modelName}
                     </h3>
-                    <div className="flex items-center gap-1 ml-2">
-                      <svg className="h-4 w-4 fill-black" viewBox="0 0 24 24">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                      </svg>
-                      <span className="text-sm font-bold text-black">
-                        {car.rating?.toFixed(1) || "4.8"}
-                      </span>
-                    </div>
+                    <span className="text-sm text-gray-500 capitalize">
+                      {car.fuelType}
+                    </span>
                   </div>
 
                   <p className="text-gray-700 mb-4 text-sm capitalize">
-                    Category: {car.category}
+                    Transmission: {car.transmission}
                   </p>
 
                   {/* Features */}
                   <div className="flex flex-wrap gap-2 mb-4">
                     <span className="border border-gray-300 text-black px-3 py-1 rounded text-sm">
-                      {car.seater} Seater
+                      {car.seatingCapacity} Seater
                     </span>
                     <span className="border border-gray-300 text-black px-3 py-1 rounded text-sm">
-                      {car.fuelType}
+                      {car.vehicleType}
                     </span>
-                    <span className="border border-gray-300 text-black px-3 py-1 rounded text-sm">
-                      {car.transmission}
+                    <span
+                      className={`px-3 py-1 rounded text-sm ${car.available
+                          ? "bg-green-100 text-green-700 border border-green-400"
+                          : "bg-red-100 text-red-700 border border-red-400"
+                        }`}
+                    >
+                      {car.available ? "Available" : "Booked"}
                     </span>
                   </div>
 
-                  {/* Pricing + Book Button */}
+                  {/* Booking */}
                   <div className="border-t border-gray-300 pt-4">
                     <div className="flex justify-between items-center mb-3">
                       <div>
-                        <p className="text-sm text-gray-600">starting from</p>
+                        <p className="text-sm text-gray-600">Starting from</p>
                         <p className="text-2xl font-bold text-black">
-                          {car.price12}
+                          ₹{car.priceFor12Hours} /-
                         </p>
-                        <p className="text-sm text-gray-600">for 12 hours</p>
+                        <p className="text-sm text-gray-600">per 12 hours</p>
                       </div>
                       <button
                         onClick={() => handleBookNow(car)}
@@ -221,7 +221,9 @@ export default function AllCars() {
                     </div>
                     <p className="text-sm text-gray-700">
                       24 hours:{" "}
-                      <span className="font-bold">{car.price24}</span>
+                      <span className="font-bold">
+                        ₹{car.priceFor24Hours} /-
+                      </span>
                     </p>
                   </div>
                 </div>

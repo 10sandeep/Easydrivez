@@ -6,7 +6,7 @@ import {
   Car, Bike, Users, Package, TrendingUp, Calendar,
   DollarSign, BarChart3, Filter, Download, Search,
   Edit2, Trash2, Eye, Plus, X, CheckCircle, Clock,
-  AlertCircle, FileText, LogOut, User, Shield
+  AlertCircle, FileText, LogOut, User, Shield, Loader2
 } from "lucide-react";
 
 interface Car {
@@ -39,6 +39,19 @@ interface Bike {
   available: boolean;
   createdAt: string;
   updatedAt: string;
+  __v?: number;
+}
+
+interface Blog {
+  _id: string;
+  title: string;
+  description: string;
+  category: string;
+  author: string;
+  content: string;
+  image: string;
+  createdAt: string;
+  updatedAt?: string;
   __v?: number;
 }
 
@@ -108,17 +121,29 @@ interface FormData {
   category: string;
 }
 
+interface BlogFormData {
+  title: string;
+  description: string;
+  category: string;
+  author: string;
+  content: string;
+  image: string | File | null;
+}
+
 export default function AdminPanel() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"dashboard" | "vehicles" | "bookings" | "reports">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "vehicles" | "bookings" | "reports" | "blog">("dashboard");
   const [cars, setCars] = useState<Car[]>([]);
   const [bikes, setBikes] = useState<Bike[]>([]);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
   const [vehicleSubTab, setVehicleSubTab] = useState<"car" | "bike">("car");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isBlogFormOpen, setIsBlogFormOpen] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<{ item: Car | Bike; type: "car" | "bike" } | null>(null);
+  const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
   const [formType, setFormType] = useState<"car" | "bike">("car");
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [adminEmail, setAdminEmail] = useState<string>("");
@@ -127,6 +152,9 @@ export default function AdminPanel() {
   const [isLoading, setIsLoading] = useState(true);
   const [bookingsLoading, setBookingsLoading] = useState(true);
   const [vehiclesLoading, setVehiclesLoading] = useState(true);
+  const [blogsLoading, setBlogsLoading] = useState(true);
+  const [isBlogSubmitting, setIsBlogSubmitting] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     brand: "",
     model: "",
@@ -143,6 +171,14 @@ export default function AdminPanel() {
     cc: "",
     rating: "",
     category: "",
+  });
+  const [blogFormData, setBlogFormData] = useState<BlogFormData>({
+    title: "",
+    description: "",
+    category: "",
+    author: "Rideez",
+    content: "",
+    image: null,
   });
 
   // ✅ Check authentication on mount
@@ -225,8 +261,34 @@ export default function AdminPanel() {
     }
   };
 
+  // ✅ Fetch blogs from API
+  const fetchBlogs = async () => {
+    if (!isAuthenticated) return;
+
+    try {
+      setBlogsLoading(true);
+      console.log("📡 [AdminPanel] Fetching blogs...");
+
+      const res = await fetch("/api/blog", { cache: "no-store" });
+
+      const data = await res.json();
+      console.log("📝 [AdminPanel] Blogs response:", data);
+
+      if (data.status && data.blogs) {
+        setBlogs(data.blogs);
+      }
+    } catch (error) {
+      console.error("❌ [AdminPanel] Error fetching blogs:", error);
+    } finally {
+      setBlogsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchVehicles();
+    if (isAuthenticated) {
+      fetchVehicles();
+      fetchBlogs();
+    }
   }, [isAuthenticated]);
 
   // ✅ Fetch bookings from API
@@ -284,6 +346,7 @@ export default function AdminPanel() {
     totalVehicles: cars.length + bikes.length,
     totalCars: cars.length,
     totalBikes: bikes.length,
+    totalBlogs: blogs.length,
     totalBookings: bookings.length,
     activeBookings: bookings.filter(b => b.status === "approved").length,
     completedBookings: bookings.filter(b => b.status === "completed").length,
@@ -302,6 +365,22 @@ export default function AdminPanel() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleBlogChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setBlogFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleBlogImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    if (file) {
+      setBlogFormData((prev) => ({ ...prev, image: file }));
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      setPreviewUrl(URL.createObjectURL(file));
+    }
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -329,6 +408,23 @@ export default function AdminPanel() {
       category: "",
     });
     setIsFormOpen(true);
+  };
+
+  const handleBlogAdd = () => {
+    setEditingBlog(null);
+    setBlogFormData({
+      title: "",
+      description: "",
+      category: "",
+      author: "Rideez",
+      content: "",
+      image: null,
+    });
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+    setIsBlogFormOpen(true);
   };
 
   const handleEdit = (item: Car | Bike, type: "car" | "bike") => {
@@ -374,6 +470,20 @@ export default function AdminPanel() {
     }
     setEditingVehicle({ item, type });
     setIsFormOpen(true);
+  };
+
+  const handleBlogEdit = (blog: Blog) => {
+    setEditingBlog(blog);
+    setBlogFormData({
+      title: blog.title,
+      description: blog.description,
+      category: blog.category,
+      author: blog.author,
+      content: blog.content,
+      image: blog.image,
+    });
+    setPreviewUrl(blog.image);
+    setIsBlogFormOpen(true);
   };
 
   const handleSubmit = async () => {
@@ -462,6 +572,67 @@ export default function AdminPanel() {
     });
   };
 
+  const handleBlogSubmit = async () => {
+    if (!blogFormData.title || !blogFormData.description || !blogFormData.content || !blogFormData.image) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("title", blogFormData.title);
+    formDataToSend.append("description", blogFormData.description);
+    formDataToSend.append("category", blogFormData.category);
+    formDataToSend.append("author", blogFormData.author);
+    formDataToSend.append("content", blogFormData.content);
+
+    if (blogFormData.image) {
+      if (blogFormData.image instanceof File) {
+        formDataToSend.append("image", blogFormData.image);
+      } else {
+        formDataToSend.append("image", blogFormData.image);
+      }
+    }
+
+    try {
+      setIsBlogSubmitting(true);
+      const method = editingBlog ? "PUT" : "POST";
+      const url = editingBlog ? `/api/blog/${editingBlog._id}` : "/api/blog";
+
+      const res = await fetch(url, {
+        method,
+        body: formDataToSend,
+      });
+
+      const data = await res.json();
+
+      if (data.status || data.success) {
+        await fetchBlogs();
+        alert(editingBlog ? "Blog updated successfully!" : "Blog added successfully!");
+        setIsBlogFormOpen(false);
+        setEditingBlog(null);
+        setBlogFormData({
+          title: "",
+          description: "",
+          category: "",
+          author: "Rideez",
+          content: "",
+          image: null,
+        });
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+        }
+        setPreviewUrl(null);
+      } else {
+        alert(editingBlog ? "Failed to update blog" : "Failed to add blog");
+      }
+    } catch (error) {
+      console.error("Error handling blog:", error);
+      alert("Error handling blog");
+    } finally {
+      setIsBlogSubmitting(false);
+    }
+  };
+
   const handleDelete = (id: string, type: "car" | "bike") => {
     if (confirm("Are you sure you want to delete this vehicle?")) {
       if (type === "car") {
@@ -470,6 +641,28 @@ export default function AdminPanel() {
         setBikes(bikes.filter(b => b._id !== id));
       }
       alert("Vehicle deleted successfully!");
+    }
+  };
+
+  const handleBlogDelete = async (id: string) => {
+    if (confirm("Are you sure you want to delete this blog?")) {
+      try {
+        const res = await fetch(`/api/blog/${id}`, {
+          method: "DELETE",
+        });
+
+        const data = await res.json();
+
+        if (data.status || data.success) {
+          await fetchBlogs();
+          alert("Blog deleted successfully!");
+        } else {
+          alert("Failed to delete blog");
+        }
+      } catch (error) {
+        console.error("Error deleting blog:", error);
+        alert("Error deleting blog");
+      }
     }
   };
 
@@ -508,6 +701,7 @@ export default function AdminPanel() {
       statistics: stats,
       cars,
       bikes,
+      blogs,
       bookings,
     };
     const dataStr = JSON.stringify(reportData, null, 2);
@@ -584,6 +778,20 @@ export default function AdminPanel() {
     return matchesSearch && matchesStatus;
   });
 
+  const filteredBlogs = blogs.filter(b =>
+    b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    b.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const closeBlogForm = () => {
+    setIsBlogFormOpen(false);
+    setEditingBlog(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+  };
+
   // ✅ Show loading screen while checking authentication
   if (isLoading) {
     return (
@@ -629,7 +837,8 @@ export default function AdminPanel() {
                 { id: "dashboard", label: "Dashboard", icon: BarChart3 },
                 { id: "vehicles", label: "Vehicles", icon: Package },
                 { id: "bookings", label: "Bookings", icon: Calendar },
-                { id: "reports", label: "Reports", icon: FileText },
+                { id: "blog", label: "Blog", icon: FileText },
+                { id: "reports", label: "Reports", icon: TrendingUp },
               ].map((tab) => {
                 const Icon = tab.icon;
                 return (
@@ -979,6 +1188,78 @@ export default function AdminPanel() {
                 {getFilteredVehicles().length === 0 && (
                   <div className="col-span-full text-center py-12">
                     <p className="text-gray-500">No {vehicleSubTab} found</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Blog Tab */}
+        {activeTab === "blog" && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search blogs..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                />
+              </div>
+              <button
+                onClick={handleBlogAdd}
+                className="flex items-center gap-2 px-4 py-2.5 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition font-medium shadow-sm"
+              >
+                <Plus className="h-4 w-4" />
+                Add Blog
+              </button>
+            </div>
+
+            {blogsLoading ? (
+              <div className="text-center py-8">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600 mx-auto mb-4"></div>
+                <p className="text-sm text-gray-600">Loading blogs...</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredBlogs.map((blog) => (
+                  <div key={blog._id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
+                    <div className="relative h-48">
+                      <img src={blog.image} alt={blog.title} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-bold text-gray-900 text-lg mb-2">{blog.title}</h3>
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{blog.description}</p>
+                      <div className="flex gap-2 mb-3">
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">{blog.category}</span>
+                        <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">by {blog.author}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mb-4">{new Date(blog.createdAt).toLocaleDateString()}</p>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleBlogEdit(blog)}
+                          className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition text-sm font-medium"
+                        >
+                          <Edit2 className="h-4 w-4" />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleBlogDelete(blog._id)}
+                          className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition text-sm font-medium"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {filteredBlogs.length === 0 && (
+                  <div className="col-span-full text-center py-12">
+                    <p className="text-gray-500">No blogs found</p>
                   </div>
                 )}
               </div>
@@ -1453,6 +1734,126 @@ export default function AdminPanel() {
                     className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition"
                   >
                     {editingVehicle ? "Update Vehicle" : "Add Vehicle"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Blog Form Modal */}
+        {isBlogFormOpen && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full my-8">
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {editingBlog ? "Edit" : "Add New"} Blog
+                </h2>
+                <button
+                  onClick={closeBlogForm}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition"
+                >
+                  <X className="h-5 w-5 text-gray-600" />
+                </button>
+              </div>
+
+              <div className="p-6 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Title *</label>
+                    <input
+                      type="text"
+                      name="title"
+                      value={blogFormData.title}
+                      onChange={handleBlogChange}
+                      placeholder="Enter blog title"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
+                    <textarea
+                      name="description"
+                      rows={3}
+                      value={blogFormData.description}
+                      onChange={handleBlogChange}
+                      placeholder="Enter blog description"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                      <input
+                        type="text"
+                        name="category"
+                        value={blogFormData.category}
+                        onChange={handleBlogChange}
+                        placeholder="e.g., Safety"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Author *</label>
+                      <input
+                        type="text"
+                        name="author"
+                        value={blogFormData.author}
+                        onChange={handleBlogChange}
+                        placeholder="e.g., Rideez"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Content *</label>
+                    <textarea
+                      name="content"
+                      rows={10}
+                      value={blogFormData.content}
+                      onChange={handleBlogChange}
+                      placeholder="Enter blog content"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Image *</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleBlogImageChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    {previewUrl && (
+                      <img src={previewUrl} alt="Preview" className="mt-3 h-32 w-full object-cover rounded-lg" />
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <button
+                    onClick={closeBlogForm}
+                    className="flex-1 px-4 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold rounded-lg transition"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleBlogSubmit}
+                    disabled={isBlogSubmitting}
+                    className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-bold rounded-lg transition flex items-center justify-center"
+                  >
+                    {isBlogSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        {editingBlog ? "Updating..." : "Creating..."}
+                      </>
+                    ) : (
+                      editingBlog ? "Update Blog" : "Create Blog"
+                    )}
                   </button>
                 </div>
               </div>

@@ -1,8 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search, ArrowUpRight, Calendar, User, Clock } from "lucide-react";
-import { Blog, blogs } from '@/lib/data';
 import { MessageCircle, Phone } from "lucide-react";
+
+interface Blog {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  author: string;
+  date: string;
+  category: string;
+  tags: string[];
+  featured: boolean;
+}
+
 const categories = [
   "All",
   "Cars",
@@ -15,6 +28,42 @@ const App = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch('/api/blog');
+        const data = await res.json();
+        if (data.status && data.blogs) {
+          const transformedBlogs: Blog[] = data.blogs.map((apiBlog: any) => ({
+            id: apiBlog._id,
+            title: apiBlog.title,
+            excerpt: apiBlog.description,
+            content: apiBlog.content,
+            image: apiBlog.image,
+            author: apiBlog.author,
+            date: new Date(apiBlog.createdAt).toLocaleDateString(),
+            category: apiBlog.category,
+            tags: [apiBlog.category],
+            featured: false,
+          }));
+          if (transformedBlogs.length > 0) {
+            transformedBlogs[0].featured = true;
+          }
+          setBlogs(transformedBlogs);
+        }
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
 
   const filteredBlogs = blogs.filter((blog) => {
     const matchesCategory =
@@ -27,13 +76,29 @@ const App = () => {
 
   const featuredBlog = blogs.find((blog) => blog.featured);
 
+  const dynamicCategories = React.useMemo(() => {
+    return ["All", ...new Set(blogs.map((blog) => blog.category))];
+  }, [blogs]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading blogs...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (selectedBlog) {
     return (
-      <BlogDetail 
-        blog={selectedBlog} 
+      <BlogDetail
+        blog={selectedBlog}
         onBack={() => setSelectedBlog(null)}
         allBlogs={blogs}
         onBlogSelect={setSelectedBlog}
+        categories={dynamicCategories}
       />
     );
   }
@@ -116,15 +181,14 @@ const App = () => {
         {/* Filters and Search */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
           <div className="flex gap-2 overflow-x-auto pb-2">
-            {categories.map((cat) => (
+            {dynamicCategories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
-                  selectedCategory === cat
+                className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${selectedCategory === cat
                     ? "bg-gray-900 text-white"
                     : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
-                }`}
+                  }`}
               >
                 {cat}
               </button>
@@ -182,7 +246,7 @@ const App = () => {
             ))}
         </div>
 
-        {filteredBlogs.length === 0 && (
+        {filteredBlogs.length === 0 && !loading && (
           <div className="text-center py-20">
             <p className="text-gray-500 text-lg">
               No blogs found matching your criteria.
@@ -194,16 +258,18 @@ const App = () => {
   );
 };
 
-const BlogDetail = ({ 
-  blog, 
-  onBack, 
+const BlogDetail = ({
+  blog,
+  onBack,
   allBlogs,
-  onBlogSelect 
-}: { 
-  blog: Blog; 
+  onBlogSelect,
+  categories
+}: {
+  blog: Blog;
   onBack: () => void;
   allBlogs: Blog[];
   onBlogSelect: (blog: Blog) => void;
+  categories: string[];
 }) => {
   // Get recent posts (excluding current blog)
   const recentPosts = allBlogs
@@ -229,10 +295,10 @@ const BlogDetail = ({
       .replace(/<a /g, '<a class="text-blue-600 hover:text-blue-700 underline font-medium" ')
       // Style blockquotes
       .replace(/<blockquote>/g, '<blockquote class="border-l-4 border-blue-600 pl-6 py-4 my-6 bg-gray-50 italic text-gray-700">');
-    
+
     return formattedContent;
   };
- const handleWhatsApp = () => {
+  const handleWhatsApp = () => {
     window.open("https://wa.me/919090089708", "_blank");
   };
 
@@ -242,7 +308,7 @@ const BlogDetail = ({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-       <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
+      <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
         {/* WhatsApp Button */}
         <button
           onClick={handleWhatsApp}
