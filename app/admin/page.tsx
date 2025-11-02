@@ -155,6 +155,19 @@ export default function AdminPanel() {
   const [blogsLoading, setBlogsLoading] = useState(true);
   const [isBlogSubmitting, setIsBlogSubmitting] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [vehicleImageFile, setVehicleImageFile] = useState<File | null>(null);
+  const [vehicleImagePreview, setVehicleImagePreview] = useState<string | null>(null);
+
+  const handleVehicleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    if (file) {
+      setVehicleImageFile(file);
+      if (vehicleImagePreview) {
+        URL.revokeObjectURL(vehicleImagePreview);
+      }
+      setVehicleImagePreview(URL.createObjectURL(file));
+    }
+  };
   const [formData, setFormData] = useState<FormData>({
     brand: "",
     model: "",
@@ -407,6 +420,11 @@ export default function AdminPanel() {
       rating: "4.5",
       category: "",
     });
+    setVehicleImageFile(null);
+    if (vehicleImagePreview) {
+      URL.revokeObjectURL(vehicleImagePreview);
+    }
+    setVehicleImagePreview(null);
     setIsFormOpen(true);
   };
 
@@ -448,6 +466,7 @@ export default function AdminPanel() {
         rating: "",
         category: "",
       });
+      setVehicleImagePreview(c.carPicturate);
     } else {
       const b = item as Bike;
       setFormData({
@@ -467,7 +486,9 @@ export default function AdminPanel() {
         rating: b.rating.toString(),
         category: b.category,
       });
+      setVehicleImagePreview(b.bikeImage);
     }
+    setVehicleImageFile(null);
     setEditingVehicle({ item, type });
     setIsFormOpen(true);
   };
@@ -487,8 +508,14 @@ export default function AdminPanel() {
   };
 
   const handleSubmit = async () => {
-    if (!formData.brand || !formData.model || !formData.image) {
+    if (!formData.brand || !formData.model) {
       alert("Please fill in all required fields");
+      return;
+    }
+
+    // For new vehicles, require image file
+    if (!editingVehicle && !vehicleImageFile) {
+      alert("Please upload an image");
       return;
     }
 
@@ -498,44 +525,58 @@ export default function AdminPanel() {
     }
 
     try {
-      let body: any = {};
+      const formDataToSend = new FormData();
 
       if (formType === "car") {
-        body.brand = formData.brand;
-        body.modelName = formData.model;
-        body.carPicturate = formData.image;
-        body.available = formData.available;
-        body.vehicleType = formData.vehicleType;
-        body.fuelType = formData.fuelType;
-        body.transmission = formData.transmission;
-        body.seatingCapacity = parseInt(formData.seatingCapacity);
-        body.priceFor12Hours = parseInt(formData.priceFor12Hours);
-        body.priceFor24Hours = parseInt(formData.priceFor24Hours);
+        formDataToSend.append("brand", formData.brand);
+        formDataToSend.append("modelName", formData.model);
+        formDataToSend.append("available", formData.available.toString());
+        formDataToSend.append("vehicleType", formData.vehicleType);
+        formDataToSend.append("fuelType", formData.fuelType);
+        formDataToSend.append("transmission", formData.transmission);
+        formDataToSend.append("seatingCapacity", formData.seatingCapacity);
+        formDataToSend.append("priceFor12Hours", formData.priceFor12Hours);
+        formDataToSend.append("priceFor24Hours", formData.priceFor24Hours);
+
+        // Add image file or keep existing URL
+        if (vehicleImageFile) {
+          formDataToSend.append("carPicturate", vehicleImageFile);
+        } else if (editingVehicle && formData.image) {
+          formDataToSend.append("carPicturate", formData.image);
+        }
       } else {
-        body.brand = formData.brand;
-        body.model = formData.model;
-        body.bikeImage = formData.image;
-        body.available = formData.available;
-        body.seater = parseInt(formData.seater);
-        body.type = formData.bikeType;
-        body.cc = parseInt(formData.cc);
-        body.rating = parseFloat(formData.rating);
-        body.category = formData.category;
+        formDataToSend.append("brand", formData.brand);
+        formDataToSend.append("model", formData.model);
+        formDataToSend.append("available", formData.available.toString());
+        formDataToSend.append("seater", formData.seater);
+        formDataToSend.append("type", formData.bikeType);
+        formDataToSend.append("cc", formData.cc);
+        formDataToSend.append("rating", formData.rating);
+        formDataToSend.append("category", formData.category);
+
+        // Add image file or keep existing URL
+        if (vehicleImageFile) {
+          formDataToSend.append("bikeImage", vehicleImageFile);
+        } else if (editingVehicle && formData.image) {
+          formDataToSend.append("bikeImage", formData.image);
+        }
       }
 
       if (editingVehicle) {
-        // Update
-        body.id = editingVehicle.item._id;
+        formDataToSend.append("id", editingVehicle.item._id);
       }
-      // For create, no id in body
 
-      const res = await fetch(`/api/${formType}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+      const method = editingVehicle ? "PUT" : "POST";
+
+      const url = editingVehicle
+        ? `/api/${formType}`                 // e.g. /api/car or /api/bike when editing
+        : `/api/${formType === 'car' ? 'createcar' : 'createbike'}`; // e.g. /api/createcar or /api/createbike when creating
+
+      const res = await fetch(url, {
+        method,
+        body: formDataToSend,
       });
+
 
       const data = await res.json();
 
@@ -544,6 +585,11 @@ export default function AdminPanel() {
         alert(editingVehicle ? "Vehicle updated successfully!" : "Vehicle added successfully!");
         setIsFormOpen(false);
         setEditingVehicle(null);
+        setVehicleImageFile(null);
+        if (vehicleImagePreview) {
+          URL.revokeObjectURL(vehicleImagePreview);
+        }
+        setVehicleImagePreview(null);
       } else {
         alert(editingVehicle ? "Failed to update vehicle" : "Failed to add vehicle");
       }
@@ -1497,6 +1543,11 @@ export default function AdminPanel() {
                   onClick={() => {
                     setIsFormOpen(false);
                     setEditingVehicle(null);
+                    setVehicleImageFile(null);
+                    if (vehicleImagePreview) {
+                      URL.revokeObjectURL(vehicleImagePreview);
+                    }
+                    setVehicleImagePreview(null);
                   }}
                   className="p-2 hover:bg-gray-100 rounded-lg transition"
                 >
@@ -1533,17 +1584,17 @@ export default function AdminPanel() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Image URL *</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      {formType === "car" ? "Car" : "Bike"} Image *
+                    </label>
                     <input
-                      type="url"
-                      name="image"
-                      value={formData.image}
-                      onChange={handleChange}
-                      placeholder="https://example.com/image.jpg"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleVehicleImageChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                    {formData.image && (
-                      <img src={formData.image} alt="Preview" className="mt-3 h-32 w-full object-cover rounded-lg" />
+                    {vehicleImagePreview && (
+                      <img src={vehicleImagePreview} alt="Preview" className="mt-3 h-32 w-full object-cover rounded-lg" />
                     )}
                   </div>
 
@@ -1724,6 +1775,11 @@ export default function AdminPanel() {
                     onClick={() => {
                       setIsFormOpen(false);
                       setEditingVehicle(null);
+                      setVehicleImageFile(null);
+                      if (vehicleImagePreview) {
+                        URL.revokeObjectURL(vehicleImagePreview);
+                      }
+                      setVehicleImagePreview(null);
                     }}
                     className="flex-1 px-4 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold rounded-lg transition"
                   >

@@ -16,25 +16,89 @@ export async function GET() {
 }
 
 // ✅ PUT — admin only (update bike)
+// ✅ PUT — admin only (update bike)
 export async function PUT(request: NextRequest) {
     try {
         await ConnectDb();
-        const body = await request.json();
 
-        const { id, ...updateData } = body;
+        const formData = await request.formData();
+
+        const id = formData.get("id") as string | null;
+        const brand = formData.get("brand") as string;
+        const model = formData.get("model") as string;
+        const available = formData.get("available") === "true";
+        const seater = Number(formData.get("seater"));
+        const type = formData.get("type") as string;
+        const cc = Number(formData.get("cc"));
+        const rating = Number(formData.get("rating"));
+        const category = formData.get("category") as string;
+        const bikeImage = formData.get("bikeImage");
+
         if (!id) {
-            return NextResponse.json({ status: false, message: "Bike ID is required" }, { status: 400 });
+            return NextResponse.json(
+                { status: false, message: "Bike ID is required" },
+                { status: 400 }
+            );
         }
 
-        const updatedBike = await Bike.findByIdAndUpdate(id, updateData, { new: true });
+        let imageUrl: string;
+
+        // Check if bikeImage is a File (new upload) or string (existing URL)
+        if (bikeImage instanceof File) {
+            // ✅ Upload new image to Cloudinary
+            const bytes = await bikeImage.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+
+            const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
+                cloudinary.uploader
+                    .upload_stream({ folder: "bikes" }, (error, result) => {
+                        if (error || !result) reject(error);
+                        else resolve(result);
+                    })
+                    .end(buffer);
+            });
+
+            imageUrl = uploadResult.secure_url;
+        } else {
+            // Use existing URL
+            imageUrl = bikeImage as string;
+        }
+
+        // Update bike in database
+        const updatedBike = await Bike.findByIdAndUpdate(
+            id,
+            {
+                brand,
+                model,
+                bikeImage: imageUrl,
+                available,
+                seater,
+                type,
+                cc,
+                rating,
+                category,
+            },
+            { new: true }
+        );
+
         if (!updatedBike) {
-            return NextResponse.json({ status: false, message: "Bike not found" }, { status: 404 });
+            return NextResponse.json(
+                { status: false, message: "Bike not found" },
+                { status: 404 }
+            );
         }
 
-        return NextResponse.json({ status: true, message: "Bike updated successfully", bike: updatedBike }, { status: 200 });
+        return NextResponse.json({
+            status: true,
+            message: "Bike updated successfully",
+            bike: updatedBike,
+        }, { status: 200 });
     } catch (error) {
         console.error("Error updating bike:", error);
-        return NextResponse.json({ status: false, message: "Internal Server Error" }, { status: 500 });
+        return NextResponse.json(
+            { status: false, message: "Internal Server Error" },
+            { status: 500 }
+        );
     }
 }
 
