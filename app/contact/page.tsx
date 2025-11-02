@@ -36,24 +36,27 @@ export default function ContactPage() {
     {
       icon: MapPin,
       title: "Address",
-      details: "Bhubaneswar, Odisha 751001, India",
+      details: [
+        "B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd., Bhubaneswar, Odisha 751015",
+        "38, Keshari Plaza Phase 2, Jadupur, Dumduma, Bhubaneswar 751019",
+      ],
     },
     {
       icon: Phone,
       title: "Phone",
-      details: "+91 98765 43210",
-      link: "tel:+919876543210",
+      details: ["+91 9090090699", "+91 9090089708", "+91 8093806834"],
+      links: ["tel:+919090090699", "tel:+919090089708", "tel:+918093806834"],
     },
     {
       icon: Mail,
       title: "Email",
-      details: "info@rentalservice.in",
-      link: "mailto:info@rentalservice.in",
+      details: ["support@eazydrivez.com"],
+      links: ["mailto:support@eazydrivez.com"],
     },
     {
       icon: Clock,
       title: "Working Hours",
-      details: "24/7 Service Available",
+      details: ["24/7 Service Available"],
     },
   ];
 
@@ -64,7 +67,7 @@ export default function ContactPage() {
         className="relative py-24 bg-cover bg-center"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1466096115517-bceecbfb6fde?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170')`,
-          backgroundAttachment: 'fixed'
+          backgroundAttachment: "fixed",
         }}
       >
         <div className="max-w-7xl mx-auto px-4 text-center">
@@ -93,16 +96,23 @@ export default function ContactPage() {
                 <h3 className="text-lg font-bold text-black mb-2">
                   {info.title}
                 </h3>
-                {info.link ? (
-                  <a
-                    href={info.link}
-                    className="text-gray-700 hover:text-black transition-colors"
-                  >
-                    {info.details}
-                  </a>
-                ) : (
-                  <p className="text-gray-700">{info.details}</p>
-                )}
+                <div className="space-y-2">
+                  {info.details.map((detail, index) =>
+                    info.links ? (
+                      <a
+                        key={index}
+                        href={info.links[index]}
+                        className="block text-gray-700 hover:text-black transition-colors"
+                      >
+                        {detail}
+                      </a>
+                    ) : (
+                      <p key={index} className="text-gray-700 text-sm">
+                        {detail}
+                      </p>
+                    )
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -128,7 +138,7 @@ export default function ContactPage() {
                     required
                     className="w-full px-4 py-3 bg-white border border-gray-300 rounded text-black outline-none focus:border-black transition"
                     style={{
-                      WebkitTextFillColor: 'black',
+                      WebkitTextFillColor: "black",
                     }}
                   />
                 </div>
@@ -146,7 +156,7 @@ export default function ContactPage() {
                     required
                     className="w-full px-4 py-3 bg-white border border-gray-300 rounded text-black outline-none focus:border-black transition"
                     style={{
-                      WebkitTextFillColor: 'black',
+                      WebkitTextFillColor: "black",
                     }}
                   />
                 </div>
@@ -164,7 +174,7 @@ export default function ContactPage() {
                     required
                     className="w-full px-4 py-3 bg-white border border-gray-300 rounded text-black outline-none focus:border-black transition"
                     style={{
-                      WebkitTextFillColor: 'black',
+                      WebkitTextFillColor: "black",
                     }}
                   />
                 </div>
@@ -182,7 +192,7 @@ export default function ContactPage() {
                     rows={5}
                     className="w-full px-4 py-3 bg-white border border-gray-300 rounded text-black outline-none focus:border-black transition resize-none"
                     style={{
-                      WebkitTextFillColor: 'black',
+                      WebkitTextFillColor: "black",
                     }}
                   />
                 </div>
@@ -208,7 +218,7 @@ export default function ContactPage() {
             <div className="flex flex-col gap-6">
               <div className="bg-white border border-gray-300 rounded-lg overflow-hidden h-96">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3739.7461896127505!2d85.8245138!3d20.2961363!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a1912d5e5e5e5e5%3A0x5e5e5e5e5e5e5e5e!2sBhubaneswar%2C%20Odisha!5e0!3m2!1sen!2sin!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3742.676584445834!2d85.8134525!3d20.2944588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a190954206e2679%3A0x1764c3deee8cf6da!2sEazydrivez%20Self%20drive%20Car%20And%20Bike%20rentals%20service%20in%20Bhubaneswar!5e0!3m2!1sen!2sin!4v1699000000000!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -220,19 +230,21 @@ export default function ContactPage() {
 
               <div className="bg-white border border-gray-300 rounded-lg p-6">
                 <h3 className="text-xl font-bold text-black mb-3">
-                  Quick Response
+                  Quick Response          
                 </h3>
                 <p className="text-gray-700 mb-4">
                   Our team typically responds within 1-2 hours during business
                   hours. For urgent inquiries, please call us directly.
                 </p>
-                <a
-                  href="tel:+919876543210"
-                  className="inline-flex items-center gap-2 text-black font-bold text-lg hover:underline"
-                >
-                  <Phone className="h-5 w-5" />
-                  +91 98765 43210
-                </a>
+                <div className="space-y-2">
+                  <a
+                    href="tel:+918093806834"
+                    className="flex items-center gap-2 text-black font-bold text-lg hover:underline"
+                  >
+                    <Phone className="h-5 w-5" />
+                    +91 8093806834
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -242,9 +254,7 @@ export default function ContactPage() {
       {/* CTA Section */}
       <section className="bg-black py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-4">
-            Ready to Book?
-          </h2>
+          <h2 className="text-4xl font-bold text-white mb-4">Ready to Book?</h2>
           <p className="text-lg text-gray-300 mb-8">
             Start your rental journey today. We're available 24/7 to assist you.
           </p>
@@ -256,7 +266,7 @@ export default function ContactPage() {
               Call Now
             </a>
             <a
-              href="mailto:info@rentalservice.in"
+              href="mailto:support@eazydrivez.com"
               className="border-2 border-white text-white hover:bg-white hover:text-black font-bold py-3 px-8 rounded transition"
             >
               Email Us

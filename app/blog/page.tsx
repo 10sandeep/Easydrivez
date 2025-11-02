@@ -18,10 +18,10 @@ interface Blog {
 
 const categories = [
   "All",
-  "Design",
-  "Gen Z Stuff",
-  "User Interface",
-  "User Experience",
+  "Cars",
+  "Bikes",
+  "Driving ",
+  "Safety ",
 ];
 
 const App = () => {

@@ -538,6 +538,7 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
                     className="w-full px-3 py-2.5 bg-gray-100 text-gray-900 border border-gray-300 rounded-lg text-sm [color-scheme:light]"
                   />
                 </div>
+          
               </div>
 
               <div className="grid grid-cols-2 gap-3">
