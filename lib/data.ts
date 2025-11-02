@@ -1,3 +1,18 @@
+import IMAGE1 from '@/assets/pic 1.jpg'; 
+import IMAGE2 from '@/assets/pic 2.jpg'; 
+import IMAGE3 from '@/assets/pic 3.jpg';
+import IMAGE4 from '@/assets/pic 4.jpg';
+import IMAGE5 from '@/assets/pic 5.jpg';
+import IMAGE6 from '@/assets/pic 6.jpg';
+import IMAGE7 from '@/assets/pic 7.jpg';
+import IMAGE8 from '@/assets/pic 8.jpg';
+import IMAGE9 from '@/assets/pic 9.jpg';
+import IMAGE10 from '@/assets/pic 10.jpg';
+import IMAGE11 from '@/assets/pic 11.jpg';
+import IMAGE12 from '@/assets/pic 12.jpg';
+import IMAGE13 from '@/assets/pic 13.jpg';
+import IMAGE14 from '@/assets/pic 14.jpg';
+
 export interface Car {
   id: number;
   name: string;
@@ -43,12 +58,14 @@ export interface Blog {
   content: string;
 }
 
-// export const backgroundImages: string[] = [
-//   "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=1920&q=80",
-//   "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1920&q=80",
-//   "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1920&q=80",
-//   "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80",
-// ];
+export interface ContactInfo {
+  phone: string[];
+  email: string;
+  address: string[];
+  hours: string;
+  acknowledgment: string;
+  lastUpdated: string;
+}
 
 export const featuredCars: Car[] = [
   {
@@ -124,7 +141,6 @@ export const featuredCars: Car[] = [
     features: ["Manual", "AC", "5 Seats"],
   },
 ];
-
 
 export const featuredBikes: Bike[] = [
   {
@@ -202,16 +218,20 @@ export const featuredBikes: Bike[] = [
 ];
 
 export const galleryImages: string[] = [
-  "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&q=80",
-  "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&q=80",
-  "https://images.unsplash.com/photo-1485291571150-772bcfc10da5?w=600&q=80",
-  "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=600&q=80",
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
-  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&q=80",
-  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&q=80",
-  "https://images.unsplash.com/photo-1557862921-37829c790f19?w=600&q=80",
-  "https://images.unsplash.com/photo-1554151228-14d9def656e4?w=600&q=80",
-  "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=600&q=80",
+  IMAGE1.src,
+  IMAGE2.src, 
+  IMAGE3.src, 
+  IMAGE4.src, 
+  IMAGE5.src,  
+  IMAGE6.src,  
+  IMAGE7.src,  
+  IMAGE8.src, 
+  IMAGE9.src,
+  IMAGE10.src,
+  IMAGE11.src,
+  IMAGE12.src,
+  IMAGE13.src,
+  IMAGE14.src,
 ];
 
 export const testimonials: Testimonial[] = [
@@ -240,7 +260,6 @@ export const termsAndConditionsData = {
     title: 'Terms & Conditions',
     subtitle: 'easydrivez Rental Services - Bhubaneswar'
   },
-
   sections: [
     {
       id: 'rental-period',
@@ -348,17 +367,20 @@ export const termsAndConditionsData = {
         'Failure to document pre-existing damage may result in the customer being held liable for any damage reported after the reservation.'
       ]
     }
+  ]
+};
+
+export const contact: ContactInfo = {
+  phone: ['+91 9090090699', '+91 9090089708', '+91 8093806834'],
+  email: 'support@eazydrivez.com',
+  address: [
+    'B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd., Bhubaneswar, Odisha 751015',
+    '38, Keshari Plaza Phase 2, Jadupur, Dumduma, Bhubaneswar 751019'
   ],
-
-  contact: {
-    phone: '+91 98765 43210',
-    email: 'info@rentalservice.in',
-    address: 'Bhubaneswar, Odisha 751001, India',
-    hours: '24/7 Service Available'
-  },
-
-  acknowledgment: 'By renting a vehicle from Mo Car, you acknowledge that you have read, understood, and agree to comply with all terms and conditions outlined in this agreement.',
-  lastUpdated: 'October 2025'
+  hours: '24/7 Service Available',
+  acknowledgment:
+    'By renting a vehicle from Mo Car, you acknowledge that you have read, understood, and agree to comply with all terms and conditions outlined in this agreement.',
+  lastUpdated: 'October 2025',
 };
 
 export const services = [
@@ -421,7 +443,6 @@ export const reasons = [
   }
 ];
 
-
 export const faqs: FAQItem[] = [
   {
     question: "What documents do I need to rent?",
@@ -462,7 +483,6 @@ export const faqs: FAQItem[] = [
     answer: "Yes, complimentary helmets are provided with all bike rentals.",
   },
 ];
-
 
 
 // Mock blog data

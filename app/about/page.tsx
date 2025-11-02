@@ -1,35 +1,37 @@
-import React from 'react';
-import { Car, Shield, Clock, Award, Users, MapPin } from 'lucide-react';
+import React from "react";
+import { Car, Shield, Clock, Award, Users, MapPin } from "lucide-react";
 
 export default function AboutPage() {
   const features = [
     {
       icon: Car,
-      title: 'Wide Selection',
-      description: 'Choose from our extensive fleet of cars and bikes for every occasion',
+      title: "Wide Selection",
+      description:
+        "Choose from our extensive fleet of cars and bikes for every occasion",
     },
     {
       icon: Shield,
-      title: 'Safe & Secure',
-      description: 'All vehicles are regularly maintained and thoroughly sanitized',
+      title: "Safe & Secure",
+      description:
+        "All vehicles are regularly maintained and thoroughly sanitized",
     },
     {
       icon: Clock,
-      title: '24/7 Support',
-      description: 'Round-the-clock customer service for your convenience',
+      title: "24/7 Support",
+      description: "Round-the-clock customer service for your convenience",
     },
     {
       icon: Award,
-      title: 'Best Prices',
-      description: 'Competitive rates with no hidden charges or surprises',
+      title: "Best Prices",
+      description: "Competitive rates with no hidden charges or surprises",
     },
   ];
 
   const stats = [
-    { number: '500+', label: 'Happy Customers' },
-    { number: '100+', label: 'Vehicles' },
-    { number: '5+', label: 'Years Experience' },
-    { number: '24/7', label: 'Support' },
+    { number: "500+", label: "Happy Customers" },
+    { number: "100+", label: "Vehicles" },
+    { number: "5+", label: "Years Experience" },
+    { number: "24/7", label: "Support" },
   ];
 
   return (
@@ -39,7 +41,7 @@ export default function AboutPage() {
         className="relative py-24 bg-cover bg-center"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=400&fit=crop')`,
-          backgroundAttachment: 'fixed',
+          backgroundAttachment: "fixed",
         }}
       >
         <div className="max-w-7xl mx-auto px-4 text-center">
@@ -47,7 +49,8 @@ export default function AboutPage() {
             About eazydrivez
           </h1>
           <p className="text-lg md:text-xl text-gray-200 drop-shadow-md max-w-3xl mx-auto">
-            Your trusted partner for premium car and bike rental services in Bhubaneswar
+            Your trusted partner for premium car and bike rental services in
+            Bhubaneswar
           </p>
         </div>
       </div>
@@ -77,20 +80,20 @@ export default function AboutPage() {
                 Our Story
               </h2>
               <p className="text-gray-600 mb-4 leading-relaxed">
-                Founded in Bhubaneswar, Eazydrivez has been providing reliable and
-                affordable vehicle rental services to customers across the city. We
-                understand that whether you're a tourist exploring the city or a local
-                in need of temporary transportation, you deserve quality service at
-                competitive prices.
+                Founded in Bhubaneswar, Eazydrivez has been providing reliable
+                and affordable vehicle rental services to customers across the
+                city. We understand that whether you're a tourist exploring the
+                city or a local in need of temporary transportation, you deserve
+                quality service at competitive prices.
               </p>
               <p className="text-gray-600 mb-4 leading-relaxed">
-                Our mission is simple: to make vehicle rentals easy, accessible, and
-                hassle-free. With a diverse fleet of well-maintained cars and bikes,
-                we cater to all your transportation needs.
+                Our mission is simple: to make vehicle rentals easy, accessible,
+                and hassle-free. With a diverse fleet of well-maintained cars
+                and bikes, we cater to all your transportation needs.
               </p>
               <p className="text-gray-600 leading-relaxed">
-                We take pride in our customer-first approach, ensuring every journey
-                with us is comfortable, safe, and memorable.
+                We take pride in our customer-first approach, ensuring every
+                journey with us is comfortable, safe, and memorable.
               </p>
             </div>
             <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl">
@@ -137,7 +140,7 @@ export default function AboutPage() {
       </div>
 
       {/* Location Section */}
-   <div className="py-16 bg-white">
+      <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-8 md:p-12 text-white border border-gray-700">
             <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -153,7 +156,11 @@ export default function AboutPage() {
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
                     <MapPin className="h-5 w-5 mt-1 flex-shrink-0" />
-                    <span>B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd., Bhubaneswar, Odisha 751015</span>
+                    <span>
+                      B-15 ID Market Nayapalli, in front of Saraswati Shishu
+                      Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd.,
+                      Bhubaneswar, Odisha 751015
+                    </span>
                   </div>
                   <div className="flex items-start gap-3">
                     <Clock className="h-5 w-5 mt-1 flex-shrink-0" />
@@ -163,7 +170,7 @@ export default function AboutPage() {
               </div>
               <div className="flex justify-center">
                 <a
-                  href="tel:+919090089708"
+                  href="tel:+919090090699"
                   className="bg-white text-black px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg inline-flex items-center gap-2"
                 >
                   <svg
@@ -195,7 +202,8 @@ export default function AboutPage() {
             Ready to Hit the Road?
           </h2>
           <p className="text-gray-600 mb-8 text-lg">
-            Book your perfect ride today and experience the convenience of Easydrivez
+            Book your perfect ride today and experience the convenience of
+            Easydrivez
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a

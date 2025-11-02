@@ -1,8 +1,8 @@
 "use client";
-
+import Image from "next/image";
+import Logo from "@/assets/logo1.png";
 import Link from "next/link";
 import {
-  Car,
   Facebook,
   Twitter,
   Instagram,
@@ -23,7 +23,7 @@ export function Footer() {
       { href: "/about", label: "About" },
       { href: "/terms", label: "Terms" },
       { href: "/contact", label: "Contact" },
-      { href: "/gallery", label: "Gallary" },
+      { href: "/gallery", label: "Gallery" },
     ],
     services: [
       { label: "Car Rentals", href: "/services#rentals" },
@@ -40,23 +40,27 @@ export function Footer() {
   ];
 
   return (
-    <footer className="relative bg-white border-t border-gray-200 text-gray-900">
-      <div className="container mx-auto px-4 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {/* Brand & Social */}
+    <footer className="relative bg-gradient-to-b from-gray-50 to-white border-t border-gray-200 text-gray-800">
+      <div className="container mx-auto px-6 lg:px-12 py-12 lg:py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+          {/* Brand Section */}
           <div>
             <Link href="/" className="flex items-center space-x-2 mb-4">
-              <Car className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">
-                Easydrivez
-              </span>
+              <Image
+                src={Logo}
+                alt="EazyDrivez Logo"
+                width={200}
+                height={80}
+                className="h-20 w-auto object-contain"
+                priority
+              />
             </Link>
-
-            <p className="text-gray-600 mb-4 leading-relaxed">
-              Premium car rental services with professional chauffeurs.
-              Experience luxury and comfort on every journey.
+            <p className="text-gray-600 mb-4 leading-relaxed text-sm">
+              Premium vehicle rental services — from economy to luxury rides.
+              Drive comfort and class with Eazydrivez.
             </p>
 
+            {/* Social Icons */}
             <div className="flex space-x-3">
               {socialLinks.map((social) => (
                 <a
@@ -76,7 +80,7 @@ export function Footer() {
             <h3 className="text-lg font-semibold mb-4 text-gray-900">
               Company
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-sm">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
                   <Link
@@ -95,7 +99,7 @@ export function Footer() {
             <h3 className="text-lg font-semibold mb-4 text-gray-900">
               Services
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-sm">
               {footerLinks.services.map((link) => (
                 <li key={link.href}>
                   <Link
@@ -114,26 +118,54 @@ export function Footer() {
             <h3 className="text-lg font-semibold mb-4 text-gray-900">
               Contact
             </h3>
-            <ul className="space-y-3">
-              <li className="flex items-start space-x-3 text-gray-600">
+            <ul className="space-y-4 text-sm">
+              {/* Address with Map Link */}
+              <li className="flex items-start space-x-3 text-gray-600 hover:text-blue-600 transition-colors">
                 <MapPin className="h-5 w-5 mt-0.5 text-blue-600 flex-shrink-0" />
-                <span>B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd., Bhubaneswar, Odisha 751015</span>
+                <a
+                  href="https://share.google/bavAd0rZrhngZvt94"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="leading-relaxed hover:underline"
+                >
+                  B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya
+                  Mandir, Beside Saura Shakti Enterprises Pvt. Ltd.,
+                  Bhubaneswar, Odisha 751015
+                </a>
               </li>
-              <li className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors">
-                <Phone className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                <a href="tel:+919876543210">+91 9090089708</a>
+
+              {/* Phone Numbers */}
+              <li className="flex flex-col gap-2 text-gray-600">
+                <div className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+                  <Phone className="h-5 w-5 text-blue-600" />
+                  <a href="tel:+919090090699">+91 9090090699</a>
+                </div>
+                <div className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+                  <Phone className="h-5 w-5 text-blue-600" />
+                  <a href="tel:+919090089708">+91 9090089708</a>
+                </div>
+                <div className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+                  <Phone className="h-5 w-5 text-blue-600" />
+                  <a href="tel:+918093806834">+91 8093806834</a>
+                </div>
               </li>
-              <li className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors">
+
+              {/* Email */}
+              <li className="flex items-center gap-3 text-gray-600 hover:text-blue-600 transition-colors">
                 <Mail className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                <a href="mailto:support@eazydrivez.com">support@eazydrivez.com</a>
+                <a href="mailto:support@eazydrivez.com" className="hover:underline">
+                  support@eazydrivez.com
+                </a>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Footer Bottom */}
-        <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-600">
-          <p>&copy; {currentYear} eazydrivez. All rights reserved.</p>
+        <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-600 text-sm">
+          <p>
+            &copy; {currentYear} <span className="font-semibold text-blue-600">Eazydrivez</span>. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

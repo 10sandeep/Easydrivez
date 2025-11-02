@@ -17,8 +17,10 @@ import Services from "@/components/service";
 import FeaturedBikesSection from "@/components/featuredbike";
 import FeaturedCarsSection from "@/components/featuredcar";
 
-
 export default function Home() {
+  const [cars, setCars] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [formData, setFormData] = useState({
     vehicleType: "",
     pickupLocation: "",
@@ -38,10 +40,61 @@ export default function Home() {
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  
+  // Seach vehicle
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      console.log("Form submitted with data:", formData);
 
-  const handleSubmit = () => {
-    alert("Searching for available vehicles...");
+      // Convert 12-hour time to 24-hour format if needed
+      const formatTime = (time: string, period: string) => {
+        let [hours, minutes] = time.split(":").map(Number);
+        if (period === "PM" && hours < 12) hours += 12;
+        if (period === "AM" && hours === 12) hours = 0;
+        return `${hours.toString().padStart(2, "0")}:${minutes
+          .toString()
+          .padStart(2, "0")}`;
+      };
+
+      const payload = {
+        vehicleType: formData.vehicleType,
+        pickupDate: formData.pickupDate,
+        pickupTime: formatTime(formData.pickupTime, formData.pickupPeriod),
+        dropoffDate: formData.dropDate,
+        dropoffTime: formatTime(formData.dropTime, formData.dropPeriod),
+      };
+
+      const res = await fetch("/api/vehicle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      setLoading(false);
+
+      const data = await res.json();
+
+      if (!data.success) {
+        alert("Error finding vehicles. Please try again.");
+        return;
+      }
+
+      console.log("Available vehicles:", data.data);
+
+      // Navigate based on vehicle type and pass results via query or localStorage
+      if (payload.vehicleType === "car") {
+        localStorage.setItem("availableCars", JSON.stringify(data.data));
+        router.push("/allcars");
+      } else if (payload.vehicleType === "bike") {
+        localStorage.setItem("availableBikes", JSON.stringify(data.data));
+        router.push("/allbikes");
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error("Error submitting form:", error);
+      alert("Something went wrong. Please try again later.");
+    }
   };
 
   const handleChange = (
@@ -65,6 +118,48 @@ export default function Home() {
   const handlePhone = () => {
     window.location.href = "tel:+919090089708";
   };
+
+  useEffect(() => {
+    const storedCars = localStorage.getItem("availableCars");
+    if (storedCars) {
+      setCars(JSON.parse(storedCars));
+    }
+    setLoading(false);
+  }, []);
+
+
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-600 bg-gradient-to-br from-blue-50 via-white to-orange-50">
+        <div className="text-center">
+          <div className="relative w-24 h-24 mx-auto mb-6">
+            {/* Animated wheel */}
+            <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-t-blue-600 border-r-orange-500 border-b-transparent border-l-transparent animate-spin"></div>
+            {/* Inner hub */}
+            <div className="absolute inset-6 rounded-full bg-gradient-to-br from-blue-600 to-orange-500 flex items-center justify-center">
+              <div className="w-4 h-4 rounded-full bg-white"></div>
+            </div>
+            {/* Spokes effect */}
+            <div className="absolute inset-8 flex items-center justify-center">
+              <div className="w-full h-0.5 bg-white/50 rotate-45"></div>
+              <div className="w-full h-0.5 bg-white/50 -rotate-45 absolute"></div>
+            </div>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            Getting Your Ride Ready
+          </h2>
+          <p className="text-gray-600 flex items-center justify-center gap-2">
+            <span>Loading vehicle details</span>
+            <span className="inline-flex gap-1">
+              <span className="animate-bounce">.</span>
+              <span className="animate-bounce delay-100">.</span>
+              <span className="animate-bounce delay-200">.</span>
+            </span>
+          </p>
+        </div>
+      </div>
+    );
 
   return (
     <div className="min-h-screen">
@@ -328,7 +423,7 @@ export default function Home() {
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                       />
                     </svg>
-                    Find Car
+                    Find Vehicle
                   </button>
                 </div>
               </div>
@@ -337,36 +432,85 @@ export default function Home() {
               <div className="h-px bg-gray-700 my-4"></div>
 
               {/* Contact Info */}
-              <div className="flex justify-center">
-                <a
-                  href="tel:+91 9090089708"
-                  className="group flex items-center gap-3"
-                >
-                  <div className="h-9 w-9 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition flex-shrink-0">
-                    <svg
-                      className="h-4 w-4 text-blue-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
-                      Need Help?
-                    </p>
-                    <p className="text-sm font-bold text-white">
-                      +91 9090089708
-                    </p>
-                  </div>
-                </a>
-              </div>
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+  {/* Phone Numbers */}
+  <div className="flex justify-center">
+    <a
+      href="tel:+919090089708"
+      className="group flex items-center gap-3"
+    >
+      <div className="h-9 w-9 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition flex-shrink-0">
+        <svg
+          className="h-4 w-4 text-blue-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+          />
+        </svg>
+      </div>
+      <div>
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+          Need Help?
+        </p>
+        <p className="text-sm font-bold text-white">
+          +91 9090089708
+        </p>
+        <p className="text-sm font-bold text-white">
+          +91 8093806834
+        </p>
+        <p className="text-sm font-bold text-white">
+          +91 9090090699
+        </p>
+      </div>
+    </a>
+  </div>
+
+  {/* Address */}
+  <div className="flex justify-center">
+    <a
+      href="https://www.google.com/maps/place/Eazydrivez+Self+drive+Car+And+Bike+rentals+service+in+Bhubaneswar/@20.2944588,85.8156412,17z/data=!3m1!4b1!4m6!3m5!1s0x3a190954206e2679:0x1764c3deee8cf6da!8m2!3d20.2944588!4d85.8156412!16s%2Fg%2F11mkc661z4"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex items-start gap-3"
+    >
+      <div className="h-9 w-9 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition flex-shrink-0">
+        <svg
+          className="h-4 w-4 text-blue-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+          />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+        </svg>
+      </div>
+      <div>
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+          Visit Us
+        </p>
+        <p className="text-sm font-bold text-white hover:text-blue-400 transition max-w-md">
+          B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd., Bhubaneswar, Odisha 751015
+        </p>
+      </div>
+    </a>
+  </div>
+</div>
             </div>
           </div>
         </div>
