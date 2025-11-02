@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface Car {
@@ -9,14 +8,14 @@ interface Car {
   carPicturate: string;
   brand: string;
   modelName: string;
-  seater: number;
-  type: string;
+  vehicleType: string;
   fuelType: string;
   transmission: string;
-  price12: string;
-  price24: string;
-  rating: number;
-  category: string;
+  seatingCapacity: number;
+  priceFor12Hours: number;
+  priceFor24Hours: number;
+  rating?: number;
+  category?: string;
   available: boolean;
 }
 
@@ -53,7 +52,7 @@ export default function FeaturedCarsSection() {
 
         const data = await res.json();
         if (data.status && data.cars) {
-          // Optional: only take top 4 cars for featured section
+          // only show first 4 cars for featured section
           setCars(data.cars.slice(0, 4));
         } else {
           throw new Error(data.message || "Unexpected response from server");
@@ -131,7 +130,7 @@ export default function FeaturedCarsSection() {
           {cars.map((car, idx) => (
             <div
               key={car._id || idx}
-              className="group rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer bg-white shadow-md card-hover animate-scale-in"
+              className="group rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer bg-white shadow-md hover:shadow-xl animate-scale-in"
               style={{ animationDelay: `${idx * 0.1}s` }}
             >
               {/* Image */}
@@ -143,7 +142,7 @@ export default function FeaturedCarsSection() {
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
                   <span className="text-white text-xs font-semibold bg-black/40 px-3 py-1 rounded-full">
-                    {car.type}
+                    {car.vehicleType}
                   </span>
                 </div>
               </div>
@@ -168,15 +167,16 @@ export default function FeaturedCarsSection() {
                 </div>
 
                 <p className="text-sm text-gray-600 mb-3 capitalize">
-                  {car.category} • {car.fuelType} • {car.transmission}
+                  {car.category || "Standard"} • {car.fuelType} •{" "}
+                  {car.transmission}
                 </p>
 
                 <div className="flex gap-2 mb-4 flex-wrap">
                   <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">
-                    {car.seater} Seater
+                    {car.seatingCapacity} Seater
                   </span>
                   <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">
-                    {car.type}
+                    {car.vehicleType}
                   </span>
                 </div>
 
@@ -185,7 +185,7 @@ export default function FeaturedCarsSection() {
                     <div>
                       <p className="text-xs text-gray-600">from</p>
                       <p className="text-2xl font-bold text-gray-900">
-                        {car.price12}
+                        ₹{car.priceFor12Hours}
                       </p>
                       <p className="text-xs text-gray-600">for 12 hours</p>
                     </div>
@@ -197,7 +197,10 @@ export default function FeaturedCarsSection() {
                     </button>
                   </div>
                   <p className="text-xs text-gray-600">
-                    24 hours: {car.price24}
+                    24 hours:{" "}
+                    <span className="font-bold">
+                      ₹{car.priceFor24Hours}
+                    </span>
                   </p>
                 </div>
               </div>
