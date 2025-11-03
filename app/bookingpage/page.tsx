@@ -7,9 +7,10 @@ import Link from "next/link";
 export default function BookingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const [carData, setCarData] = useState<any>(null);
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [carId, setCarId] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,19 +22,25 @@ export default function BookingPage() {
   });
 
   useEffect(() => {
-    // Get car data from URL parameters
     const carDataParam = searchParams.get("car");
+
     if (carDataParam) {
       try {
-        const car = JSON.parse(decodeURIComponent(carDataParam));
-        setCarData(car);
+        // Decode the URL-encoded JSON string
+        const carData = JSON.parse(decodeURIComponent(carDataParam));
+
+        // Extract and set the car ID
+        setCarId(carData._id);
+        console.log("Car ID:", carData._id);
       } catch (error) {
         console.error("Error parsing car data:", error);
       }
     }
   }, [searchParams]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -43,27 +50,27 @@ export default function BookingPage() {
 
   const calculateDays = () => {
     if (!formData.pickupDate || !formData.dropDate) return 0;
-    
+
     const pickup = new Date(formData.pickupDate);
     const drop = new Date(formData.dropDate);
     const diffTime = Math.abs(drop.getTime() - pickup.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     return diffDays === 0 ? 1 : diffDays;
   };
 
   const calculatePrice = () => {
     if (!carData) return 0;
-    
+
     const days = calculateDays();
     const basePrice = carData.pricePerDay || 0;
-    
+
     return basePrice * days;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (
       !formData.name ||
       !formData.email ||
@@ -87,7 +94,11 @@ export default function BookingPage() {
 
     console.log("Booking submitted:", formData);
     alert(
-      `Booking request for ${carData?.name}\nName: ${formData.name}\nEmail: ${formData.email}\nMobile: ${formData.mobile}\nDuration: ${rentalDays} day(s)\nEstimated Price: ₹${estimatedPrice.toLocaleString()}\nPayment: On Site (Cash/UPI)`
+      `Booking request for ${carData?.name}\nName: ${formData.name}\nEmail: ${
+        formData.email
+      }\nMobile: ${
+        formData.mobile
+      }\nDuration: ${rentalDays} day(s)\nEstimated Price: ₹${estimatedPrice.toLocaleString()}\nPayment: On Site (Cash/UPI)`
     );
 
     // Navigate back or to confirmation page
@@ -137,7 +148,7 @@ export default function BookingPage() {
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
               {carData.name}
             </h2>
-            
+
             {/* Car Image */}
             <div className="mb-8">
               <img
@@ -342,7 +353,7 @@ export default function BookingPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={!acceptTerms}
-                  className="w-full bg-black hover:bg-gray-800 text-white font-bold py-4 px-6 rounded-lg 
+                  className="w-full bg-black hover:bg-gray-800 text-white font-bold py-4 px-6 rounded-lg
                            transition-all active:scale-95 shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed
                            flex flex-col items-center gap-2"
                 >
@@ -372,5 +383,6 @@ export default function BookingPage() {
         </div>
       </div>
     </div>
+    
   );
 }

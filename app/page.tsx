@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { MessageCircle, Phone } from "lucide-react";
+import { ArrowRight, MessageCircle, Phone } from "lucide-react";
+import CarImage from "@/public/car-hero.png";
 // import {
 //   featuredCars,
 //   featuredBikes,
@@ -127,7 +128,6 @@ export default function Home() {
     setLoading(false);
   }, []);
 
-
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-600 bg-gradient-to-br from-blue-50 via-white to-orange-50">
@@ -162,7 +162,7 @@ export default function Home() {
     );
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen mt-20 bg-white">
       {/* Sticky Contact Buttons */}
       <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
         {/* WhatsApp Button */}
@@ -185,49 +185,45 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] overflow-hidden">
-        {/* Background Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${HeroImage.src})` }}
+       <section className="relative min-h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden bg-gradient-to-b from-[#FFE6CC] to-[#FFF5EB] px-6">
+      {/* === Heading Section === */}
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight max-w-3xl mb-4">
+        Experience the smooth <br className="hidden sm:block" />
+        drives of <span className="text-[#FF5C35]">premium rentals</span>
+      </h1>
+
+      {/* === Car Image === */}
+      <div className="relative mt-6">
+        <img
+          src={CarImage.src}
+          alt="Premium Rental Car"
+          className="w-[420px] sm:w-[500px] md:w-[580px] drop-shadow-2xl mx-auto"
         />
+      </div>
 
-        {/* Dark Overlay for Better Readability */}
-        <div className="absolute inset-0 bg-black/60 md:bg-black/40"></div>
+      {/* === CTA Buttons === */}
+      <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
+        <button
+          onClick={handleRentCar}
+          className="flex items-center gap-2 bg-[#FF5C35] hover:bg-[#ff754f] text-white font-semibold text-sm sm:text-base px-8 py-3 rounded-full transition-all hover:scale-105 active:scale-95 shadow-md"
+        >
+          Rent a Car <ArrowRight size={18} />
+        </button>
 
-        {/* Content */}
-        <div className="relative z-20 flex flex-col justify-center items-start h-full px-6 sm:px-8 md:px-16 lg:px-32 text-white py-24 md:py-32">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight max-w-xl">
-            Drive Beyond Limits
-            <br />
-            with Eazydrivez
-          </h1>
+        <button
+          onClick={handleRentBike}
+          className="flex items-center gap-2 border border-[#FF5C35] text-[#FF5C35] font-semibold text-sm sm:text-base px-8 py-3 rounded-full hover:bg-[#FF5C35]/10 transition-all hover:scale-105 active:scale-95"
+        >
+          Rent a Bike <ArrowRight size={18} />
+        </button>
+      </div>
 
-          <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-sm sm:max-w-md leading-relaxed">
-            To drive meaningful impact and achieve our sustainability goals
-            through collective innovation.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <button
-              onClick={handleRentCar}
-              className="px-6 py-3 sm:px-8 bg-yellow-400 text-black font-semibold rounded-md hover:bg-yellow-600 transition-colors text-sm sm:text-base"
-            >
-              Rent Car
-            </button>
-            <button
-              onClick={handleRentBike}
-              className="px-6 py-3 sm:px-8 bg-transparent border-2 border-white text-white font-semibold rounded-md hover:bg-yellow-600 hover:text-black transition-colors text-sm sm:text-base"
-            >
-              Rent Bike
-            </button>
-          </div>
-        </div>
-      </section>
+     
+    </section>
 
       {/* BOOKING FORM SECTION BELOW HERO */}
-      <section className="relative z-20 -mt-16 mb-16 px-4">
-        <div className="max-w-7xl mx-auto">
+      <section className="relative bg-white z-20 -mt-16 mb-16 px-4">
+        <div className="max-w-7xl mt-8 mx-auto">
           <div className="bg-gray-900/95 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden border border-gray-700">
             <div className="p-5">
               {/* All Fields in One Grid */}
@@ -432,85 +428,87 @@ export default function Home() {
               <div className="h-px bg-gray-700 my-4"></div>
 
               {/* Contact Info */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-  {/* Phone Numbers */}
-  <div className="flex justify-center">
-    <a
-      href="tel:+919090089708"
-      className="group flex items-center gap-3"
-    >
-      <div className="h-9 w-9 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition flex-shrink-0">
-        <svg
-          className="h-4 w-4 text-blue-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-          />
-        </svg>
-      </div>
-      <div>
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
-          Need Help?
-        </p>
-        <p className="text-sm font-bold text-white">
-          +91 9090089708
-        </p>
-        <p className="text-sm font-bold text-white">
-          +91 8093806834
-        </p>
-        <p className="text-sm font-bold text-white">
-          +91 9090090699
-        </p>
-      </div>
-    </a>
-  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                {/* Phone Numbers */}
+                <div className="flex justify-center">
+                  <a
+                    href="tel:+919090089708"
+                    className="group flex items-center gap-3"
+                  >
+                    <div className="h-9 w-9 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition flex-shrink-0">
+                      <svg
+                        className="h-4 w-4 text-blue-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                        Need Help?
+                      </p>
+                      <p className="text-sm font-bold text-white">
+                        +91 9090089708
+                      </p>
+                      <p className="text-sm font-bold text-white">
+                        +91 8093806834
+                      </p>
+                      <p className="text-sm font-bold text-white">
+                        +91 9090090699
+                      </p>
+                    </div>
+                  </a>
+                </div>
 
-  {/* Address */}
-  <div className="flex justify-center">
-    <a
-      href="https://www.google.com/maps/place/Eazydrivez+Self+drive+Car+And+Bike+rentals+service+in+Bhubaneswar/@20.2944588,85.8156412,17z/data=!3m1!4b1!4m6!3m5!1s0x3a190954206e2679:0x1764c3deee8cf6da!8m2!3d20.2944588!4d85.8156412!16s%2Fg%2F11mkc661z4"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group flex items-start gap-3"
-    >
-      <div className="h-9 w-9 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition flex-shrink-0">
-        <svg
-          className="h-4 w-4 text-blue-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
-      </div>
-      <div>
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
-          Visit Us
-        </p>
-        <p className="text-sm font-bold text-white hover:text-blue-400 transition max-w-md">
-          B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd., Bhubaneswar, Odisha 751015
-        </p>
-      </div>
-    </a>
-  </div>
-</div>
+                {/* Address */}
+                <div className="flex justify-center">
+                  <a
+                    href="https://www.google.com/maps/place/Eazydrivez+Self+drive+Car+And+Bike+rentals+service+in+Bhubaneswar/@20.2944588,85.8156412,17z/data=!3m1!4b1!4m6!3m5!1s0x3a190954206e2679:0x1764c3deee8cf6da!8m2!3d20.2944588!4d85.8156412!16s%2Fg%2F11mkc661z4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-start gap-3"
+                  >
+                    <div className="h-9 w-9 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition flex-shrink-0">
+                      <svg
+                        className="h-4 w-4 text-blue-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                        Visit Us
+                      </p>
+                      <p className="text-sm font-bold text-white hover:text-blue-400 transition max-w-md">
+                        B-15 ID Market Nayapalli, in front of Saraswati Shishu
+                        Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd.,
+                        Bhubaneswar, Odisha 751015
+                      </p>
+                    </div>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

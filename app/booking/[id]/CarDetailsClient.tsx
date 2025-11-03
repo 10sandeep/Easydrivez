@@ -31,7 +31,11 @@ interface BookingResponse {
   // Add other response fields as needed
 }
 
-export default function CarDetailsClient({ params }: { params: { id: string } }) {
+export default function CarDetailsClient({
+  params,
+}: {
+  params: { id: string };
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -55,7 +59,8 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
 
   // Success modal state
   const [bookingSuccess, setBookingSuccess] = useState(false);
-  const [bookingResponse, setBookingResponse] = useState<BookingResponse | null>(null);
+  const [bookingResponse, setBookingResponse] =
+    useState<BookingResponse | null>(null);
 
   // Decode vehicle passed in search params (car or bike)
   useEffect(() => {
@@ -66,8 +71,11 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
 
       if (rawData) {
         const decoded = JSON.parse(decodeURIComponent(rawData));
+        decoded.price12 = decoded.priceFor12Hours;
+        decoded.price24 = decoded.priceFor24Hours;
         setVehicle(decoded);
         setIsBike(!!bikeParam);
+        console.log("data", decoded);
       } else {
         setError("No vehicle data found in URL parameters.");
       }
@@ -200,7 +208,8 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
   };
 
   const copyBookingId = () => {
-    const bookingId = bookingResponse?.booking?._id || bookingResponse?.booking?.id;
+    const bookingId =
+      bookingResponse?.booking?._id || bookingResponse?.booking?.id;
     if (bookingId) {
       navigator.clipboard.writeText(bookingId).then(() => {
         // Optional: Show a toast or alert for copy success
@@ -233,7 +242,8 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
       vehicleDetails: {
         brand: vehicle?.brand || "",
         model: vehicle?.modelName || vehicle?.model || "",
-        image: vehicle?.carPicturate || vehicle?.bikeImage || vehicle?.image || "",
+        image:
+          vehicle?.carPicturate || vehicle?.bikeImage || vehicle?.image || "",
         type: vehicle?.type || vehicle?.category || "",
         cc: vehicle?.cc,
         seater: vehicle?.seater,
@@ -538,7 +548,6 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
                     className="w-full px-3 py-2.5 bg-gray-100 text-gray-900 border border-gray-300 rounded-lg text-sm [color-scheme:light]"
                   />
                 </div>
-          
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -602,8 +611,8 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
                 {submitting
                   ? "Booking..."
                   : priceDetails.hours > 0
-                    ? `Payment On Site - ${priceDetails.display}`
-                    : "Payment On Site"}
+                  ? `Payment On Site - ${priceDetails.display}`
+                  : "Payment On Site"}
               </button>
             </form>
           </div>
@@ -652,14 +661,16 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
 
               <div className="bg-gray-50 rounded-md p-4 mb-4">
                 <div className="text-sm text-gray-700 mb-2">
-                  <strong>Vehicle:</strong>{" "}
-                  {vehicle.brand} {vehicle.modelName || vehicle.model}
+                  <strong>Vehicle:</strong> {vehicle.brand}{" "}
+                  {vehicle.modelName || vehicle.model}
                 </div>
                 <div className="text-sm text-gray-700 mb-2">
-                  <strong>Pickup:</strong> {formData.pickupDate} {formData.pickupTime}
+                  <strong>Pickup:</strong> {formData.pickupDate}{" "}
+                  {formData.pickupTime}
                 </div>
                 <div className="text-sm text-gray-700 mb-2">
-                  <strong>Drop-off:</strong> {formData.dropoffDate} {formData.dropoffTime}
+                  <strong>Drop-off:</strong> {formData.dropoffDate}{" "}
+                  {formData.dropoffTime}
                 </div>
                 <div className="text-sm text-gray-700 mb-2">
                   <strong>Duration:</strong> {priceDetails.hours} hours
@@ -673,7 +684,8 @@ export default function CarDetailsClient({ params }: { params: { id: string } })
                     <div>
                       <strong>Booking ID:</strong>{" "}
                       <span className="font-mono">
-                        {bookingResponse.booking._id || bookingResponse.booking.id}
+                        {bookingResponse.booking._id ||
+                          bookingResponse.booking.id}
                       </span>
                     </div>
                   </div>

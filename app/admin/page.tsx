@@ -600,7 +600,7 @@ export default function AdminPanel() {
 
       const res = await fetch(url, {
         method,
-        body: formDataToSend,
+        body: JSON.stringify(blogFormData),
       });
 
       const data = await res.json();

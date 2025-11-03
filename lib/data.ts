@@ -236,19 +236,25 @@ export const galleryImages: string[] = [
 
 export const testimonials: Testimonial[] = [
   {
-    name: "Rajesh Kumar",
+    name: "Sujata Sahoo",
     rating: 5,
     text: "Amazing service! The car was in perfect condition and the staff was very helpful. Will definitely rent again.",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
   },
   {
-    name: "Priya Sharma",
+    name: "Akhaya Barik",
     rating: 5,
     text: "Great experience renting a bike for my weekend trip. Smooth process and affordable rates!",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
   },
   {
-    name: "Amit Patel",
+    name: "Ranjan Das",
+    rating: 4,
+    text: "Professional service and well-maintained vehicles. Customer support was excellent throughout.",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+  },
+    {
+    name: "Suman Nayak",
     rating: 4,
     text: "Professional service and well-maintained vehicles. Customer support was excellent throughout.",
     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
@@ -258,115 +264,152 @@ export const testimonials: Testimonial[] = [
 export const termsAndConditionsData = {
   header: {
     title: 'Terms & Conditions',
-    subtitle: 'easydrivez Rental Services - Bhubaneswar'
+    subtitle: 'eazydrivez Rental Services - Bhubaneswar'
   },
   sections: [
     {
       id: 'rental-period',
-      title: '1. RENTAL PERIOD & DROP-OFF POLICY',
+      title: '1. General Terms',
       content: [
-        'Provisional Drop-off Time: Will be specified at the time of booking.',
-        'Final Drop-off: Will be confirmed upon vehicle return to Mo Car.',
-        'Late Return Penalty: Any delay exceeding 30 minutes without prior notification will attract hourly charges.',
-        'Trip Extension: Must be requested at least 6 hours before the provisional drop-off time. Standard rates will apply for extensions.'
+        'Eazydrivez is at the sole risk of the Customer.',
+        'The liability of Eazydrivez is excluded to the fullest extent permitted by law.',
+        'Customer can rent a vehicle under Eazydrivez platform for Tourist Purposes.',
       ]
     },
     {
       id: 'damage',
-      title: '2. VEHICLE DAMAGE & ACCIDENT LIABILITY',
+      title: '2. Documents Required',
       content: [
-        'The customer is responsible for all penalties, fines, and damages incurred during the rental period.',
-        'Repair Cost: Customer must pay 100% of the accidental repair cost (as estimated by authorized service center) plus daily tariff until the vehicle is ready for rental again.',
-        'Notification: Customer must inform Mo Car within 2 hours and file a police report within 48 hours.',
-        'Theft: In case of vehicle theft, the customer is liable to pay the full market rate of the vehicle.'
+        'Driving license and Adhar Card, Voter Id Issued by Authority or Institution.',
+        'Local IDs/Students Must carry their Job/College/Institution Id Card for the Address Proof.',
+        'Customers Can Mail their Driving license, Adhar Card Copy or Other ID & Live Photo in support@eazydrivez.com for the Pre verification of your documents.',
+        ' In the absence of any Valid/required Documents the booking will be treated as Cancelled and Rs.500/- + Online Transaction charge is deductible from Total amount Paid.'
       ]
     },
     {
       id: 'return',
-      title: '3. VEHICLE RETURN REQUIREMENTS',
+      title: '3.Age Requirement',
       content: [
-        'Vehicles must be returned on the specified provisional date and time as per the rental agreement.',
-        'Vehicle must be in the same condition as at pick-up (excluding normal wear and tear).',
-        'Fuel level must match the pick-up level. Extra fuel is non-refundable; shortage will be charged.',
-        'All pre-existing damages must be documented and acknowledged at the time of pick-up.'
+        'Minimum 21 Years for Normal vehicles.',
+        'Minimum 25 Years for Premium Range vehicles.',
       ]
     },
     {
       id: 'documents',
-      title: '4. MANDATORY DOCUMENTS',
+      title: '4.Prohibited Use ',
       content: [
-        'Valid Driving License issued by the Government of India',
-        'Photo ID (Aadhaar Card, Voter ID, or Passport)',
-        'College/Company ID (for verification)'
+        'Customers are not allowed to carry arms, ammunitions banned drugs & Pets. In addition, use of car for commercial activity such as product sell and promotion, and carrying goods is strictly prohibited. In such cases, customers will be charged a penalty of Rs. 5000 or The Penalty charged by the Authorities whichever is Higher.',
+        'For any speed race or competition',
+        'For the purpose of towing, pushing, Marriage or propelling any trailer or any other vehicle;',
+        'For the primary business purpose of transporting people or operating a taxi service;',
+        'By any person who is under the influence of (i) alcohol or (ii) any drug or medication under the effects of which the operation of a vehicle is prohibited or not recommended;',
+        'Illegal Nature: For the purpose of commission of any crime or other illegal or unlawful activity.',
+         'Only Renter is authorised to drive the vehicle. If any other person found Driving the vehicle or Sub letting of vehicle then Security money will be forfeited of the renter.',
+         'Smoking, Drinking & Other Types of Drugs Not Allowed Inside The car. If Anything Found inside the car then it will be chargeable Rs.3000/-',
+         ' If vehicle not found in same condition after trip completion, 200/- washing charges will be applicable.'
       ]
     },
     {
       id: 'usage',
-      title: '5. VEHICLE USAGE RULES',
+      title: '5. Over Speeding Charges',
       content: [
-        'Speed Limit: Maximum 80 km/hr. Customers must adhere to speed limit boards.',
-        'KM Limit: Will be informed at the time of pick-up.',
-        'Proper Handling: Vehicle must be used skillfully and properly by a valid license holder only.',
-        'Helmet/Seatbelt: Mandatory during entire rental period.',
-        'Fuel: Rental fare does not include fuel costs or toll taxes (to be paid separately by customer).'
+        'Exceeding 80km/Hour:',
+        ' A penalty of Rs. 200 shall be charged on the first instance.',
+        ' An additional penalty of Rs 500/- shall be charged each time from the second instance of speed violation.',
+        'Mode of payment: Cash / PAYTM / Phone Pe / G Pay/ Card Payments /Online.',
+        'If Any Violation of Terms & Conditions done by Customer then the Security Money will be Refund/Adjust within 24 Hours from the Drop Time in respective Bank Account/ Phone Pe/ G Pay/ PAYTM, Etc.'
       ]
     },
     {
       id: 'prohibited',
-      title: '6. PROHIBITED ACTIVITIES',
+      title: '6. Kilometers Limitation',
       content: [
-        'Any illegal purpose or activity',
-        'Reckless, negligent, or unreasonable driving',
-        'Commercial purposes (unless explicitly agreed)',
-        'Selling, renting, or transferring the vehicle or its parts',
-        'Attempting to give legal rights over the vehicle to any third party',
-        'Any unauthorized modifications or removal of components'
+        'There is Unlimited Kms Offered to the Customer In the Normal range vehicles.',
+        ' Outside Odisha: Customer Must Inform In Advance if planning to Cross the Odisha State Border Before 24 Hours of Pick up time. Booking done for outside odisha trip without any information will be treated as Invalid booking and no refund will be done.',
+        'Unlimited Kilometers Only applicable On & above 24 Hours Bookings only up to 350 Kms/24 Hrs.',
+        '250 Kms is Limited for 12 Hours Booking.',
       ]
     },
     {
       id: 'modifications',
-      title: '7. VEHICLE MODIFICATIONS & MAINTENANCE',
+      title: '7. Roadside Assistance',
       content: [
-        'No alterations or component removal are permitted unless immediately replaced with the same or equivalent/improved version.',
-        'Any concerns regarding vehicle condition must be reported immediately and documented with photos.'
+        'Eazydrivez makes reasonable best efforts to provide roadside assistance support in all cases. ',
+        'If, however, a User\'s need for Roadside Assistance results from a breach of these Terms and Conditions, the User may be charged for the full costs of the service.'
       ]
     },
     {
       id: 'bikes',
-      title: '8. SPECIAL PROVISIONS FOR BIKES & SCOOTERS',
+      title: '8. Late Charges',
       content: [
-        'Complimentary Helmet: One helmet is provided free with every motorcycle rental and must be returned undamaged.',
-        'Additional Helmets: Rs. 50/- per extra helmet will be charged.',
-        'Minor Damage: Rs. 200/- per helmet',
-        'Major Damage/Loss: Market value of the helmet'
+        'If the Customer Exceeds the Time Limit without any information Before 06 Hours of expiry Of time then it will be Chargeable Rs, 500/- as a fine in addition to extra Per Hour Charge Rs, 200/Hour.',
+        ' Extension Rules are Subject to availability of vehicles.',
+   
       ]
     },
     {
       id: 'legal',
-      title: '9. LEGAL JURISDICTION & LIABILITY',
+      title: '9. Insurance & Damage Charges',
       content: [
-        'All legal disputes or conflicts arising from Mo Car rental services shall be subject to the exclusive jurisdiction of courts in Bhubaneswar, Odisha, India.',
-        'Customer is liable to pay Mo Car\'s reasonable attorney fees and bear all legal proceeding costs, including appeals.',
-        'Mo Car may immediately terminate the rental agreement upon suspicion or discovery of breach of these terms and conditions.'
+        'The company will not be responsible for any damages during the travel, if any damage while travel. Renter should take care of the repair charges by their own up to Rs.25000/- In Normal range vehicles & Rs. 75,000/-',
+        ' Insurance claim can be applicable for damage or repaired charges above Rs.25000/- For Normal vehicles & Rs.75, 000/- for premium range Vehicles only. For any excess charges apart from claim amount, the renter will be liable to pay.',
+        ' While travel if any mechanical fault in the car, our company will do alternate arrangements without any cost.',
+        ' For More Information Regarding Damage Charges refer the Car Manual available in Respective Sites.',
       ]
     },
     {
       id: 'third-party',
-      title: '10. THIRD-PARTY RIGHTS',
+      title: '10. Vehicle Tracking',
       content: [
-        'Only parties to the Rental Agreement can enforce responsibilities outlined herein.',
-        'No third party can enforce any of Mo Car\'s obligations under this agreement.'
+        'ehicles registered with Eazydrivez may be continuously tracked by using GPS for security reasons or for reasons deemed fit and proper by Eazydrivez.',
+        'Eazydrivez shall be entitled to terminate any booking at any time without giving any reason or prior notice to the Customer.'
       ]
     },
     {
       id: 'inspection',
-      title: '11. PRE-RENTAL INSPECTION',
+      title: '11. Home Delivery',
       content: [
-        'Prior to vehicle pick-up, the customer must document any pre-existing damage.',
-        'Photographs of the vehicle\'s condition at the start of rental must be taken and emailed to Mo Car for record.',
-        'Failure to document pre-existing damage may result in the customer being held liable for any damage reported after the reservation.'
+        'Airport Delivery is free. (Only toll charges applicable)',
+        'Home delivery is Chargeable Rs. 500/- Including Pick up/Drop up within the radius of 20Km.',
+      
       ]
-    }
+    },
+        {
+      id: 'cancelpolicy',
+      title: '12. Cancellation Policy',
+      content: [
+        ' 50% of the total amount will be deduct in any cancellation before 24 hours from the time of Pick up.',
+        '75% of The Total Amount of Rental Will be Deductible in case of any cancellation within 24 hours from the time of Pick up.',
+      ' Rs.500 Will be Deductible on Swiping/Change of Vehicle. In Covid Cases of Lock down/Shut Down/Night Curfew Customers can Postponed their booking to the future dates subject to availability. No Refunds in case of any cancellation for Covid Reasons.',
+      'If Customer Doesn\'t Pick Up the Vehicle Within 06 Hours From the Pick up time without Information then the Booking will be Treated as Cancelled & No amount will be refunded.',
+      'Cancellation refund amount will be credited within 07 Working Days from the Date of Cancellation.'
+      ]
+    },
+            {
+      id: 'workinghours',
+      title: '13. Working Hours',
+      content: [
+        ' Our working hours are from 7:00 AM to 10:00 PM daily.',
+       
+      ]
+    },
+             {
+      id: 'fuelpolicy',
+      title: '14. Fuel Policy',
+      content: [
+        'The vehicle must be returned by the customer, upon completion of the booking with fuel at the same level as at start of the booking.',
+        ' If the vehicle returned with lesser fuel than the fuel level at the start of the trip, then refueling charge will be applicable.',
+       
+      ]
+    },
+             {
+      id: 'workinghours',
+      title: '15. Questions and Concerns',
+      content: [
+        ' In case of any questions or concerns/complaints about the Policy or data processing, Users shall reach us on call & WhatsApp +91-8093806834.',
+       
+      ]
+    },
   ]
 };
 
@@ -379,7 +422,7 @@ export const contact: ContactInfo = {
   ],
   hours: '24/7 Service Available',
   acknowledgment:
-    'By renting a vehicle from Mo Car, you acknowledge that you have read, understood, and agree to comply with all terms and conditions outlined in this agreement.',
+    'By renting a vehicle from eazydrivez, you acknowledge that you have read, understood, and agree to comply with all terms and conditions outlined in this agreement.',
   lastUpdated: 'October 2025',
 };
 

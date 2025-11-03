@@ -30,7 +30,7 @@ export function Navbar() {
     { href: "/about", label: "About" },
     { href: "/blog", label: "Blogs" },
     { href: "/contact", label: "Contact" },
-    { href: "/gallery", label: "Gallery" },
+    { href: "/gallary", label: "Gallery" },
   ];
 
   const faqLink = { href: "/faq", label: "FAQ" };

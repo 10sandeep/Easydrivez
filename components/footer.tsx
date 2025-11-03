@@ -21,7 +21,6 @@ export function Footer() {
       { href: "/allcars", label: "All Cars" },
       { href: "/allbikes", label: "All Bikes" },
       { href: "/about", label: "About" },
-      { href: "/terms", label: "Terms" },
       { href: "/contact", label: "Contact" },
       { href: "/gallery", label: "Gallery" },
     ],
@@ -30,6 +29,10 @@ export function Footer() {
       { label: "Chauffeur Services", href: "/services#chauffeur" },
       { label: "Airport Pickup", href: "/services#airport" },
     ],
+    legals:[
+      {href : "/terms", label: "Terms & Conditions"},
+      {href : "/privacy", label:"Privacy & Policy"}
+    ]
   };
 
   const socialLinks = [
@@ -42,7 +45,7 @@ export function Footer() {
   return (
     <footer className="relative bg-gradient-to-b from-gray-50 to-white border-t border-gray-200 text-gray-800">
       <div className="container mx-auto px-6 lg:px-12 py-12 lg:py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div>
             <Link href="/" className="flex items-center space-x-2 mb-4">
@@ -113,6 +116,23 @@ export function Footer() {
             </ul>
           </div>
 
+  <div>
+            <h3 className="text-lg font-semibold mb-4 text-gray-900">
+              Legals
+            </h3>
+            <ul className="space-y-2 text-sm">
+              {footerLinks.legals.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-600 hover:text-blue-600 transition-colors inline-block hover:translate-x-1 duration-200"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
           {/* Contact Info */}
           <div>
             <h3 className="text-lg font-semibold mb-4 text-gray-900">
