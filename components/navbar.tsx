@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Car, Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Logo from "@/assets/logo1.png";
 
@@ -14,7 +14,6 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -23,26 +22,6 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // Handle click outside to close mobile menu
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        mobileMenuRef.current &&
-        !mobileMenuRef.current.contains(event.target as Node)
-      ) {
-        setIsMobileMenuOpen(false);
-      }
-    };
-
-    if (isMobileMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isMobileMenuOpen]);
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -58,7 +37,6 @@ export function Navbar() {
 
   return (
     <nav
-      ref={mobileMenuRef}
       className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
         isScrolled
           ? "bg-white/80 dark:bg-gray-950/100 backdrop-blur-lg shadow-md border-gray-200 dark:border-gray-800"
@@ -132,40 +110,50 @@ export function Navbar() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white/95 dark:bg-gray-950/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 transition-all duration-300">
-          <div className="container mx-auto px-6 py-4 space-y-4">
-            {navLinks.map((link) => (
-              <div key={link.href}>
+        <>
+          {/* Backdrop/Overlay */}
+          <div 
+            className="fixed inset-0 bg-black/20 dark:bg-black/40 md:hidden z-40"
+            onClick={() => setIsMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+          
+          {/* Menu Content */}
+          <div className="md:hidden bg-white/95 dark:bg-gray-950/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 transition-all duration-300 relative z-50">
+            <div className="container mx-auto px-6 py-4 space-y-4">
+              {navLinks.map((link) => (
+                <div key={link.href}>
+                  <Link
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`block py-2 text-lg font-medium rounded-md transition-all hover:pl-2 hover:text-yellow-600 dark:hover:text-yellow-400 ${
+                      pathname === link.href
+                        ? "text-yellow-600 dark:text-yellow-400"
+                        : "text-gray-800 dark:text-gray-200"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </div>
+              ))}
+
+              {/* FAQ Button in Mobile Menu */}
+              <div className="pt-2">
                 <Link
-                  href={link.href}
+                  href={faqLink.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`block py-2 text-lg font-medium rounded-md transition-all hover:pl-2 hover:text-yellow-600 dark:hover:text-yellow-400 ${
-                    pathname === link.href
+                    pathname === faqLink.href
                       ? "text-yellow-600 dark:text-yellow-400"
                       : "text-gray-800 dark:text-gray-200"
                   }`}
                 >
-                  {link.label}
+                  {faqLink.label}
                 </Link>
               </div>
-            ))}
-
-            {/* FAQ Button in Mobile Menu */}
-            <div className="pt-2">
-              <Link
-                href={faqLink.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`block py-2 text-lg font-medium rounded-md transition-all hover:pl-2 hover:text-yellow-600 dark:hover:text-yellow-400 ${
-                  pathname === faqLink.href
-                    ? "text-yellow-600 dark:text-yellow-400"
-                    : "text-gray-800 dark:text-gray-200"
-                }`}
-              >
-                {faqLink.label}
-              </Link>
             </div>
           </div>
-        </div>
+        </>
       )}
     </nav>
   );
