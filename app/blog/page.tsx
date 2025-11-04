@@ -80,16 +80,39 @@ const App = () => {
     return ["All", ...new Set(blogs.map((blog) => blog.category))];
   }, [blogs]);
 
-  if (loading) {
+   // ✅ Loading State
+  if (loading)
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center text-gray-600 bg-gradient-to-br from-blue-50 via-white to-orange-50">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading blogs...</p>
+          <div className="relative w-24 h-24 mx-auto mb-6">
+            {/* Animated wheel */}
+            <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-t-blue-600 border-r-orange-500 border-b-transparent border-l-transparent animate-spin"></div>
+            {/* Inner hub */}
+            <div className="absolute inset-6 rounded-full bg-gradient-to-br from-blue-600 to-orange-500 flex items-center justify-center">
+              <div className="w-4 h-4 rounded-full bg-white"></div>
+            </div>
+            {/* Spokes effect */}
+            <div className="absolute inset-8 flex items-center justify-center">
+              <div className="w-full h-0.5 bg-white/50 rotate-45"></div>
+              <div className="w-full h-0.5 bg-white/50 -rotate-45 absolute"></div>
+            </div>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            Getting Your Blog Ready
+          </h2>
+          <p className="text-gray-600 flex items-center justify-center gap-2">
+            <span>Loading Blogs</span>
+            <span className="inline-flex gap-1">
+              <span className="animate-bounce">.</span>
+              <span className="animate-bounce delay-100">.</span>
+              <span className="animate-bounce delay-200">.</span>
+            </span>
+          </p>
         </div>
       </div>
     );
-  }
 
   if (selectedBlog) {
     return (
@@ -102,9 +125,35 @@ const App = () => {
       />
     );
   }
+   const handleWhatsApp = () => {
+    window.open("https://wa.me/919090089708", "_blank");
+  };
 
+  const handlePhone = () => {
+    window.location.href = "tel:+919090089708";
+  };
   return (
     <div className="min-h-screen bg-gray-50">
+
+         <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
+        {/* WhatsApp Button */}
+        <button
+          onClick={handleWhatsApp}
+          className="h-14 w-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
+          title="Chat on WhatsApp"
+        >
+          <MessageCircle className="h-6 w-6" />
+        </button>
+
+        {/* Phone Button */}
+        <button
+          onClick={handlePhone}
+          className="h-14 w-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
+          title="Call us"
+        >
+          <Phone className="h-6 w-6" />
+        </button>
+      </div>
       {/* Navigation */}
       <div
         className="relative py-24 bg-cover bg-center"

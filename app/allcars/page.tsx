@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { MessageCircle, Phone } from "lucide-react";
 interface Car {
   _id: string;
   carPicturate: string;
@@ -120,10 +120,36 @@ export default function CarRental() {
       </div>
     );
   }
+  const handleWhatsApp = () => {
+    window.open("https://wa.me/919090089708", "_blank");
+  };
 
+  const handlePhone = () => {
+    window.location.href = "tel:+919090089708";
+  };
   // ✅ Main Render
   return (
     <div className="bg-white min-h-screen">
+
+        <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
+              {/* WhatsApp Button */}
+              <button
+                onClick={handleWhatsApp}
+                className="h-14 w-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
+                title="Chat on WhatsApp"
+              >
+                <MessageCircle className="h-6 w-6" />
+              </button>
+      
+              {/* Phone Button */}
+              <button
+                onClick={handlePhone}
+                className="h-14 w-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
+                title="Call us"
+              >
+                <Phone className="h-6 w-6" />
+              </button>
+            </div>
       {/* Hero Section */}
       <div
         className="relative py-20 bg-cover bg-center"
@@ -134,7 +160,7 @@ export default function CarRental() {
       >
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
-            Car Rental in Bhubaneswar
+           Best Car Rental in Bhubaneswar
           </h1>
           <p className="text-lg md:text-xl text-gray-100 drop-shadow-md">
             Premium car rental services at affordable prices

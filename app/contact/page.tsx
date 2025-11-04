@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
-
+import { MessageCircle} from "lucide-react";
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -59,9 +59,36 @@ export default function ContactPage() {
       details: ["24/7 Service Available"],
     },
   ];
+  const handleWhatsApp = () => {
+    window.open("https://wa.me/919090089708", "_blank");
+  };
 
+  const handlePhone = () => {
+    window.location.href = "tel:+919090089708";
+  };
   return (
     <div className="bg-white min-h-screen">
+
+      <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
+        {/* WhatsApp Button */}
+        <button
+          onClick={handleWhatsApp}
+          className="h-14 w-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
+          title="Chat on WhatsApp"
+        >
+          <MessageCircle className="h-6 w-6" />
+        </button>
+
+        {/* Phone Button */}
+        <button
+          onClick={handlePhone}
+          className="h-14 w-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
+          title="Call us"
+        >
+          <Phone className="h-6 w-6" />
+        </button>
+      </div>
+
       {/* Hero Section */}
       <div
         className="relative py-24 bg-cover bg-center"

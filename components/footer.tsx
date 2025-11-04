@@ -22,12 +22,11 @@ export function Footer() {
       { href: "/allbikes", label: "All Bikes" },
       { href: "/about", label: "About" },
       { href: "/contact", label: "Contact" },
-      { href: "/gallery", label: "Gallery" },
+      { href: "/gallary", label: "Gallery" },
     ],
     services: [
-      { label: "Car Rentals", href: "/services#rentals" },
-      { label: "Chauffeur Services", href: "/services#chauffeur" },
-      { label: "Airport Pickup", href: "/services#airport" },
+      { label: "Car Rentals", href: "/allcars" },
+      { label: "Airport Pickup", href: "/allcars" },
     ],
     legals:[
       {href : "/terms", label: "Terms & Conditions"},

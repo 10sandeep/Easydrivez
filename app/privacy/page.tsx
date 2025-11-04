@@ -1,7 +1,41 @@
+"use client"
+
+import { MessageCircle, Phone } from "lucide-react";
+
 export default function PrivacyPolicy() {
+
+
+    const handleWhatsApp = () => {
+    window.open("https://wa.me/919090089708", "_blank");
+  };
+
+  const handlePhone = () => {
+    window.location.href = "tel:+919090089708";
+  };
+  
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
+
+       <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
+        {/* WhatsApp Button */}
+        <button
+          onClick={handleWhatsApp}
+          className="h-14 w-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
+          title="Chat on WhatsApp"
+        >
+          <MessageCircle className="h-6 w-6" />
+        </button>
+
+        {/* Phone Button */}
+        <button
+          onClick={handlePhone}
+          className="h-14 w-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
+          title="Call us"
+        >
+          <Phone className="h-6 w-6" />
+        </button>
+      </div>
       <div
         className="relative py-24 bg-cover bg-center"
         style={{
@@ -279,23 +313,7 @@ export default function PrivacyPolicy() {
         </div>
       </div>
 
-      {/* Floating Contact Buttons */}
-      <div className="fixed bottom-6 left-6 flex flex-col gap-3 z-50">
-        <a
-          href="tel:+919090089708"
-          className="w-12 h-12 bg-green-500 hover:bg-green-600 rounded-full shadow-xl flex items-center justify-center text-white text-xl hover:scale-110 transition-all"
-        >
-          📞
-        </a>
-        <a
-          href="https://wa.me/919090089708"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-12 h-12 bg-green-400 hover:bg-green-500 rounded-full shadow-xl flex items-center justify-center text-white text-xl hover:scale-110 transition-all"
-        >
-          💬
-        </a>
-      </div>
+ 
     </div>
   );
 }
