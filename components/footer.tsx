@@ -35,10 +35,9 @@ export function Footer() {
   };
 
   const socialLinks = [
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
+    { icon: Facebook, href: "https://www.facebook.com/share/1MJjR6xeLP/", label: "Facebook" },
+    { icon: Instagram, href: "https://www.instagram.com/eazydrivez?igsh=MXM2bWhlMnVoN3RhaQ==", label: "Instagram" },
+
   ];
 
   return (
