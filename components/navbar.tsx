@@ -23,6 +23,20 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close mobile menu on browser back/forward navigation
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setIsMobileMenuOpen(false);
+    };
+
+    // Close menu when route changes
+    handleRouteChange();
+
+    return () => {
+      // Cleanup if needed
+    };
+  }, [pathname]);
+
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/allcars", label: "All Cars" },
