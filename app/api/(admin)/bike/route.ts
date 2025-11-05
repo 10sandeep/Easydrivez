@@ -32,6 +32,8 @@ export async function PUT(request: NextRequest) {
         const cc = Number(formData.get("cc"));
         const rating = Number(formData.get("rating"));
         const category = formData.get("category") as string;
+        const priceFor12Hours = Number(formData.get("priceFor12Hours"));
+        const priceFor24Hours = Number(formData.get("priceFor24Hours"));
         const bikeImage = formData.get("bikeImage");
 
         if (!id) {
@@ -43,28 +45,26 @@ export async function PUT(request: NextRequest) {
 
         let imageUrl: string;
 
-        // Check if bikeImage is a File (new upload) or string (existing URL)
         if (bikeImage instanceof File) {
-            // ✅ Upload new image to Cloudinary
             const bytes = await bikeImage.arrayBuffer();
             const buffer = Buffer.from(bytes);
 
-            const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
-                cloudinary.uploader
-                    .upload_stream({ folder: "bikes" }, (error, result) => {
-                        if (error || !result) reject(error);
-                        else resolve(result);
-                    })
-                    .end(buffer);
-            });
+            const uploadResult = await new Promise<{ secure_url: string }>(
+                (resolve, reject) => {
+                    cloudinary.uploader
+                        .upload_stream({ folder: "bikes" }, (error, result) => {
+                            if (error || !result) reject(error);
+                            else resolve(result);
+                        })
+                        .end(buffer);
+                }
+            );
 
             imageUrl = uploadResult.secure_url;
         } else {
-            // Use existing URL
             imageUrl = bikeImage as string;
         }
 
-        // Update bike in database
         const updatedBike = await Bike.findByIdAndUpdate(
             id,
             {
@@ -77,6 +77,8 @@ export async function PUT(request: NextRequest) {
                 cc,
                 rating,
                 category,
+                priceFor12Hours,
+                priceFor24Hours,
             },
             { new: true }
         );
@@ -88,11 +90,14 @@ export async function PUT(request: NextRequest) {
             );
         }
 
-        return NextResponse.json({
-            status: true,
-            message: "Bike updated successfully",
-            bike: updatedBike,
-        }, { status: 200 });
+        return NextResponse.json(
+            {
+                status: true,
+                message: "Bike updated successfully",
+                bike: updatedBike,
+            },
+            { status: 200 }
+        );
     } catch (error) {
         console.error("Error updating bike:", error);
         return NextResponse.json(
