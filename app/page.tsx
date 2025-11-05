@@ -127,7 +127,6 @@ export default function Home() {
     setLoading(false);
   }, []);
 
-
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-600 bg-gradient-to-br from-blue-50 via-white to-orange-50">
@@ -204,8 +203,9 @@ export default function Home() {
           </h1>
 
           <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-sm sm:max-w-md leading-relaxed">
-            To drive meaningful impact and achieve our sustainability goals
-            through collective innovation.
+            Book The Best Self-Drive Cars In Bhubaneswar & Rent A Bike in
+            Bhubaneswar with EazyDrivez – offering affordable car rental & bike
+            rental , easy booking, reliable rides, and hassle-free travel.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -432,85 +432,87 @@ export default function Home() {
               <div className="h-px bg-gray-700 my-4"></div>
 
               {/* Contact Info */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-  {/* Phone Numbers */}
-  <div className="flex justify-center">
-    <a
-      href="tel:+919090089708"
-      className="group flex items-center gap-3"
-    >
-      <div className="h-9 w-9 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition flex-shrink-0">
-        <svg
-          className="h-4 w-4 text-blue-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-          />
-        </svg>
-      </div>
-      <div>
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
-          Need Help?
-        </p>
-        <p className="text-sm font-bold text-white">
-          +91 9090089708
-        </p>
-        <p className="text-sm font-bold text-white">
-          +91 8093806834
-        </p>
-        <p className="text-sm font-bold text-white">
-          +91 9090090699
-        </p>
-      </div>
-    </a>
-  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                {/* Phone Numbers */}
+                <div className="flex justify-center">
+                  <a
+                    href="tel:+919090089708"
+                    className="group flex items-center gap-3"
+                  >
+                    <div className="h-9 w-9 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition flex-shrink-0">
+                      <svg
+                        className="h-4 w-4 text-blue-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                        Need Help?
+                      </p>
+                      <p className="text-sm font-bold text-white">
+                        +91 9090089708
+                      </p>
+                      <p className="text-sm font-bold text-white">
+                        +91 8093806834
+                      </p>
+                      <p className="text-sm font-bold text-white">
+                        +91 9090090699
+                      </p>
+                    </div>
+                  </a>
+                </div>
 
-  {/* Address */}
-  <div className="flex justify-center">
-    <a
-      href="https://www.google.com/maps/place/Eazydrivez+Self+drive+Car+And+Bike+rentals+service+in+Bhubaneswar/@20.2944588,85.8156412,17z/data=!3m1!4b1!4m6!3m5!1s0x3a190954206e2679:0x1764c3deee8cf6da!8m2!3d20.2944588!4d85.8156412!16s%2Fg%2F11mkc661z4"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group flex items-start gap-3"
-    >
-      <div className="h-9 w-9 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition flex-shrink-0">
-        <svg
-          className="h-4 w-4 text-blue-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
-      </div>
-      <div>
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
-          Visit Us
-        </p>
-        <p className="text-sm font-bold text-white hover:text-blue-400 transition max-w-md">
-          B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd., Bhubaneswar, Odisha 751015
-        </p>
-      </div>
-    </a>
-  </div>
-</div>
+                {/* Address */}
+                <div className="flex justify-center">
+                  <a
+                    href="https://www.google.com/maps/place/Eazydrivez+Self+drive+Car+And+Bike+rentals+service+in+Bhubaneswar/@20.2944588,85.8156412,17z/data=!3m1!4b1!4m6!3m5!1s0x3a190954206e2679:0x1764c3deee8cf6da!8m2!3d20.2944588!4d85.8156412!16s%2Fg%2F11mkc661z4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-start gap-3"
+                  >
+                    <div className="h-9 w-9 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition flex-shrink-0">
+                      <svg
+                        className="h-4 w-4 text-blue-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                        Visit Us
+                      </p>
+                      <p className="text-sm font-bold text-white hover:text-blue-400 transition max-w-md">
+                        B-15 ID Market Nayapalli, in front of Saraswati Shishu
+                        Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd.,
+                        Bhubaneswar, Odisha 751015
+                      </p>
+                    </div>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

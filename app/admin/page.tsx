@@ -3,10 +3,30 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Car, Bike, Users, Package, TrendingUp, Calendar,
-  DollarSign, BarChart3, Filter, Download, Search,
-  Edit2, Trash2, Eye, Plus, X, CheckCircle, Clock,
-  AlertCircle, FileText, LogOut, User, Shield, Loader2
+  Car,
+  Bike,
+  Users,
+  Package,
+  TrendingUp,
+  Calendar,
+  DollarSign,
+  BarChart3,
+  Filter,
+  Download,
+  Search,
+  Edit2,
+  Trash2,
+  Eye,
+  Plus,
+  X,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  FileText,
+  LogOut,
+  User,
+  Shield,
+  Loader2,
 } from "lucide-react";
 
 interface Car {
@@ -132,7 +152,9 @@ interface BlogFormData {
 
 export default function AdminPanel() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"dashboard" | "vehicles" | "bookings" | "reports" | "blog">("dashboard");
+  const [activeTab, setActiveTab] = useState<
+    "dashboard" | "vehicles" | "bookings" | "reports" | "blog"
+  >("dashboard");
   const [cars, setCars] = useState<Car[]>([]);
   const [bikes, setBikes] = useState<Bike[]>([]);
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -142,7 +164,10 @@ export default function AdminPanel() {
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isBlogFormOpen, setIsBlogFormOpen] = useState(false);
-  const [editingVehicle, setEditingVehicle] = useState<{ item: Car | Bike; type: "car" | "bike" } | null>(null);
+  const [editingVehicle, setEditingVehicle] = useState<{
+    item: Car | Bike;
+    type: "car" | "bike";
+  } | null>(null);
   const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
   const [formType, setFormType] = useState<"car" | "bike">("car");
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
@@ -156,7 +181,9 @@ export default function AdminPanel() {
   const [isBlogSubmitting, setIsBlogSubmitting] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [vehicleImageFile, setVehicleImageFile] = useState<File | null>(null);
-  const [vehicleImagePreview, setVehicleImagePreview] = useState<string | null>(null);
+  const [vehicleImagePreview, setVehicleImagePreview] = useState<string | null>(
+    null
+  );
 
   const handleVehicleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -212,7 +239,7 @@ export default function AdminPanel() {
 
         const res = await fetch("/api/adminverify", {
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
           credentials: "include",
           cache: "no-store",
@@ -252,7 +279,7 @@ export default function AdminPanel() {
 
       const [carRes, bikeRes] = await Promise.all([
         fetch("/api/car", { cache: "no-store" }),
-        fetch("/api/bike", { cache: "no-store" })
+        fetch("/api/bike", { cache: "no-store" }),
       ]);
 
       const carData = await carRes.json();
@@ -345,7 +372,8 @@ export default function AdminPanel() {
       localStorage.removeItem("adminToken");
 
       // Clear cookies
-      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie =
+        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
       console.log("✅ [AdminPanel] Logout successful, redirecting...");
 
@@ -361,26 +389,32 @@ export default function AdminPanel() {
     totalBikes: bikes.length,
     totalBlogs: blogs.length,
     totalBookings: bookings.length,
-    activeBookings: bookings.filter(b => b.status === "approved").length,
-    completedBookings: bookings.filter(b => b.status === "completed").length,
-    pendingBookings: bookings.filter(b => b.status === "pending").length,
-    rejectedBookings: bookings.filter(b => b.status === "rejected").length,
+    activeBookings: bookings.filter((b) => b.status === "approved").length,
+    completedBookings: bookings.filter((b) => b.status === "completed").length,
+    pendingBookings: bookings.filter((b) => b.status === "pending").length,
+    rejectedBookings: bookings.filter((b) => b.status === "rejected").length,
     totalRevenue: bookings
-      .filter(b => b.status === "completed")
+      .filter((b) => b.status === "completed")
       .reduce((sum, b) => {
         const price = b.rental.totalPrice.replace(/[^0-9]/g, "");
         return sum + parseFloat(price || "0");
       }, 0),
-    totalCarsBooked: bookings.filter(b => b.vehicleType === "car").length,
-    totalBikesBooked: bookings.filter(b => b.vehicleType === "bike").length,
+    totalCarsBooked: bookings.filter((b) => b.vehicleType === "car").length,
+    totalBikesBooked: bookings.filter((b) => b.vehicleType === "bike").length,
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleBlogChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleBlogChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
     setBlogFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -519,7 +553,10 @@ export default function AdminPanel() {
       return;
     }
 
-    if (formType === "car" && (!formData.priceFor12Hours || !formData.priceFor24Hours)) {
+    if (
+      formType === "car" &&
+      (!formData.priceFor12Hours || !formData.priceFor24Hours)
+    ) {
       alert("Please fill in price fields for car");
       return;
     }
@@ -569,20 +606,23 @@ export default function AdminPanel() {
       const method = editingVehicle ? "PUT" : "POST";
 
       const url = editingVehicle
-        ? `/api/${formType}`                 // e.g. /api/car or /api/bike when editing
-        : `/api/${formType === 'car' ? 'createcar' : 'createbike'}`; // e.g. /api/createcar or /api/createbike when creating
+        ? `/api/${formType}` // e.g. /api/car or /api/bike when editing
+        : `/api/${formType === "car" ? "createcar" : "createbike"}`; // e.g. /api/createcar or /api/createbike when creating
 
       const res = await fetch(url, {
         method,
         body: formDataToSend,
       });
 
-
       const data = await res.json();
 
       if (data.status) {
         fetchVehicles(); // Refresh list
-        alert(editingVehicle ? "Vehicle updated successfully!" : "Vehicle added successfully!");
+        alert(
+          editingVehicle
+            ? "Vehicle updated successfully!"
+            : "Vehicle added successfully!"
+        );
         setIsFormOpen(false);
         setEditingVehicle(null);
         setVehicleImageFile(null);
@@ -591,7 +631,9 @@ export default function AdminPanel() {
         }
         setVehicleImagePreview(null);
       } else {
-        alert(editingVehicle ? "Failed to update vehicle" : "Failed to add vehicle");
+        alert(
+          editingVehicle ? "Failed to update vehicle" : "Failed to add vehicle"
+        );
       }
     } catch (error) {
       console.error("Error handling vehicle:", error);
@@ -618,75 +660,169 @@ export default function AdminPanel() {
     });
   };
 
+  // const handleBlogSubmit = async () => {
+  //   if (
+  //     !blogFormData.title ||
+  //     !blogFormData.description ||
+  //     !blogFormData.content ||
+  //     !blogFormData.image
+  //   ) {
+  //     alert("Please fill all required fields");
+  //     return;
+  //   }
+
+  //   const formDataToSend = new FormData();
+  //   formDataToSend.append("title", blogFormData.title);
+  //   formDataToSend.append("description", blogFormData.description);
+  //   formDataToSend.append("category", blogFormData.category);
+  //   formDataToSend.append("author", blogFormData.author);
+  //   formDataToSend.append("content", blogFormData.content);
+
+  //   console.log(
+  //     "Form data to send from admin page ...............",
+  //     formDataToSend
+  //   );
+
+  //   if (blogFormData.image) {
+  //     if (blogFormData.image instanceof File) {
+  //       formDataToSend.append("image", blogFormData.image);
+  //     } else {
+  //       formDataToSend.append("image", blogFormData.image);
+  //     }
+  //   }
+
+  //   try {
+  //     setIsBlogSubmitting(true);
+  //     const method = editingBlog ? "PUT" : "POST";
+  //     const url = editingBlog ? `/api/blog/${editingBlog._id}` : "/api/blog";
+
+  //     const res = await fetch(url, {
+  //       method,
+  //       body: JSON.stringify(blogFormData),
+  //     });
+
+  //     const data = await res.json();
+
+  //     if (data.status || data.success) {
+  //       await fetchBlogs();
+  //       alert(
+  //         editingBlog
+  //           ? "Blog updated successfully!"
+  //           : "Blog added successfully!"
+  //       );
+  //       setIsBlogFormOpen(false);
+  //       setEditingBlog(null);
+  //       setBlogFormData({
+  //         title: "",
+  //         description: "",
+  //         category: "",
+  //         author: "Rideez",
+  //         content: "",
+  //         image: null,
+  //       });
+  //       if (previewUrl) {
+  //         URL.revokeObjectURL(previewUrl);
+  //       }
+  //       setPreviewUrl(null);
+  //     } else {
+  //       alert(editingBlog ? "Failed to update blog" : "Failed to add blog");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error handling blog:", error);
+  //     alert("Error handling blog");
+  //   } finally {
+  //     setIsBlogSubmitting(false);
+  //   }
+  // };
   const handleBlogSubmit = async () => {
-    if (!blogFormData.title || !blogFormData.description || !blogFormData.content || !blogFormData.image) {
-      alert("Please fill all required fields");
+  if (
+    !blogFormData.title ||
+    !blogFormData.description ||
+    !blogFormData.content ||
+    !blogFormData.image
+  ) {
+    alert("Please fill all required fields");
+    return;
+  }
+
+  const formDataToSend = new FormData();
+  formDataToSend.append("title", blogFormData.title);
+  formDataToSend.append("description", blogFormData.description);
+  formDataToSend.append("category", blogFormData.category);
+  formDataToSend.append("author", blogFormData.author);
+  formDataToSend.append("content", blogFormData.content);
+
+  if (blogFormData.image instanceof File) {
+    formDataToSend.append("image", blogFormData.image);
+  } else if (typeof blogFormData.image === "string") {
+    formDataToSend.append("image", blogFormData.image); // existing URL when editing
+  }
+
+  try {
+    setIsBlogSubmitting(true);
+    const method = editingBlog ? "PUT" : "POST";
+    const url = editingBlog ? `/api/blog/${editingBlog._id}` : "/api/blog";
+
+    const res = await fetch(url, {
+      method,
+      body: formDataToSend, // ← THIS IS THE FIX
+      // DO NOT set headers! Let browser auto-set multipart boundary
+    });
+
+    const data = await res.json();
+
+    if (data.status || data.success) {
+      await fetchBlogs();
+      alert(editingBlog ? "Blog updated!" : "Blog created!");
+      closeBlogForm(); // reuse your cleanup function
+    } else {
+      alert(data.message || "Failed to save blog");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Network error. Try again.");
+  } finally {
+    setIsBlogSubmitting(false);
+  }
+};
+
+  const handleDelete = async (id: string, type: "car" | "bike") => {
+    if (
+      !confirm(
+        "Are you sure you want to delete this vehicle? This action cannot be undone."
+      )
+    ) {
       return;
     }
 
-    const formDataToSend = new FormData();
-    formDataToSend.append("title", blogFormData.title);
-    formDataToSend.append("description", blogFormData.description);
-    formDataToSend.append("category", blogFormData.category);
-    formDataToSend.append("author", blogFormData.author);
-    formDataToSend.append("content", blogFormData.content);
-
-    if (blogFormData.image) {
-      if (blogFormData.image instanceof File) {
-        formDataToSend.append("image", blogFormData.image);
-      } else {
-        formDataToSend.append("image", blogFormData.image);
-      }
-    }
-
     try {
-      setIsBlogSubmitting(true);
-      const method = editingBlog ? "PUT" : "POST";
-      const url = editingBlog ? `/api/blog/${editingBlog._id}` : "/api/blog";
-
-      const res = await fetch(url, {
-        method,
-        body: JSON.stringify(blogFormData),
+      const res = await fetch(`/api/${type}?id=${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
       const data = await res.json();
 
-      if (data.status || data.success) {
-        await fetchBlogs();
-        alert(editingBlog ? "Blog updated successfully!" : "Blog added successfully!");
-        setIsBlogFormOpen(false);
-        setEditingBlog(null);
-        setBlogFormData({
-          title: "",
-          description: "",
-          category: "",
-          author: "Rideez",
-          content: "",
-          image: null,
-        });
-        if (previewUrl) {
-          URL.revokeObjectURL(previewUrl);
+      if (data.status) {
+        // Only remove from state if API confirms success
+        if (type === "car") {
+          setCars(cars.filter((c) => c._id !== id));
+        } else {
+          setBikes(bikes.filter((b) => b._id !== id));
         }
-        setPreviewUrl(null);
+        alert(
+          `${
+            type.charAt(0).toUpperCase() + type.slice(1)
+          } deleted successfully!`
+        );
       } else {
-        alert(editingBlog ? "Failed to update blog" : "Failed to add blog");
+        alert(data.message || "Failed to delete vehicle");
       }
     } catch (error) {
-      console.error("Error handling blog:", error);
-      alert("Error handling blog");
-    } finally {
-      setIsBlogSubmitting(false);
-    }
-  };
-
-  const handleDelete = (id: string, type: "car" | "bike") => {
-    if (confirm("Are you sure you want to delete this vehicle?")) {
-      if (type === "car") {
-        setCars(cars.filter(c => c._id !== id));
-      } else {
-        setBikes(bikes.filter(b => b._id !== id));
-      }
-      alert("Vehicle deleted successfully!");
+      console.error("Delete error:", error);
+      alert("Error deleting vehicle. Please try again.");
     }
   };
 
@@ -713,9 +849,14 @@ export default function AdminPanel() {
   };
 
   // ✅ Update booking status via API
-  const updateBookingStatus = async (bookingId: string, newStatus: "pending" | "approved" | "rejected" | "completed") => {
+  const updateBookingStatus = async (
+    bookingId: string,
+    newStatus: "pending" | "approved" | "rejected" | "completed"
+  ) => {
     try {
-      console.log(`🔄 [AdminPanel] Updating booking ${bookingId} to ${newStatus}...`);
+      console.log(
+        `🔄 [AdminPanel] Updating booking ${bookingId} to ${newStatus}...`
+      );
 
       const res = await fetch(`/api/bookings/${bookingId}`, {
         method: "PATCH",
@@ -728,7 +869,11 @@ export default function AdminPanel() {
       const data = await res.json();
 
       if (data.success) {
-        setBookings(bookings.map(b => b._id === bookingId ? { ...b, status: newStatus } : b));
+        setBookings(
+          bookings.map((b) =>
+            b._id === bookingId ? { ...b, status: newStatus } : b
+          )
+        );
         alert(`Booking ${newStatus} successfully!`);
         console.log("✅ [AdminPanel] Booking updated successfully");
       } else {
@@ -755,7 +900,9 @@ export default function AdminPanel() {
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `admin-report-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `admin-report-${
+      new Date().toISOString().split("T")[0]
+    }.json`;
     link.click();
   };
 
@@ -806,7 +953,11 @@ export default function AdminPanel() {
     const searchLower = searchTerm.toLowerCase();
     return list
       .filter((item) => {
-        const name = `${item.brand} ${vehicleSubTab === "car" ? (item as Car).modelName : (item as Bike).model}`.toLowerCase();
+        const name = `${item.brand} ${
+          vehicleSubTab === "car"
+            ? (item as Car).modelName
+            : (item as Bike).model
+        }`.toLowerCase();
         return name.includes(searchLower);
       })
       .map((item) =>
@@ -816,17 +967,19 @@ export default function AdminPanel() {
       );
   };
 
-  const filteredBookings = bookings.filter(b => {
+  const filteredBookings = bookings.filter((b) => {
     const vehicleName = `${b.vehicleDetails.brand} ${b.vehicleDetails.model}`;
-    const matchesSearch = vehicleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch =
+      vehicleName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       b.customer.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === "all" || b.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
 
-  const filteredBlogs = blogs.filter(b =>
-    b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    b.content.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredBlogs = blogs.filter(
+    (b) =>
+      b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      b.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const closeBlogForm = () => {
@@ -844,7 +997,9 @@ export default function AdminPanel() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mb-4"></div>
-          <p className="text-gray-600 font-medium">Verifying authentication...</p>
+          <p className="text-gray-600 font-medium">
+            Verifying authentication...
+          </p>
         </div>
       </div>
     );
@@ -870,7 +1025,6 @@ export default function AdminPanel() {
           </h1>
 
           {/* ✅ Admin Badge in Header */}
-
         </div>
       </div>
 
@@ -891,10 +1045,11 @@ export default function AdminPanel() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${activeTab === tab.id
-                      ? "bg-yellow-600 text-white shadow-sm"
-                      : "text-gray-600 hover:bg-gray-100"
-                      }`}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${
+                      activeTab === tab.id
+                        ? "bg-yellow-600 text-white shadow-sm"
+                        : "text-gray-600 hover:bg-gray-100"
+                    }`}
                   >
                     <Icon className="h-5 w-5" />
                     {tab.label}
@@ -935,13 +1090,19 @@ export default function AdminPanel() {
                     ></div>
                     <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-50">
                       <div className="px-4 py-3 border-b border-gray-200">
-                        <p className="text-sm font-semibold text-gray-900">Admin Account</p>
-                        <p className="text-xs text-gray-600 mt-1">{adminEmail}</p>
+                        <p className="text-sm font-semibold text-gray-900">
+                          Admin Account
+                        </p>
+                        <p className="text-xs text-gray-600 mt-1">
+                          {adminEmail}
+                        </p>
                       </div>
                       <div className="px-2 py-2">
                         <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-green-50">
                           <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
-                          <span className="text-sm text-green-700 font-medium">Active Session</span>
+                          <span className="text-sm text-green-700 font-medium">
+                            Active Session
+                          </span>
                         </div>
                       </div>
                       <div className="border-t border-gray-200 mt-2">
@@ -969,11 +1130,21 @@ export default function AdminPanel() {
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 font-medium">Total Vehicles</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">{stats.totalVehicles}</p>
+                    <p className="text-sm text-gray-600 font-medium">
+                      Total Vehicles
+                    </p>
+                    <p className="text-3xl font-bold text-gray-900 mt-2">
+                      {stats.totalVehicles}
+                    </p>
                     <div className="flex gap-3 mt-3">
-                      <span className="text-xs text-gray-600"><Car className="h-3 w-3 inline mr-1" />{stats.totalCars} Cars</span>
-                      <span className="text-xs text-gray-600"><Bike className="h-3 w-3 inline mr-1" />{stats.totalBikes} Bikes</span>
+                      <span className="text-xs text-gray-600">
+                        <Car className="h-3 w-3 inline mr-1" />
+                        {stats.totalCars} Cars
+                      </span>
+                      <span className="text-xs text-gray-600">
+                        <Bike className="h-3 w-3 inline mr-1" />
+                        {stats.totalBikes} Bikes
+                      </span>
                     </div>
                   </div>
                   <div className="bg-blue-100 p-3 rounded-lg">
@@ -985,11 +1156,16 @@ export default function AdminPanel() {
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 font-medium">Total Bookings</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">{stats.totalBookings}</p>
+                    <p className="text-sm text-gray-600 font-medium">
+                      Total Bookings
+                    </p>
+                    <p className="text-3xl font-bold text-gray-900 mt-2">
+                      {stats.totalBookings}
+                    </p>
                     <p className="text-xs text-gray-600 mt-3 flex items-center gap-1">
                       <Car className="h-3 w-3" />
-                      {stats.totalCarsBooked} Cars | {stats.totalBikesBooked} Bikes
+                      {stats.totalCarsBooked} Cars | {stats.totalBikesBooked}{" "}
+                      Bikes
                     </p>
                   </div>
                   <div className="bg-green-100 p-3 rounded-lg">
@@ -1001,8 +1177,12 @@ export default function AdminPanel() {
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 font-medium">Active Bookings</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">{stats.activeBookings}</p>
+                    <p className="text-sm text-gray-600 font-medium">
+                      Active Bookings
+                    </p>
+                    <p className="text-3xl font-bold text-gray-900 mt-2">
+                      {stats.activeBookings}
+                    </p>
                     <p className="text-xs text-gray-600 mt-3">
                       {stats.pendingBookings} pending approval
                     </p>
@@ -1016,8 +1196,12 @@ export default function AdminPanel() {
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 font-medium">Total Revenue</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">₹{stats.totalRevenue.toLocaleString()}</p>
+                    <p className="text-sm text-gray-600 font-medium">
+                      Total Revenue
+                    </p>
+                    <p className="text-3xl font-bold text-gray-900 mt-2">
+                      ₹{stats.totalRevenue.toLocaleString()}
+                    </p>
                     <p className="text-xs text-gray-600 mt-3">
                       {stats.completedBookings} completed bookings
                     </p>
@@ -1033,31 +1217,51 @@ export default function AdminPanel() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Recent Bookings */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Bookings</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                  Recent Bookings
+                </h3>
                 {bookingsLoading ? (
                   <div className="text-center py-8">
                     <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
-                    <p className="text-sm text-gray-600 mt-2">Loading bookings...</p>
+                    <p className="text-sm text-gray-600 mt-2">
+                      Loading bookings...
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     {bookings.slice(0, 5).map((booking) => (
-                      <div key={booking._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div
+                        key={booking._id}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      >
                         <div>
-                          <p className="font-semibold text-gray-900 text-sm">{booking.customer.name}</p>
-                          <p className="text-xs text-gray-600">{booking.vehicleDetails.brand} {booking.vehicleDetails.model}</p>
+                          <p className="font-semibold text-gray-900 text-sm">
+                            {booking.customer.name}
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            {booking.vehicleDetails.brand}{" "}
+                            {booking.vehicleDetails.model}
+                          </p>
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${booking.status === "completed" ? "bg-green-100 text-green-700" :
-                          booking.status === "approved" ? "bg-blue-100 text-blue-700" :
-                            booking.status === "pending" ? "bg-yellow-100 text-yellow-700" :
-                              "bg-red-100 text-red-700"
-                          }`}>
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            booking.status === "completed"
+                              ? "bg-green-100 text-green-700"
+                              : booking.status === "approved"
+                              ? "bg-blue-100 text-blue-700"
+                              : booking.status === "pending"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-red-100 text-red-700"
+                          }`}
+                        >
                           {booking.status}
                         </span>
                       </div>
                     ))}
                     {bookings.length === 0 && (
-                      <p className="text-center text-gray-500 py-8">No bookings found</p>
+                      <p className="text-center text-gray-500 py-8">
+                        No bookings found
+                      </p>
                     )}
                   </div>
                 )}
@@ -1065,53 +1269,92 @@ export default function AdminPanel() {
 
               {/* Booking Status Overview */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Booking Status Overview</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                  Booking Status Overview
+                </h3>
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span className="text-gray-600">Pending</span>
-                      <span className="font-semibold text-gray-900">{stats.pendingBookings}</span>
+                      <span className="font-semibold text-gray-900">
+                        {stats.pendingBookings}
+                      </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-yellow-600 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${stats.totalBookings > 0 ? (stats.pendingBookings / stats.totalBookings) * 100 : 0}%` }}
+                        style={{
+                          width: `${
+                            stats.totalBookings > 0
+                              ? (stats.pendingBookings / stats.totalBookings) *
+                                100
+                              : 0
+                          }%`,
+                        }}
                       ></div>
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span className="text-gray-600">Approved/Active</span>
-                      <span className="font-semibold text-gray-900">{stats.activeBookings}</span>
+                      <span className="font-semibold text-gray-900">
+                        {stats.activeBookings}
+                      </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-blue-600 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${stats.totalBookings > 0 ? (stats.activeBookings / stats.totalBookings) * 100 : 0}%` }}
+                        style={{
+                          width: `${
+                            stats.totalBookings > 0
+                              ? (stats.activeBookings / stats.totalBookings) *
+                                100
+                              : 0
+                          }%`,
+                        }}
                       ></div>
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span className="text-gray-600">Completed</span>
-                      <span className="font-semibold text-gray-900">{stats.completedBookings}</span>
+                      <span className="font-semibold text-gray-900">
+                        {stats.completedBookings}
+                      </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-green-600 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${stats.totalBookings > 0 ? (stats.completedBookings / stats.totalBookings) * 100 : 0}%` }}
+                        style={{
+                          width: `${
+                            stats.totalBookings > 0
+                              ? (stats.completedBookings /
+                                  stats.totalBookings) *
+                                100
+                              : 0
+                          }%`,
+                        }}
                       ></div>
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span className="text-gray-600">Rejected</span>
-                      <span className="font-semibold text-gray-900">{stats.rejectedBookings}</span>
+                      <span className="font-semibold text-gray-900">
+                        {stats.rejectedBookings}
+                      </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-red-600 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${stats.totalBookings > 0 ? (stats.rejectedBookings / stats.totalBookings) * 100 : 0}%` }}
+                        style={{
+                          width: `${
+                            stats.totalBookings > 0
+                              ? (stats.rejectedBookings / stats.totalBookings) *
+                                100
+                              : 0
+                          }%`,
+                        }}
                       ></div>
                     </div>
                   </div>
@@ -1147,20 +1390,22 @@ export default function AdminPanel() {
             <div className="flex gap-2 mb-6">
               <button
                 onClick={() => setVehicleSubTab("car")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${vehicleSubTab === "car"
-                  ? "bg-yellow-600 text-white shadow-sm"
-                  : "text-gray-600 hover:bg-gray-100"
-                  }`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${
+                  vehicleSubTab === "car"
+                    ? "bg-yellow-600 text-white shadow-sm"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
               >
                 <Car className="h-4 w-4" />
                 Cars ({cars.length})
               </button>
               <button
                 onClick={() => setVehicleSubTab("bike")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${vehicleSubTab === "bike"
-                  ? "bg-yellow-600 text-white shadow-sm"
-                  : "text-gray-600 hover:bg-gray-100"
-                  }`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${
+                  vehicleSubTab === "bike"
+                    ? "bg-yellow-600 text-white shadow-sm"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
               >
                 <Bike className="h-4 w-4" />
                 Bikes ({bikes.length})
@@ -1175,13 +1420,21 @@ export default function AdminPanel() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {getFilteredVehicles().map((vehicle) => {
-                  const originalItem = vehicleSubTab === "car"
-                    ? cars.find(c => c._id === vehicle.id)
-                    : bikes.find(b => b._id === vehicle.id);
+                  const originalItem =
+                    vehicleSubTab === "car"
+                      ? cars.find((c) => c._id === vehicle.id)
+                      : bikes.find((b) => b._id === vehicle.id);
                   return (
-                    <div key={vehicle.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition relative">
+                    <div
+                      key={vehicle.id}
+                      className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition relative"
+                    >
                       <div className="relative h-48">
-                        <img src={vehicle.image} alt={vehicle.name} className="w-full h-full object-cover" />
+                        <img
+                          src={vehicle.image}
+                          alt={vehicle.name}
+                          className="w-full h-full object-cover"
+                        />
                         <span className="absolute top-3 left-3 px-3 py-1 bg-white rounded-full text-xs font-semibold text-gray-900 shadow-sm">
                           {vehicle.type}
                         </span>
@@ -1192,11 +1445,18 @@ export default function AdminPanel() {
                         )}
                       </div>
                       <div className="p-4">
-                        <h3 className="font-bold text-gray-900 text-lg mb-1">{vehicle.name}</h3>
-                        <p className="text-sm text-gray-600 mb-3">{vehicle.category}</p>
+                        <h3 className="font-bold text-gray-900 text-lg mb-1">
+                          {vehicle.name}
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-3">
+                          {vehicle.category}
+                        </p>
                         <div className="flex gap-2 mb-3 flex-wrap">
                           {vehicle.features.map((f, i) => (
-                            <span key={i} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                            <span
+                              key={i}
+                              className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                            >
                               {f}
                             </span>
                           ))}
@@ -1204,24 +1464,33 @@ export default function AdminPanel() {
                         <div className="flex justify-between items-center pt-3 border-t border-gray-200">
                           <div>
                             <p className="text-xs text-gray-600">12 hrs</p>
-                            <p className="font-bold text-gray-900">{vehicle.price12}</p>
+                            <p className="font-bold text-gray-900">
+                              {vehicle.price12}
+                            </p>
                           </div>
                           <div>
                             <p className="text-xs text-gray-600">24 hrs</p>
-                            <p className="font-bold text-gray-900">{vehicle.price24}</p>
+                            <p className="font-bold text-gray-900">
+                              {vehicle.price24}
+                            </p>
                           </div>
                         </div>
                         <div className="flex gap-2 mt-4">
                           <button
-                            onClick={() => originalItem && handleEdit(originalItem, vehicleSubTab)}
+                            onClick={() =>
+                              originalItem &&
+                              handleEdit(originalItem, vehicleSubTab)
+                            }
                             className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition text-sm font-medium"
                           >
                             <Edit2 className="h-4 w-4" />
                             Edit
                           </button>
                           <button
-                            onClick={() => handleDelete(vehicle.id, vehicleSubTab)}
-                            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition text-sm font-medium"
+                            onClick={() =>
+                              handleDelete(vehicle.id, vehicleSubTab)
+                            }
+                            className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition text-sm font-medium"
                           >
                             <Trash2 className="h-4 w-4" />
                             Delete
@@ -1272,18 +1541,35 @@ export default function AdminPanel() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredBlogs.map((blog) => (
-                  <div key={blog._id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
+                  <div
+                    key={blog._id}
+                    className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition"
+                  >
                     <div className="relative h-48">
-                      <img src={blog.image} alt={blog.title} className="w-full h-full object-cover" />
+                      <img
+                        src={blog.image}
+                        alt={blog.title}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <div className="p-4">
-                      <h3 className="font-bold text-gray-900 text-lg mb-2">{blog.title}</h3>
-                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{blog.description}</p>
+                      <h3 className="font-bold text-gray-900 text-lg mb-2">
+                        {blog.title}
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                        {blog.description}
+                      </p>
                       <div className="flex gap-2 mb-3">
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">{blog.category}</span>
-                        <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">by {blog.author}</span>
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
+                          {blog.category}
+                        </span>
+                        <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                          by {blog.author}
+                        </span>
                       </div>
-                      <p className="text-xs text-gray-500 mb-4">{new Date(blog.createdAt).toLocaleDateString()}</p>
+                      <p className="text-xs text-gray-500 mb-4">
+                        {new Date(blog.createdAt).toLocaleDateString()}
+                      </p>
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleBlogEdit(blog)}
@@ -1351,44 +1637,87 @@ export default function AdminPanel() {
                   <table className="w-full">
                     <thead className="bg-gray-50 border-b border-gray-200">
                       <tr>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Booking ID</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Customer</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Vehicle</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Duration</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Amount</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                          Booking ID
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                          Customer
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                          Vehicle
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                          Duration
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                          Amount
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                          Status
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {filteredBookings.map((booking) => (
-                        <tr key={booking._id} className="hover:bg-gray-50 transition">
+                        <tr
+                          key={booking._id}
+                          className="hover:bg-gray-50 transition"
+                        >
                           <td className="px-6 py-4">
-                            <p className="text-sm font-medium text-gray-900">#{booking._id.slice(-6)}</p>
-                            <p className="text-xs text-gray-600">{new Date(booking.createdAt).toLocaleDateString()}</p>
+                            <p className="text-sm font-medium text-gray-900">
+                              #{booking._id.slice(-6)}
+                            </p>
+                            <p className="text-xs text-gray-600">
+                              {new Date(booking.createdAt).toLocaleDateString()}
+                            </p>
                           </td>
                           <td className="px-6 py-4">
-                            <p className="text-sm font-medium text-gray-900">{booking.customer.name}</p>
-                            <p className="text-xs text-gray-600">{booking.customer.mobile}</p>
+                            <p className="text-sm font-medium text-gray-900">
+                              {booking.customer.name}
+                            </p>
+                            <p className="text-xs text-gray-600">
+                              {booking.customer.mobile}
+                            </p>
                           </td>
                           <td className="px-6 py-4">
-                            <p className="text-sm font-medium text-gray-900">{booking.vehicleDetails.brand} {booking.vehicleDetails.model}</p>
-                            <p className="text-xs text-gray-600">{booking.vehicleType}</p>
+                            <p className="text-sm font-medium text-gray-900">
+                              {booking.vehicleDetails.brand}{" "}
+                              {booking.vehicleDetails.model}
+                            </p>
+                            <p className="text-xs text-gray-600">
+                              {booking.vehicleType}
+                            </p>
                           </td>
                           <td className="px-6 py-4">
-                            <p className="text-sm text-gray-900">{booking.rental.duration}</p>
-                            <p className="text-xs text-gray-600">{booking.rental.pickupDate}</p>
+                            <p className="text-sm text-gray-900">
+                              {booking.rental.duration}
+                            </p>
+                            <p className="text-xs text-gray-600">
+                              {booking.rental.pickupDate}
+                            </p>
                           </td>
                           <td className="px-6 py-4">
-                            <p className="text-sm font-bold text-gray-900">{booking.rental.totalPrice}</p>
+                            <p className="text-sm font-bold text-gray-900">
+                              {booking.rental.totalPrice}
+                            </p>
                           </td>
                           <td className="px-6 py-4">
-                            <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${booking.status === "completed" ? "bg-green-100 text-green-700" :
-                              booking.status === "approved" ? "bg-blue-100 text-blue-700" :
-                                booking.status === "pending" ? "bg-yellow-100 text-yellow-700" :
-                                  "bg-red-100 text-red-700"
-                              }`}>
-                              {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                            <span
+                              className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${
+                                booking.status === "completed"
+                                  ? "bg-green-100 text-green-700"
+                                  : booking.status === "approved"
+                                  ? "bg-blue-100 text-blue-700"
+                                  : booking.status === "pending"
+                                  ? "bg-yellow-100 text-yellow-700"
+                                  : "bg-red-100 text-red-700"
+                              }`}
+                            >
+                              {booking.status.charAt(0).toUpperCase() +
+                                booking.status.slice(1)}
                             </span>
                           </td>
                           <td className="px-6 py-4">
@@ -1403,14 +1732,24 @@ export default function AdminPanel() {
                               {booking.status === "pending" && (
                                 <>
                                   <button
-                                    onClick={() => updateBookingStatus(booking._id, "approved")}
+                                    onClick={() =>
+                                      updateBookingStatus(
+                                        booking._id,
+                                        "approved"
+                                      )
+                                    }
                                     className="p-2 hover:bg-green-50 rounded-lg transition"
                                     title="Approve Booking"
                                   >
                                     <CheckCircle className="h-4 w-4 text-green-600" />
                                   </button>
                                   <button
-                                    onClick={() => updateBookingStatus(booking._id, "rejected")}
+                                    onClick={() =>
+                                      updateBookingStatus(
+                                        booking._id,
+                                        "rejected"
+                                      )
+                                    }
                                     className="p-2 hover:bg-red-50 rounded-lg transition"
                                     title="Reject Booking"
                                   >
@@ -1421,14 +1760,24 @@ export default function AdminPanel() {
                               {booking.status === "approved" && (
                                 <>
                                   <button
-                                    onClick={() => updateBookingStatus(booking._id, "completed")}
+                                    onClick={() =>
+                                      updateBookingStatus(
+                                        booking._id,
+                                        "completed"
+                                      )
+                                    }
                                     className="p-2 hover:bg-purple-50 rounded-lg transition"
                                     title="Mark as Completed"
                                   >
                                     <CheckCircle className="h-4 w-4 text-purple-600" />
                                   </button>
                                   <button
-                                    onClick={() => updateBookingStatus(booking._id, "rejected")}
+                                    onClick={() =>
+                                      updateBookingStatus(
+                                        booking._id,
+                                        "rejected"
+                                      )
+                                    }
                                     className="p-2 hover:bg-red-50 rounded-lg transition"
                                     title="Cancel Booking"
                                   >
@@ -1459,12 +1808,16 @@ export default function AdminPanel() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Revenue Report */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Revenue Summary</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                  Revenue Summary
+                </h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg">
                     <div>
                       <p className="text-sm text-gray-600">Total Revenue</p>
-                      <p className="text-2xl font-bold text-green-600">₹{stats.totalRevenue.toLocaleString()}</p>
+                      <p className="text-2xl font-bold text-green-600">
+                        ₹{stats.totalRevenue.toLocaleString()}
+                      </p>
                     </div>
                     <DollarSign className="h-8 w-8 text-green-600" />
                   </div>
@@ -1472,15 +1825,45 @@ export default function AdminPanel() {
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <p className="text-xs text-gray-600 mb-1">From Cars</p>
                       <p className="text-lg font-bold text-gray-900">
-                        ₹{bookings.filter(b => b.vehicleType === "car" && b.status === "completed")
-                          .reduce((sum, b) => sum + parseFloat(b.rental.totalPrice.replace(/[^0-9]/g, "") || "0"), 0).toLocaleString()}
+                        ₹
+                        {bookings
+                          .filter(
+                            (b) =>
+                              b.vehicleType === "car" &&
+                              b.status === "completed"
+                          )
+                          .reduce(
+                            (sum, b) =>
+                              sum +
+                              parseFloat(
+                                b.rental.totalPrice.replace(/[^0-9]/g, "") ||
+                                  "0"
+                              ),
+                            0
+                          )
+                          .toLocaleString()}
                       </p>
                     </div>
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <p className="text-xs text-gray-600 mb-1">From Bikes</p>
                       <p className="text-lg font-bold text-gray-900">
-                        ₹{bookings.filter(b => b.vehicleType === "bike" && b.status === "completed")
-                          .reduce((sum, b) => sum + parseFloat(b.rental.totalPrice.replace(/[^0-9]/g, "") || "0"), 0).toLocaleString()}
+                        ₹
+                        {bookings
+                          .filter(
+                            (b) =>
+                              b.vehicleType === "bike" &&
+                              b.status === "completed"
+                          )
+                          .reduce(
+                            (sum, b) =>
+                              sum +
+                              parseFloat(
+                                b.rental.totalPrice.replace(/[^0-9]/g, "") ||
+                                  "0"
+                              ),
+                            0
+                          )
+                          .toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -1489,18 +1872,47 @@ export default function AdminPanel() {
 
               {/* Booking Statistics */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Booking Statistics</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                  Booking Statistics
+                </h3>
                 <div className="space-y-3">
                   {[
-                    { label: "Total Bookings", value: stats.totalBookings, color: "text-blue-600" },
-                    { label: "Completed", value: stats.completedBookings, color: "text-green-600" },
-                    { label: "Active/Approved", value: stats.activeBookings, color: "text-orange-600" },
-                    { label: "Pending", value: stats.pendingBookings, color: "text-yellow-600" },
-                    { label: "Rejected", value: stats.rejectedBookings, color: "text-red-600" },
+                    {
+                      label: "Total Bookings",
+                      value: stats.totalBookings,
+                      color: "text-blue-600",
+                    },
+                    {
+                      label: "Completed",
+                      value: stats.completedBookings,
+                      color: "text-green-600",
+                    },
+                    {
+                      label: "Active/Approved",
+                      value: stats.activeBookings,
+                      color: "text-orange-600",
+                    },
+                    {
+                      label: "Pending",
+                      value: stats.pendingBookings,
+                      color: "text-yellow-600",
+                    },
+                    {
+                      label: "Rejected",
+                      value: stats.rejectedBookings,
+                      color: "text-red-600",
+                    },
                   ].map((item) => (
-                    <div key={item.label} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <span className="text-sm text-gray-600">{item.label}</span>
-                      <span className={`text-lg font-bold ${item.color}`}>{item.value}</span>
+                    <div
+                      key={item.label}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
+                      <span className="text-sm text-gray-600">
+                        {item.label}
+                      </span>
+                      <span className={`text-lg font-bold ${item.color}`}>
+                        {item.value}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -1509,22 +1921,42 @@ export default function AdminPanel() {
 
             {/* Monthly Performance */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Performance Metrics</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">
+                Performance Metrics
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
                   <Users className="h-8 w-8 text-blue-600 mx-auto mb-3" />
-                  <p className="text-3xl font-bold text-blue-600">{new Set(bookings.map(b => b.customer.mobile)).size}</p>
+                  <p className="text-3xl font-bold text-blue-600">
+                    {new Set(bookings.map((b) => b.customer.mobile)).size}
+                  </p>
                   <p className="text-sm text-gray-600 mt-2">Total Customers</p>
                 </div>
                 <div className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
                   <TrendingUp className="h-8 w-8 text-green-600 mx-auto mb-3" />
-                  <p className="text-3xl font-bold text-green-600">{stats.completedBookings > 0 ? Math.round((stats.completedBookings / stats.totalBookings) * 100) : 0}%</p>
+                  <p className="text-3xl font-bold text-green-600">
+                    {stats.completedBookings > 0
+                      ? Math.round(
+                          (stats.completedBookings / stats.totalBookings) * 100
+                        )
+                      : 0}
+                    %
+                  </p>
                   <p className="text-sm text-gray-600 mt-2">Completion Rate</p>
                 </div>
                 <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
                   <Package className="h-8 w-8 text-purple-600 mx-auto mb-3" />
-                  <p className="text-3xl font-bold text-purple-600">₹{stats.totalRevenue > 0 && stats.completedBookings > 0 ? Math.round(stats.totalRevenue / stats.completedBookings).toLocaleString() : 0}</p>
-                  <p className="text-sm text-gray-600 mt-2">Avg. Booking Value</p>
+                  <p className="text-3xl font-bold text-purple-600">
+                    ₹
+                    {stats.totalRevenue > 0 && stats.completedBookings > 0
+                      ? Math.round(
+                          stats.totalRevenue / stats.completedBookings
+                        ).toLocaleString()
+                      : 0}
+                  </p>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Avg. Booking Value
+                  </p>
                 </div>
               </div>
             </div>
@@ -1537,7 +1969,14 @@ export default function AdminPanel() {
             <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full my-8">
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <h2 className="text-2xl font-bold text-gray-900">
-                  {editingVehicle ? `Edit ${formType.charAt(0).toUpperCase() + formType.slice(1)}` : `Add New ${formType.charAt(0).toUpperCase() + formType.slice(1)}`} Vehicle
+                  {editingVehicle
+                    ? `Edit ${
+                        formType.charAt(0).toUpperCase() + formType.slice(1)
+                      }`
+                    : `Add New ${
+                        formType.charAt(0).toUpperCase() + formType.slice(1)
+                      }`}{" "}
+                  Vehicle
                 </h2>
                 <button
                   onClick={() => {
@@ -1560,7 +1999,9 @@ export default function AdminPanel() {
                   {/* Common Fields */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Brand *</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Brand *
+                      </label>
                       <input
                         type="text"
                         name="brand"
@@ -1571,7 +2012,9 @@ export default function AdminPanel() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Model *</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Model *
+                      </label>
                       <input
                         type="text"
                         name="model"
@@ -1594,12 +2037,18 @@ export default function AdminPanel() {
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     {vehicleImagePreview && (
-                      <img src={vehicleImagePreview} alt="Preview" className="mt-3 h-32 w-full object-cover rounded-lg" />
+                      <img
+                        src={vehicleImagePreview}
+                        alt="Preview"
+                        className="mt-3 h-32 w-full object-cover rounded-lg"
+                      />
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Available</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Available
+                    </label>
                     <input
                       type="checkbox"
                       checked={formData.available}
@@ -1612,7 +2061,9 @@ export default function AdminPanel() {
                   {formType === "car" && (
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Vehicle Type *</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Vehicle Type *
+                        </label>
                         <select
                           name="vehicleType"
                           value={formData.vehicleType}
@@ -1627,7 +2078,9 @@ export default function AdminPanel() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Fuel Type *</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Fuel Type *
+                        </label>
                         <select
                           name="fuelType"
                           value={formData.fuelType}
@@ -1642,7 +2095,9 @@ export default function AdminPanel() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Transmission *</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Transmission *
+                        </label>
                         <select
                           name="transmission"
                           value={formData.transmission}
@@ -1655,7 +2110,9 @@ export default function AdminPanel() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Seating Capacity *</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Seating Capacity *
+                        </label>
                         <select
                           name="seatingCapacity"
                           value={formData.seatingCapacity}
@@ -1668,9 +2125,13 @@ export default function AdminPanel() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">12 Hours Price *</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          12 Hours Price *
+                        </label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                            ₹
+                          </span>
                           <input
                             type="text"
                             name="priceFor12Hours"
@@ -1682,9 +2143,13 @@ export default function AdminPanel() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">24 Hours Price *</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          24 Hours Price *
+                        </label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                            ₹
+                          </span>
                           <input
                             type="text"
                             name="priceFor24Hours"
@@ -1702,7 +2167,9 @@ export default function AdminPanel() {
                   {formType === "bike" && (
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Bike Type *</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Bike Type *
+                        </label>
                         <select
                           name="bikeType"
                           value={formData.bikeType}
@@ -1717,7 +2184,9 @@ export default function AdminPanel() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Category *
+                        </label>
                         <select
                           name="category"
                           value={formData.category}
@@ -1730,7 +2199,9 @@ export default function AdminPanel() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Seater *</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Seater *
+                        </label>
                         <select
                           name="seater"
                           value={formData.seater}
@@ -1742,7 +2213,9 @@ export default function AdminPanel() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">CC *</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          CC *
+                        </label>
                         <input
                           type="number"
                           name="cc"
@@ -1753,7 +2226,9 @@ export default function AdminPanel() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Rating</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Rating
+                        </label>
                         <input
                           type="number"
                           name="rating"
@@ -1816,7 +2291,9 @@ export default function AdminPanel() {
               <div className="p-6 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Title *</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Title *
+                    </label>
                     <input
                       type="text"
                       name="title"
@@ -1828,7 +2305,9 @@ export default function AdminPanel() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Description *
+                    </label>
                     <textarea
                       name="description"
                       rows={3}
@@ -1841,7 +2320,9 @@ export default function AdminPanel() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Category *
+                      </label>
                       <input
                         type="text"
                         name="category"
@@ -1852,7 +2333,9 @@ export default function AdminPanel() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Author *</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Author *
+                      </label>
                       <input
                         type="text"
                         name="author"
@@ -1865,7 +2348,9 @@ export default function AdminPanel() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Content *</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Content *
+                    </label>
                     <textarea
                       name="content"
                       rows={10}
@@ -1877,7 +2362,9 @@ export default function AdminPanel() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Image *</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Image *
+                    </label>
                     <input
                       type="file"
                       accept="image/*"
@@ -1885,7 +2372,11 @@ export default function AdminPanel() {
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     {previewUrl && (
-                      <img src={previewUrl} alt="Preview" className="mt-3 h-32 w-full object-cover rounded-lg" />
+                      <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="mt-3 h-32 w-full object-cover rounded-lg"
+                      />
                     )}
                   </div>
                 </div>
@@ -1907,8 +2398,10 @@ export default function AdminPanel() {
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                         {editingBlog ? "Updating..." : "Creating..."}
                       </>
+                    ) : editingBlog ? (
+                      "Update Blog"
                     ) : (
-                      editingBlog ? "Update Blog" : "Create Blog"
+                      "Create Blog"
                     )}
                   </button>
                 </div>
@@ -1922,7 +2415,9 @@ export default function AdminPanel() {
           <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
-                <h2 className="text-2xl font-bold text-gray-900">Booking Details</h2>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Booking Details
+                </h2>
                 <button
                   onClick={() => setSelectedBooking(null)}
                   className="p-2 hover:bg-gray-100 rounded-lg transition"
@@ -1935,16 +2430,25 @@ export default function AdminPanel() {
                 <div className="grid grid-cols-2 gap-6">
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Booking ID</p>
-                    <p className="font-semibold text-gray-900">#{selectedBooking._id.slice(-8)}</p>
+                    <p className="font-semibold text-gray-900">
+                      #{selectedBooking._id.slice(-8)}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Status</p>
-                    <span className={`inline-flex px-3 py-1 rounded-full text-sm font-semibold ${selectedBooking.status === "completed" ? "bg-green-100 text-green-700" :
-                      selectedBooking.status === "approved" ? "bg-blue-100 text-blue-700" :
-                        selectedBooking.status === "pending" ? "bg-yellow-100 text-yellow-700" :
-                          "bg-red-100 text-red-700"
-                      }`}>
-                      {selectedBooking.status.charAt(0).toUpperCase() + selectedBooking.status.slice(1)}
+                    <span
+                      className={`inline-flex px-3 py-1 rounded-full text-sm font-semibold ${
+                        selectedBooking.status === "completed"
+                          ? "bg-green-100 text-green-700"
+                          : selectedBooking.status === "approved"
+                          ? "bg-blue-100 text-blue-700"
+                          : selectedBooking.status === "pending"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {selectedBooking.status.charAt(0).toUpperCase() +
+                        selectedBooking.status.slice(1)}
                     </span>
                   </div>
                   <div className="col-span-2">
@@ -1958,47 +2462,77 @@ export default function AdminPanel() {
                         />
                       )}
                       <div>
-                        <p className="font-semibold text-gray-900">{selectedBooking.vehicleDetails.brand} {selectedBooking.vehicleDetails.model}</p>
-                        <p className="text-sm text-gray-600">{selectedBooking.vehicleType} | {selectedBooking.vehicleDetails.category}</p>
+                        <p className="font-semibold text-gray-900">
+                          {selectedBooking.vehicleDetails.brand}{" "}
+                          {selectedBooking.vehicleDetails.model}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {selectedBooking.vehicleType} |{" "}
+                          {selectedBooking.vehicleDetails.category}
+                        </p>
                       </div>
                     </div>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Customer Name</p>
-                    <p className="font-semibold text-gray-900">{selectedBooking.customer.name}</p>
+                    <p className="font-semibold text-gray-900">
+                      {selectedBooking.customer.name}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Phone</p>
-                    <p className="font-semibold text-gray-900">{selectedBooking.customer.mobile}</p>
+                    <p className="font-semibold text-gray-900">
+                      {selectedBooking.customer.mobile}
+                    </p>
                   </div>
                   <div className="col-span-2">
                     <p className="text-sm text-gray-600 mb-1">Email</p>
-                    <p className="font-semibold text-gray-900">{selectedBooking.customer.email}</p>
+                    <p className="font-semibold text-gray-900">
+                      {selectedBooking.customer.email}
+                    </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Pickup Date & Time</p>
-                    <p className="font-semibold text-gray-900">{selectedBooking.rental.pickupDate} at {selectedBooking.rental.pickupTime}</p>
+                    <p className="text-sm text-gray-600 mb-1">
+                      Pickup Date & Time
+                    </p>
+                    <p className="font-semibold text-gray-900">
+                      {selectedBooking.rental.pickupDate} at{" "}
+                      {selectedBooking.rental.pickupTime}
+                    </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Return Date & Time</p>
-                    <p className="font-semibold text-gray-900">{selectedBooking.rental.dropoffDate} at {selectedBooking.rental.dropoffTime}</p>
+                    <p className="text-sm text-gray-600 mb-1">
+                      Return Date & Time
+                    </p>
+                    <p className="font-semibold text-gray-900">
+                      {selectedBooking.rental.dropoffDate} at{" "}
+                      {selectedBooking.rental.dropoffTime}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Duration</p>
-                    <p className="font-semibold text-gray-900">{selectedBooking.rental.duration}</p>
+                    <p className="font-semibold text-gray-900">
+                      {selectedBooking.rental.duration}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Total Amount</p>
-                    <p className="text-2xl font-bold text-green-600">{selectedBooking.rental.totalPrice}</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {selectedBooking.rental.totalPrice}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Booked On</p>
-                    <p className="font-semibold text-gray-900">{new Date(selectedBooking.createdAt).toLocaleString()}</p>
+                    <p className="font-semibold text-gray-900">
+                      {new Date(selectedBooking.createdAt).toLocaleString()}
+                    </p>
                   </div>
                   {selectedBooking.updatedAt && (
                     <div>
                       <p className="text-sm text-gray-600 mb-1">Last Updated</p>
-                      <p className="font-semibold text-gray-900">{new Date(selectedBooking.updatedAt).toLocaleString()}</p>
+                      <p className="font-semibold text-gray-900">
+                        {new Date(selectedBooking.updatedAt).toLocaleString()}
+                      </p>
                     </div>
                   )}
                 </div>
