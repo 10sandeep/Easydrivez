@@ -258,6 +258,8 @@ export default function AdminPanel() {
       const carData = await carRes.json();
       const bikeData = await bikeRes.json();
 
+      console.log(bikeData)
+
       console.log("🚗 [AdminPanel] Cars response:", carData);
       console.log("🏍️ [AdminPanel] Bikes response:", bikeData);
 
@@ -553,6 +555,8 @@ export default function AdminPanel() {
         formDataToSend.append("cc", formData.cc);
         formDataToSend.append("rating", formData.rating);
         formDataToSend.append("category", formData.category);
+        formDataToSend.append("priceFor12Hours", formData.priceFor12Hours);
+        formDataToSend.append("priceFor24Hours", formData.priceFor24Hours);
 
         // Add image file or keep existing URL
         if (vehicleImageFile) {
@@ -784,8 +788,8 @@ export default function AdminPanel() {
     type: "Bike",
     category: bike.category,
     image: bike.bikeImage,
-    price12: `₹${Math.round(bike.cc * 1.5).toLocaleString()}`,
-    price24: `₹${Math.round(bike.cc * 2.5).toLocaleString()}`,
+    price12: `₹${bike.priceFor12Hours?.toLocaleString()}`,
+    price24: `₹${bike.priceFor24Hours?.toLocaleString()}`,
     pricePerDay: Math.round(bike.cc * 2.5),
     fuelType: "petrol",
     seating: bike.seater.toString(),
@@ -1740,6 +1744,34 @@ export default function AdminPanel() {
                           <option value="1">1 Seater</option>
                           <option value="2">2 Seater</option>
                         </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">12 Hours Price *</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
+                          <input
+                            type="text"
+                            name="priceFor12Hours"
+                            value={formData.priceFor12Hours}
+                            onChange={handleChange}
+                            placeholder="2000"
+                            className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">24 Hours Price *</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">₹</span>
+                          <input
+                            type="text"
+                            name="priceFor24Hours"
+                            value={formData.priceFor24Hours}
+                            onChange={handleChange}
+                            placeholder="3500"
+                            className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
                       </div>
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">CC *</label>

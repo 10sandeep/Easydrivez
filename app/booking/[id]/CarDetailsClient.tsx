@@ -111,68 +111,47 @@ export default function CarDetailsClient({
     return Math.max(0, durationMs / (1000 * 60 * 60)); // hours
   };
 
-  // Price calculation (same logic)
+  // Price calculation (unified for car and bike)
   const calculatePrice = () => {
     if (!vehicle) return { amount: 0, display: "₹ 0", hours: 0, breakdown: "" };
 
     const hours = calculateDurationHours();
-    const BASE_FEE = 1000;
     let rentalPrice = 0;
     let breakdown = "";
 
-    if (isBike) {
-      const rate12 = Math.floor((vehicle.cc || 0) * 3);
-      const rate24 = Math.floor((vehicle.cc || 0) * 4.5);
+    const price12 =
+      parseInt(String(vehicle.price12 || "").replace(/[^0-9]/g, "")) || 0;
+    const price24 =
+      parseInt(String(vehicle.price24 || "").replace(/[^0-9]/g, "")) || 0;
 
-      if (hours <= 0) {
-        return {
-          amount: BASE_FEE,
-          display: `₹ ${BASE_FEE.toLocaleString("en-IN")}`,
-          hours: 0,
-          breakdown: "Base booking fee",
-        };
-      }
-
-      if (hours <= 12) {
-        rentalPrice = rate12;
-        breakdown = `Base (₹${BASE_FEE}) + 12h @ ₹${rate12}`;
-      } else if (hours <= 24) {
-        rentalPrice = rate24;
-        breakdown = `Base (₹${BASE_FEE}) + 24h @ ₹${rate24}`;
-      } else {
-        const fullDays = Math.floor(hours / 24);
-        rentalPrice = fullDays * rate24;
-        breakdown = `Base (₹${BASE_FEE}) + ${fullDays} day(s) @ ₹${rate24}/day`;
-      }
-    } else {
-      const price12 =
-        parseInt(String(vehicle.price12 || "").replace(/[^0-9]/g, "")) || 0;
-      const price24 =
-        parseInt(String(vehicle.price24 || "").replace(/[^0-9]/g, "")) || 0;
-
-      if (hours <= 0) {
-        return {
-          amount: BASE_FEE,
-          display: `₹ ${BASE_FEE.toLocaleString("en-IN")}`,
-          hours: 0,
-          breakdown: "Base booking fee",
-        };
-      }
-
-      if (hours <= 12) {
-        rentalPrice = price12;
-        breakdown = `Base (₹${BASE_FEE}) + 12h rate (${vehicle.price12})`;
-      } else if (hours <= 24) {
-        rentalPrice = price24;
-        breakdown = `Base (₹${BASE_FEE}) + 24h rate (${vehicle.price24})`;
-      } else {
-        const fullDays = Math.floor(hours / 24);
-        rentalPrice = fullDays * price24;
-        breakdown = `Base (₹${BASE_FEE}) + ${fullDays} day(s) × ${vehicle.price24}`;
-      }
+    if (hours <= 0) {
+      return {
+        amount: 0,
+        display: `₹ 0`,
+        hours: 0,
+        breakdown: "",
+      };
     }
 
-    const totalPrice = BASE_FEE + rentalPrice;
+    if (hours <= 12) {
+      rentalPrice = price12;
+      breakdown = `12h @ ₹${price12.toLocaleString("en-IN")}`;
+    } else if (hours <= 24) {
+      rentalPrice = price24;
+      breakdown = `24h @ ₹${price24.toLocaleString("en-IN")}`;
+    } else if (hours <= 36) {
+      rentalPrice = price24 + price12;
+      breakdown = `24h @ ₹${price24.toLocaleString("en-IN")} + 12h @ ₹${price12.toLocaleString("en-IN")}`;
+    } else if (hours <= 48) {
+      rentalPrice = price24 * 2;
+      breakdown = `2 days @ ₹${price24.toLocaleString("en-IN")}/day`;
+    } else {
+      const days = Math.ceil(hours / 24);
+      rentalPrice = days * price24;
+      breakdown = `${days} days @ ₹${price24.toLocaleString("en-IN")}/day`;
+    }
+
+    const totalPrice = rentalPrice;
     return {
       amount: totalPrice,
       display: `₹ ${totalPrice.toLocaleString("en-IN")}`,
@@ -423,33 +402,20 @@ export default function CarDetailsClient({
               <div className="space-y-3">
                 <div className="flex justify-between items-center pb-2 border-b border-gray-200">
                   <span className="text-gray-700 font-medium text-sm">
-                    Base booking fee:
+                    12 hours:
                   </span>
                   <span className="text-base font-bold text-gray-900">
-                    ₹ 1,000
+                    {vehicle.price12}
                   </span>
                 </div>
-
-                {!isBike && (
-                  <>
-                    <div className="flex justify-between items-center pb-2 border-b border-gray-200">
-                      <span className="text-gray-700 font-medium text-sm">
-                        12 hours:
-                      </span>
-                      <span className="text-base font-bold text-gray-900">
-                        {vehicle.price12}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center pb-2 border-b border-gray-200">
-                      <span className="text-gray-700 font-medium text-sm">
-                        24 hours:
-                      </span>
-                      <span className="text-base font-bold text-gray-900">
-                        {vehicle.price24}
-                      </span>
-                    </div>
-                  </>
-                )}
+                <div className="flex justify-between items-center pb-2 border-b border-gray-200">
+                  <span className="text-gray-700 font-medium text-sm">
+                    24 hours:
+                  </span>
+                  <span className="text-base font-bold text-gray-900">
+                    {vehicle.price24}
+                  </span>
+                </div>
 
                 {priceDetails.hours > 0 && (
                   <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
@@ -611,8 +577,8 @@ export default function CarDetailsClient({
                 {submitting
                   ? "Booking..."
                   : priceDetails.hours > 0
-                  ? `Payment On Site - ${priceDetails.display}`
-                  : "Payment On Site"}
+                    ? `Payment On Site - ${priceDetails.display}`
+                    : "Payment On Site"}
               </button>
             </form>
           </div>

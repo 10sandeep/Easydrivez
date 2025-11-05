@@ -57,7 +57,7 @@ export default function BikeRental() {
   };
 
   // ✅ Render states
-if (error) {
+  if (error) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-red-50 via-white to-orange-50 text-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
@@ -128,7 +128,7 @@ if (error) {
     );
   }
 
-    const handleWhatsApp = () => {
+  const handleWhatsApp = () => {
     window.open("https://wa.me/919090089708", "_blank");
   };
 
@@ -139,7 +139,7 @@ if (error) {
   return (
     <div className="bg-white min-h-screen">
 
-          <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
+      <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
         {/* WhatsApp Button */}
         <button
           onClick={handleWhatsApp}
@@ -168,7 +168,7 @@ if (error) {
       >
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
-           Best Bike Rental in Bhubaneswar
+            Best Bike Rental in Bhubaneswar
           </h1>
           <p className="text-lg md:text-xl text-gray-100 drop-shadow-md">
             Premium bike rental services at affordable prices
@@ -242,7 +242,7 @@ if (error) {
                       <div>
                         <p className="text-sm text-gray-600">starting from</p>
                         <p className="text-2xl font-bold text-black">
-                          ₹{Math.floor(bike.cc * 3)} /-
+                          ₹{bike.priceFor12Hours} /-
                         </p>
                         <p className="text-sm text-gray-600">per 12 hours</p>
                       </div>
@@ -256,7 +256,7 @@ if (error) {
                     <p className="text-sm text-gray-700">
                       24 hours:{" "}
                       <span className="font-bold">
-                        ₹{Math.floor(bike.cc * 4.5)} /-
+                        ₹{bike.priceFor24Hours} /-
                       </span>
                     </p>
                   </div>

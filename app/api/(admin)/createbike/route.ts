@@ -9,6 +9,7 @@ export const POST = async (request: NextRequest) => {
 
         const formData = await request.formData();
 
+        // 🏍️ Extract all fields
         const brand = formData.get("brand") as string;
         const model = formData.get("model") as string;
         const seater = Number(formData.get("seater"));
@@ -16,14 +17,24 @@ export const POST = async (request: NextRequest) => {
         const cc = Number(formData.get("cc"));
         const rating = Number(formData.get("rating"));
         const category = formData.get("category") as string; // Classic / High Speed / Premium
-        const imageFile = formData.get("bikeImage") as File | null;
         const priceFor12Hours = Number(formData.get("priceFor12Hours"));
         const priceFor24Hours = Number(formData.get("priceFor24Hours"));
+        const imageFile = formData.get("bikeImage") as File | null;
 
-
-        if (!brand || !model || !seater || !type || !cc || !category || !imageFile) {
+        // 🚨 Validate all required fields
+        if (
+            !brand ||
+            !model ||
+            !seater ||
+            !type ||
+            !cc ||
+            !category ||
+            !imageFile ||
+            isNaN(priceFor12Hours) ||
+            isNaN(priceFor24Hours)
+        ) {
             return NextResponse.json(
-                { status: false, message: "Missing required fields" },
+                { status: false, message: "Missing or invalid fields" },
                 { status: 400 }
             );
         }
@@ -53,17 +64,21 @@ export const POST = async (request: NextRequest) => {
             category,
             priceFor12Hours,
             priceFor24Hours,
-
+            available: true, // default availability
         });
 
         await newBike.save();
 
         return NextResponse.json(
-            { status: true, message: "Bike added successfully", bike: newBike },
+            {
+                status: true,
+                message: "✅ Bike added successfully",
+                bike: newBike,
+            },
             { status: 201 }
         );
     } catch (error) {
-        console.error("Error creating bike:", error);
+        console.error("❌ Error creating bike:", error);
         return NextResponse.json(
             { status: false, message: "Internal Server Error" },
             { status: 500 }
