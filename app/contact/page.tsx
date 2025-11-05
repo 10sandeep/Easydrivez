@@ -177,7 +177,7 @@ export default function ContactPage() {
                   <input
                     type="email"
                     name="email"
-                    placeholder="john@example.com"
+                    placeholder="ram@example.com"
                     value={formData.email}
                     onChange={handleChange}
                     required
@@ -195,7 +195,7 @@ export default function ContactPage() {
                   <input
                     type="tel"
                     name="phone"
-                    placeholder="+91 98765 43210"
+                    placeholder="+91 9012345678"
                     value={formData.phone}
                     onChange={handleChange}
                     required

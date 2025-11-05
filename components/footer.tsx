@@ -37,6 +37,7 @@ export function Footer() {
   const socialLinks = [
     { icon: Facebook, href: "https://www.facebook.com/share/1MJjR6xeLP/", label: "Facebook" },
     { icon: Instagram, href: "https://www.instagram.com/eazydrivez?igsh=MXM2bWhlMnVoN3RhaQ==", label: "Instagram" },
+    {icon:Twitter, href:"https://x.com/eazydrivez?t=j2krss8y8khr8yzIWWFh5A&s=09",label: "Twitter"}
 
   ];
 

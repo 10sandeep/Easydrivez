@@ -236,28 +236,28 @@ export const galleryImages: string[] = [
 
 export const testimonials: Testimonial[] = [
   {
-    name: "Sujata Sahoo",
+    name: "Pratyasha Sahoo",
     rating: 5,
     text: "Amazing service! The car was in perfect condition and the staff was very helpful. Will definitely rent again.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
+    image: "https://images.unsplash.com/photo-1622049605334-72e1e4432346?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
   },
   {
-    name: "Akhaya Barik",
+    name: "Akhaya Nayak",
     rating: 5,
     text: "Great experience renting a bike for my weekend trip. Smooth process and affordable rates!",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
+    image: "https://images.unsplash.com/photo-1729157661483-ed21901ed892?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
   },
   {
     name: "Ranjan Das",
     rating: 4,
     text: "Professional service and well-maintained vehicles. Customer support was excellent throughout.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+    image: "https://images.unsplash.com/photo-1616002851413-ebcc9611139d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=627",
   },
     {
     name: "Suman Nayak",
     rating: 4,
     text: "Professional service and well-maintained vehicles. Customer support was excellent throughout.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+    image: "https://images.unsplash.com/photo-1694871420373-e9c1031b91ee?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
   },
 ];
 
@@ -488,38 +488,38 @@ export const reasons = [
 
 export const faqs: FAQItem[] = [
   {
-    question: "What documents do I need to rent?",
+    question: "What documents are required to rent a car or bike?",
     answer:
-      "You need a valid driver's license, government ID, and a credit/debit card.",
+      "You’ll need a valid driving license, one government-issued ID proof, and in some cases, a security deposit. For international customers, a passport and international driving permit may be required.",
   },
   {
-    question: "What is the minimum age to rent?",
-    answer: "21 years for cars and 18 years for bikes.",
+    question: "Do you provide driver service with the rental vehicles?",
+    answer: "Yes, we provide professional drivers on request. Driver charges depend on duration and distance.",
   },
   {
-    question: "Are vehicles insured?",
+    question: "What happens if I return the vehicle late?",
     answer:
-      "Yes, all vehicles come with basic insurance. Additional coverage is available.",
+      "Extra usage beyond your booking duration will be charged as per our hourly or daily rental policy. If usage crosses 12 hours, it will be counted as a full-day rental.",
   },
   {
-    question: "What payment methods do you accept?",
+    question: "Is fuel included in the rental price?",
     answer:
-      "We accept all major credit cards, debit cards, and digital payments.",
+      "No, fuel is not included. The vehicle will be given with a certain fuel level, and we request you to return it with the same level.",
   },
   {
-    question: "What is your fuel policy?",
+    question: "What should I do in case of an accident or breakdown?",
     answer:
-      "Full-to-full policy. Return the vehicle with a full tank as you received it.",
+      "In case of an accident, immediately inform our support team and local authorities. For breakdowns, we provide 24/7 roadside assistance to ensure you are never stranded.",
   },
   {
-    question: "Can I cancel my booking?",
+    question: "Can I rent a vehicle for outstation travel?",
     answer:
-      "Yes, free cancellation up to 24 hours before rental. After that, 50% charge applies.",
+      "Yes, our vehicles can be used for outstation trips. Please inform us in advance, as additional conditions and charges may apply.",
   },
   {
-    question: "What if the vehicle breaks down?",
+    question: "How can I book and make payments?",
     answer:
-      "Contact our 24/7 support immediately. We'll provide assistance or a replacement.",
+      "You can book directly through our website or contact our customer care. Payments can be made online via UPI, cards, wallets, or in cash at the time of pickup.",
   },
   {
     question: "Do I get a helmet with bike rentals?",
