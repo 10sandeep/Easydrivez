@@ -15,7 +15,7 @@ export const sendBookingEmail = async (bookingData: any) => {
   const { vehicleDetails, customer, rental, vehicleType } = bookingData;
 
   const mailOptions = {
-    from: `EasyDrivez <sandeepnayak1017@gmail.com>`, // ✅ Use verified sender
+    from: `EasyDrivez <support@eazydrivez.com>`, // ✅ Use verified sender
     to: process.env.ADMIN_EMAIL,
     subject: `🚗 New ${vehicleType.toUpperCase()} Booking - ${vehicleDetails.brand} ${vehicleDetails.model}`,
     html: `
@@ -96,7 +96,7 @@ export const sendBookingEmail = async (bookingData: any) => {
 // ✅ NEW: Send approval email
 export const sendBookingApprovalEmail = async (booking: any) => {
   const mailOptions = {
-    from: `eazydrivez<sandeepnayak1017@gmail.com>`,
+    from: `eazydrivez<ssupport@eazydrivez.com>`,
     to: booking.customer.email,
     subject: `✅ Your ${booking.vehicleDetails.brand} ${booking.vehicleDetails.model} booking is Approved!`,
     html: `
@@ -116,7 +116,7 @@ export const sendBookingApprovalEmail = async (booking: any) => {
 // ✅ NEW: Send rejection email
 export const sendBookingRejectionEmail = async (booking: any) => {
   const mailOptions = {
-    from: `eazydrivez<sandeepnayak1017@gmail.com>`,
+    from: `eazydrivez<support@eazydrivez.com>`,
     to: booking.customer.email,
     subject: `❌ Your ${booking.vehicleDetails.brand} ${booking.vehicleDetails.model} booking was Rejected`,
     html: `

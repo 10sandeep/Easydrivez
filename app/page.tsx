@@ -256,6 +256,9 @@ export default function Home() {
                     >
                       <option value="">Select Location</option>
                       <option value="bhubaneswar">Bhubaneswar</option>
+                      <option value="atoffice">At Office</option>
+                      <option value="airport">Bhubaneswar Airport</option>
+                      <option value="pickupanddrop">Pick up and Drop</option>
                     </select>
                     <svg
                       className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none"
