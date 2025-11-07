@@ -54,6 +54,7 @@ const App = () => {
             transformedBlogs[0].featured = true;
           }
           setBlogs(transformedBlogs);
+          console.log("blog data",blogs)
         }
       } catch (error) {
         console.error("Error fetching blogs:", error);
@@ -454,7 +455,7 @@ const BlogDetail = ({
 
             {/* Content */}
             <div
-              className="blog-content"
+              className="blog-content text-black"
               dangerouslySetInnerHTML={{ __html: formatContent(blog.content) }}
             />
 
