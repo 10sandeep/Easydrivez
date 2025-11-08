@@ -244,7 +244,7 @@ export default function CarDetailsClient({
     };
 
     try {
-      const response = await fetch("http://localhost:3000/api/bookings", {
+      const response = await fetch("/api/bookings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
