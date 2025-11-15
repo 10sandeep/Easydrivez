@@ -5,7 +5,7 @@ export interface IBike extends Document {
     brand: string;
     model: string;
     seater: number;
-    type: "Sports" | "Adventure" | "Cruise";
+    type: "Sport" | "Adventure" | "Cruise" | "Standard" | "Scooter" ;
     cc: number;
     rating: number;
     priceFor12Hours: number;
