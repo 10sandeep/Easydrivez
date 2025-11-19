@@ -17,6 +17,7 @@ export const POST = async (request: NextRequest) => {
         const seatingCapacity = Number(formData.get("seatingCapacity"));
         const priceFor12Hours = Number(formData.get("priceFor12Hours"));
         const priceFor24Hours = Number(formData.get("priceFor24Hours"));
+        const description = formData.get("description") as string;
         const imageFile = formData.get("carPicturate") as File | null;
 
         if (
@@ -60,6 +61,7 @@ export const POST = async (request: NextRequest) => {
             seatingCapacity,
             priceFor12Hours,
             priceFor24Hours,
+            description,
         });
 
         await newCar.save();

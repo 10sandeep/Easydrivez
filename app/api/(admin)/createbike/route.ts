@@ -19,6 +19,7 @@ export const POST = async (request: NextRequest) => {
         const category = formData.get("category") as string; // Classic / High Speed / Premium
         const priceFor12Hours = Number(formData.get("priceFor12Hours"));
         const priceFor24Hours = Number(formData.get("priceFor24Hours"));
+        const description = formData.get("description") as string;
         const imageFile = formData.get("bikeImage") as File | null;
 
         // 🚨 Validate all required fields
@@ -65,6 +66,7 @@ export const POST = async (request: NextRequest) => {
             priceFor12Hours,
             priceFor24Hours,
             available: true, // default availability
+            description
         });
 
         await newBike.save();

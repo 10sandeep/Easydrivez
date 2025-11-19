@@ -44,6 +44,7 @@ interface Car {
   createdAt: string;
   updatedAt: string;
   __v?: number;
+  description?: string
 }
 
 interface Bike {
@@ -60,6 +61,7 @@ interface Bike {
   createdAt: string;
   updatedAt: string;
   __v?: number;
+  description?: string
 }
 
 interface Blog {
@@ -139,6 +141,7 @@ interface FormData {
   cc: string;
   rating: string;
   category: string;
+  description: string
 }
 
 interface BlogFormData {
@@ -211,6 +214,7 @@ export default function AdminPanel() {
     cc: "",
     rating: "",
     category: "",
+    description: ""
   });
   const [blogFormData, setBlogFormData] = useState<BlogFormData>({
     title: "",
@@ -455,6 +459,7 @@ export default function AdminPanel() {
       cc: "",
       rating: "4.5",
       category: "",
+      description: ""
     });
     setVehicleImageFile(null);
     if (vehicleImagePreview) {
@@ -501,6 +506,7 @@ export default function AdminPanel() {
         cc: "",
         rating: "",
         category: "",
+        description: c.description || ""
       });
       setVehicleImagePreview(c.carPicturate);
     } else {
@@ -521,6 +527,7 @@ export default function AdminPanel() {
         cc: b.cc.toString(),
         rating: b.rating.toString(),
         category: b.category,
+        description: b.description || ""
       });
       setVehicleImagePreview(b.bikeImage);
     }
@@ -576,6 +583,7 @@ export default function AdminPanel() {
         formDataToSend.append("seatingCapacity", formData.seatingCapacity);
         formDataToSend.append("priceFor12Hours", formData.priceFor12Hours);
         formDataToSend.append("priceFor24Hours", formData.priceFor24Hours);
+        formDataToSend.append("description", formData.description);
 
         // Add image file or keep existing URL
         if (vehicleImageFile) {
@@ -594,6 +602,7 @@ export default function AdminPanel() {
         formDataToSend.append("category", formData.category);
         formDataToSend.append("priceFor12Hours", formData.priceFor12Hours);
         formDataToSend.append("priceFor24Hours", formData.priceFor24Hours);
+        formDataToSend.append("description", formData.description);
 
         // Add image file or keep existing URL
         if (vehicleImageFile) {
@@ -661,6 +670,7 @@ export default function AdminPanel() {
       cc: "",
       rating: "",
       category: "",
+      description: ""
     });
   };
 
@@ -739,56 +749,56 @@ export default function AdminPanel() {
   //   }
   // };
   const handleBlogSubmit = async () => {
-  if (
-    !blogFormData.title ||
-    !blogFormData.description ||
-    !blogFormData.content ||
-    !blogFormData.image
-  ) {
-    alert("Please fill all required fields");
-    return;
-  }
-
-  const formDataToSend = new FormData();
-  formDataToSend.append("title", blogFormData.title);
-  formDataToSend.append("description", blogFormData.description);
-  formDataToSend.append("category", blogFormData.category);
-  formDataToSend.append("author", blogFormData.author);
-  formDataToSend.append("content", blogFormData.content);
-
-  if (blogFormData.image instanceof File) {
-    formDataToSend.append("image", blogFormData.image);
-  } else if (typeof blogFormData.image === "string") {
-    formDataToSend.append("image", blogFormData.image); // existing URL when editing
-  }
-
-  try {
-    setIsBlogSubmitting(true);
-    const method = editingBlog ? "PUT" : "POST";
-    const url = editingBlog ? `/api/blog/${editingBlog._id}` : "/api/blog";
-
-    const res = await fetch(url, {
-      method,
-      body: formDataToSend, // ← THIS IS THE FIX
-      // DO NOT set headers! Let browser auto-set multipart boundary
-    });
-
-    const data = await res.json();
-
-    if (data.status || data.success) {
-      await fetchBlogs();
-      alert(editingBlog ? "Blog updated!" : "Blog created!");
-      closeBlogForm(); // reuse your cleanup function
-    } else {
-      alert(data.message || "Failed to save blog");
+    if (
+      !blogFormData.title ||
+      !blogFormData.description ||
+      !blogFormData.content ||
+      !blogFormData.image
+    ) {
+      alert("Please fill all required fields");
+      return;
     }
-  } catch (error) {
-    console.error("Error:", error);
-    alert("Network error. Try again.");
-  } finally {
-    setIsBlogSubmitting(false);
-  }
-};
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("title", blogFormData.title);
+    formDataToSend.append("description", blogFormData.description);
+    formDataToSend.append("category", blogFormData.category);
+    formDataToSend.append("author", blogFormData.author);
+    formDataToSend.append("content", blogFormData.content);
+
+    if (blogFormData.image instanceof File) {
+      formDataToSend.append("image", blogFormData.image);
+    } else if (typeof blogFormData.image === "string") {
+      formDataToSend.append("image", blogFormData.image); // existing URL when editing
+    }
+
+    try {
+      setIsBlogSubmitting(true);
+      const method = editingBlog ? "PUT" : "POST";
+      const url = editingBlog ? `/api/blog/${editingBlog._id}` : "/api/blog";
+
+      const res = await fetch(url, {
+        method,
+        body: formDataToSend, // ← THIS IS THE FIX
+        // DO NOT set headers! Let browser auto-set multipart boundary
+      });
+
+      const data = await res.json();
+
+      if (data.status || data.success) {
+        await fetchBlogs();
+        alert(editingBlog ? "Blog updated!" : "Blog created!");
+        closeBlogForm(); // reuse your cleanup function
+      } else {
+        alert(data.message || "Failed to save blog");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Network error. Try again.");
+    } finally {
+      setIsBlogSubmitting(false);
+    }
+  };
 
   const handleDelete = async (id: string, type: "car" | "bike") => {
     if (
@@ -817,8 +827,7 @@ export default function AdminPanel() {
           setBikes(bikes.filter((b) => b._id !== id));
         }
         alert(
-          `${
-            type.charAt(0).toUpperCase() + type.slice(1)
+          `${type.charAt(0).toUpperCase() + type.slice(1)
           } deleted successfully!`
         );
       } else {
@@ -904,9 +913,8 @@ export default function AdminPanel() {
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `admin-report-${
-      new Date().toISOString().split("T")[0]
-    }.json`;
+    link.download = `admin-report-${new Date().toISOString().split("T")[0]
+      }.json`;
     link.click();
   };
 
@@ -950,6 +958,7 @@ export default function AdminPanel() {
     available: bike.available,
     rating: bike.rating,
     cc: bike.cc,
+
   });
 
   const getFilteredVehicles = (): VehicleDisplay[] => {
@@ -957,11 +966,10 @@ export default function AdminPanel() {
     const searchLower = searchTerm.toLowerCase();
     return list
       .filter((item) => {
-        const name = `${item.brand} ${
-          vehicleSubTab === "car"
-            ? (item as Car).modelName
-            : (item as Bike).model
-        }`.toLowerCase();
+        const name = `${item.brand} ${vehicleSubTab === "car"
+          ? (item as Car).modelName
+          : (item as Bike).model
+          }`.toLowerCase();
         return name.includes(searchLower);
       })
       .map((item) =>
@@ -1049,11 +1057,10 @@ export default function AdminPanel() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${
-                      activeTab === tab.id
-                        ? "bg-yellow-600 text-white shadow-sm"
-                        : "text-gray-600 hover:bg-gray-100"
-                    }`}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${activeTab === tab.id
+                      ? "bg-yellow-600 text-white shadow-sm"
+                      : "text-gray-600 hover:bg-gray-100"
+                      }`}
                   >
                     <Icon className="h-5 w-5" />
                     {tab.label}
@@ -1248,15 +1255,14 @@ export default function AdminPanel() {
                           </p>
                         </div>
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            booking.status === "completed"
-                              ? "bg-green-100 text-green-700"
-                              : booking.status === "approved"
+                          className={`px-3 py-1 rounded-full text-xs font-medium ${booking.status === "completed"
+                            ? "bg-green-100 text-green-700"
+                            : booking.status === "approved"
                               ? "bg-blue-100 text-blue-700"
                               : booking.status === "pending"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-red-100 text-red-700"
-                          }`}
+                                ? "bg-yellow-100 text-yellow-700"
+                                : "bg-red-100 text-red-700"
+                            }`}
                         >
                           {booking.status}
                         </span>
@@ -1288,12 +1294,11 @@ export default function AdminPanel() {
                       <div
                         className="bg-yellow-600 h-2 rounded-full transition-all duration-500"
                         style={{
-                          width: `${
-                            stats.totalBookings > 0
-                              ? (stats.pendingBookings / stats.totalBookings) *
-                                100
-                              : 0
-                          }%`,
+                          width: `${stats.totalBookings > 0
+                            ? (stats.pendingBookings / stats.totalBookings) *
+                            100
+                            : 0
+                            }%`,
                         }}
                       ></div>
                     </div>
@@ -1309,12 +1314,11 @@ export default function AdminPanel() {
                       <div
                         className="bg-blue-600 h-2 rounded-full transition-all duration-500"
                         style={{
-                          width: `${
-                            stats.totalBookings > 0
-                              ? (stats.activeBookings / stats.totalBookings) *
-                                100
-                              : 0
-                          }%`,
+                          width: `${stats.totalBookings > 0
+                            ? (stats.activeBookings / stats.totalBookings) *
+                            100
+                            : 0
+                            }%`,
                         }}
                       ></div>
                     </div>
@@ -1330,13 +1334,12 @@ export default function AdminPanel() {
                       <div
                         className="bg-green-600 h-2 rounded-full transition-all duration-500"
                         style={{
-                          width: `${
-                            stats.totalBookings > 0
-                              ? (stats.completedBookings /
-                                  stats.totalBookings) *
-                                100
-                              : 0
-                          }%`,
+                          width: `${stats.totalBookings > 0
+                            ? (stats.completedBookings /
+                              stats.totalBookings) *
+                            100
+                            : 0
+                            }%`,
                         }}
                       ></div>
                     </div>
@@ -1352,12 +1355,11 @@ export default function AdminPanel() {
                       <div
                         className="bg-red-600 h-2 rounded-full transition-all duration-500"
                         style={{
-                          width: `${
-                            stats.totalBookings > 0
-                              ? (stats.rejectedBookings / stats.totalBookings) *
-                                100
-                              : 0
-                          }%`,
+                          width: `${stats.totalBookings > 0
+                            ? (stats.rejectedBookings / stats.totalBookings) *
+                            100
+                            : 0
+                            }%`,
                         }}
                       ></div>
                     </div>
@@ -1394,22 +1396,20 @@ export default function AdminPanel() {
             <div className="flex gap-2 mb-6">
               <button
                 onClick={() => setVehicleSubTab("car")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${
-                  vehicleSubTab === "car"
-                    ? "bg-yellow-600 text-white shadow-sm"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${vehicleSubTab === "car"
+                  ? "bg-yellow-600 text-white shadow-sm"
+                  : "text-gray-600 hover:bg-gray-100"
+                  }`}
               >
                 <Car className="h-4 w-4" />
                 Cars ({cars.length})
               </button>
               <button
                 onClick={() => setVehicleSubTab("bike")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${
-                  vehicleSubTab === "bike"
-                    ? "bg-yellow-600 text-white shadow-sm"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition font-medium ${vehicleSubTab === "bike"
+                  ? "bg-yellow-600 text-white shadow-sm"
+                  : "text-gray-600 hover:bg-gray-100"
+                  }`}
               >
                 <Bike className="h-4 w-4" />
                 Bikes ({bikes.length})
@@ -1710,15 +1710,14 @@ export default function AdminPanel() {
                           </td>
                           <td className="px-6 py-4">
                             <span
-                              className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${
-                                booking.status === "completed"
-                                  ? "bg-green-100 text-green-700"
-                                  : booking.status === "approved"
+                              className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${booking.status === "completed"
+                                ? "bg-green-100 text-green-700"
+                                : booking.status === "approved"
                                   ? "bg-blue-100 text-blue-700"
                                   : booking.status === "pending"
-                                  ? "bg-yellow-100 text-yellow-700"
-                                  : "bg-red-100 text-red-700"
-                              }`}
+                                    ? "bg-yellow-100 text-yellow-700"
+                                    : "bg-red-100 text-red-700"
+                                }`}
                             >
                               {booking.status.charAt(0).toUpperCase() +
                                 booking.status.slice(1)}
@@ -1841,7 +1840,7 @@ export default function AdminPanel() {
                               sum +
                               parseFloat(
                                 b.rental.totalPrice.replace(/[^0-9]/g, "") ||
-                                  "0"
+                                "0"
                               ),
                             0
                           )
@@ -1863,7 +1862,7 @@ export default function AdminPanel() {
                               sum +
                               parseFloat(
                                 b.rental.totalPrice.replace(/[^0-9]/g, "") ||
-                                  "0"
+                                "0"
                               ),
                             0
                           )
@@ -1941,8 +1940,8 @@ export default function AdminPanel() {
                   <p className="text-3xl font-bold text-green-600">
                     {stats.completedBookings > 0
                       ? Math.round(
-                          (stats.completedBookings / stats.totalBookings) * 100
-                        )
+                        (stats.completedBookings / stats.totalBookings) * 100
+                      )
                       : 0}
                     %
                   </p>
@@ -1954,8 +1953,8 @@ export default function AdminPanel() {
                     ₹
                     {stats.totalRevenue > 0 && stats.completedBookings > 0
                       ? Math.round(
-                          stats.totalRevenue / stats.completedBookings
-                        ).toLocaleString()
+                        stats.totalRevenue / stats.completedBookings
+                      ).toLocaleString()
                       : 0}
                   </p>
                   <p className="text-sm text-gray-600 mt-2">
@@ -1974,12 +1973,8 @@ export default function AdminPanel() {
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <h2 className="text-2xl font-bold text-gray-900">
                   {editingVehicle
-                    ? `Edit ${
-                        formType.charAt(0).toUpperCase() + formType.slice(1)
-                      }`
-                    : `Add New ${
-                        formType.charAt(0).toUpperCase() + formType.slice(1)
-                      }`}{" "}
+                    ? `Edit ${formType.charAt(0).toUpperCase() + formType.slice(1)}`
+                    : `Add New ${formType.charAt(0).toUpperCase() + formType.slice(1)}`}{" "}
                   Vehicle
                 </h2>
                 <button
@@ -2028,6 +2023,21 @@ export default function AdminPanel() {
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
+                  </div>
+
+                  {/* NEW: Description Field */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Description
+                    </label>
+                    <textarea
+                      name="description"
+                      value={formData.description}
+                      onChange={handleChange}
+                      placeholder="Enter vehicle description, features, and other details..."
+                      rows="3"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    />
                   </div>
 
                   <div>
@@ -2467,15 +2477,14 @@ export default function AdminPanel() {
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Status</p>
                     <span
-                      className={`inline-flex px-3 py-1 rounded-full text-sm font-semibold ${
-                        selectedBooking.status === "completed"
-                          ? "bg-green-100 text-green-700"
-                          : selectedBooking.status === "approved"
+                      className={`inline-flex px-3 py-1 rounded-full text-sm font-semibold ${selectedBooking.status === "completed"
+                        ? "bg-green-100 text-green-700"
+                        : selectedBooking.status === "approved"
                           ? "bg-blue-100 text-blue-700"
                           : selectedBooking.status === "pending"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
+                            ? "bg-yellow-100 text-yellow-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
                     >
                       {selectedBooking.status.charAt(0).toUpperCase() +
                         selectedBooking.status.slice(1)}

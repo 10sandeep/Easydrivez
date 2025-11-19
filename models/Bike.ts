@@ -5,13 +5,14 @@ export interface IBike extends Document {
     brand: string;
     model: string;
     seater: number;
-    type: "Sport" | "Adventure" | "Cruise" | "Standard" | "Scooter" ;
+    type: "Sport" | "Adventure" | "Cruise" | "Standard" | "Scooter";
     cc: number;
     rating: number;
     priceFor12Hours: number;
     priceFor24Hours: number;
     category: "Classic" | "High Speed" | "Premium";
     available: boolean;
+    description: string;   // <-- Added
     createdAt?: Date;
 }
 
@@ -23,7 +24,7 @@ const BikeSchema = new Schema<IBike>(
         seater: { type: Number, required: true },
         type: {
             type: String,
-            enum: ["Sports", "Adventure", "Cruise"],
+            enum: ["Sport", "Adventure", "Cruise", "Standard", "Scooter"], // corrected
             required: true,
         },
         cc: { type: Number, required: true },
@@ -36,9 +37,13 @@ const BikeSchema = new Schema<IBike>(
             required: true,
         },
         available: { type: Boolean, default: true },
+        description: { type: String, required: true },  // <-- Added
     },
     { timestamps: true }
 );
 
-const Bike: Model<IBike> = mongoose.models.Bike || mongoose.model("Bike", BikeSchema);
+const Bike: Model<IBike> =
+    mongoose.models.Bike || mongoose.model("Bike", BikeSchema);
+
 export default Bike;
+ 
