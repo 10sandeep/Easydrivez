@@ -14,6 +14,7 @@ interface Car {
   priceFor12Hours: number;
   priceFor24Hours: number;
   available: boolean;
+  description?: string;
 }
 
 export default function CarRental() {
@@ -131,25 +132,25 @@ export default function CarRental() {
   return (
     <div className="bg-white min-h-screen">
 
-        <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
-              {/* WhatsApp Button */}
-              <button
-                onClick={handleWhatsApp}
-                className="h-14 w-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
-                title="Chat on WhatsApp"
-              >
-                <MessageCircle className="h-6 w-6" />
-              </button>
-      
-              {/* Phone Button */}
-              <button
-                onClick={handlePhone}
-                className="h-14 w-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
-                title="Call us"
-              >
-                <Phone className="h-6 w-6" />
-              </button>
-            </div>
+      <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
+        {/* WhatsApp Button */}
+        <button
+          onClick={handleWhatsApp}
+          className="h-14 w-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
+          title="Chat on WhatsApp"
+        >
+          <MessageCircle className="h-6 w-6" />
+        </button>
+
+        {/* Phone Button */}
+        <button
+          onClick={handlePhone}
+          className="h-14 w-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
+          title="Call us"
+        >
+          <Phone className="h-6 w-6" />
+        </button>
+      </div>
       {/* Hero Section */}
       <div
         className="relative py-20 bg-cover bg-center"
@@ -160,7 +161,7 @@ export default function CarRental() {
       >
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
-           Best Car Rental in Bhubaneswar
+            Best Car Rental in Bhubaneswar
           </h1>
           <p className="text-lg md:text-xl text-gray-100 drop-shadow-md">
             Premium car rental services at affordable prices
@@ -210,6 +211,13 @@ export default function CarRental() {
                     Transmission: {car.transmission}
                   </p>
 
+                  {/* Description */}
+                  {car.description && (
+                    <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                      {car.description}
+                    </p>
+                  )}
+
                   {/* Features */}
                   <div className="flex flex-wrap gap-2 mb-4">
                     <span className="border border-gray-300 text-black px-3 py-1 rounded text-sm">
@@ -220,8 +228,8 @@ export default function CarRental() {
                     </span>
                     <span
                       className={`px-3 py-1 rounded text-sm ${car.available
-                          ? "bg-green-100 text-green-700 border border-green-400"
-                          : "bg-red-100 text-red-700 border border-red-400"
+                        ? "bg-green-100 text-green-700 border border-green-400"
+                        : "bg-red-100 text-red-700 border border-red-400"
                         }`}
                     >
                       {car.available ? "Available" : "Booked"}
