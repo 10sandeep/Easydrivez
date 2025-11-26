@@ -20,6 +20,7 @@ interface Vehicle {
   transmission?: string;
   price12?: string;
   price24?: string;
+  description?: string;
   // Add other fields as needed
 }
 
@@ -367,6 +368,18 @@ export default function CarDetailsClient({
                 className="w-full h-64 object-cover"
               />
             </div>
+
+            {/* Description */}
+            {vehicle.description && (
+              <div className="bg-white rounded-xl shadow-lg p-5">
+                <h3 className="text-base font-bold text-gray-900 mb-2">
+                  About this vehicle:
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {vehicle.description}
+                </p>
+              </div>
+            )}
 
             <div>
               <h3 className="text-base font-bold text-gray-900 mb-3">

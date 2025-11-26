@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MessageCircle, Phone } from "lucide-react";
+
 interface Bike {
   _id: string;
   bikeImage: string;
@@ -13,8 +14,10 @@ interface Bike {
   rating: number;
   category: string;
   available: boolean;
+  description?: string;
+  priceFor12Hours: number;
+  priceFor24Hours: number;
 }
-
 export default function BikeRental() {
   const router = useRouter();
   const [bikes, setBikes] = useState<Bike[]>([]);
@@ -222,6 +225,13 @@ export default function BikeRental() {
                   <p className="text-gray-700 mb-4 text-sm capitalize">
                     Type: {bike.category}
                   </p>
+
+                  {/* Description */}
+                  {bike.description && (
+                    <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                      {bike.description}
+                    </p>
+                  )}
 
                   {/* Features */}
                   <div className="flex flex-wrap gap-2 mb-4">
