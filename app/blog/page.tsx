@@ -54,7 +54,7 @@ const App = () => {
             transformedBlogs[0].featured = true;
           }
           setBlogs(transformedBlogs);
-          console.log("blog data",blogs)
+          console.log("blog data", blogs)
         }
       } catch (error) {
         console.error("Error fetching blogs:", error);
@@ -81,7 +81,7 @@ const App = () => {
     return ["All", ...new Set(blogs.map((blog) => blog.category))];
   }, [blogs]);
 
-   // ✅ Loading State
+  // ✅ Loading State
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-600 bg-gradient-to-br from-blue-50 via-white to-orange-50">
@@ -126,7 +126,7 @@ const App = () => {
       />
     );
   }
-   const handleWhatsApp = () => {
+  const handleWhatsApp = () => {
     window.open("https://wa.me/919090089708", "_blank");
   };
 
@@ -136,7 +136,7 @@ const App = () => {
   return (
     <div className="min-h-screen bg-gray-50">
 
-         <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
+      <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
         {/* WhatsApp Button */}
         <button
           onClick={handleWhatsApp}
@@ -236,8 +236,8 @@ const App = () => {
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${selectedCategory === cat
-                    ? "bg-gray-900 text-white"
-                    : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                  ? "bg-gray-900 text-white"
+                  : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
                   }`}
               >
                 {cat}
@@ -326,28 +326,71 @@ const BlogDetail = ({
     .filter(b => b.id !== blog.id)
     .slice(0, 5);
 
-  // Format content with proper styling
+  // Enhanced format content function with better paragraph handling
   const formatContent = (content: string) => {
-    // Add styling classes to HTML elements
-    let formattedContent = content
-      // Style headings
-      .replace(/<h1>/g, '<h1 class="text-4xl font-bold text-gray-900 mt-12 mb-6 leading-tight">')
-      .replace(/<h2>/g, '<h2 class="text-3xl font-bold text-gray-900 mt-10 mb-5 leading-tight">')
-      .replace(/<h3>/g, '<h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">')
-      .replace(/<h4>/g, '<h4 class="text-xl font-bold text-gray-800 mt-6 mb-3">')
-      // Style paragraphs
-      .replace(/<p>/g, '<p class="text-gray-700 text-lg leading-relaxed mb-6">')
-      // Style lists
-      .replace(/<ul>/g, '<ul class="space-y-3 mb-6 ml-6">')
-      .replace(/<ol>/g, '<ol class="space-y-3 mb-6 ml-6 list-decimal">')
-      .replace(/<li>/g, '<li class="text-gray-700 text-lg leading-relaxed pl-2"><span class="inline-block w-2 h-2 bg-blue-600 rounded-full mr-3 -ml-6"></span>')
-      // Style links
-      .replace(/<a /g, '<a class="text-blue-600 hover:text-blue-700 underline font-medium" ')
-      // Style blockquotes
-      .replace(/<blockquote>/g, '<blockquote class="border-l-4 border-blue-600 pl-6 py-4 my-6 bg-gray-50 italic text-gray-700">');
+    // If content already has HTML tags, format them
+    if (content.includes('<')) {
+      let formattedContent = content
+        // Style headings
+        .replace(/<h1>/g, '<h1 class="text-4xl font-bold text-gray-900 mt-12 mb-6 leading-tight">')
+        .replace(/<h2>/g, '<h2 class="text-3xl font-bold text-gray-900 mt-10 mb-5 leading-tight">')
+        .replace(/<h3>/g, '<h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">')
+        .replace(/<h4>/g, '<h4 class="text-xl font-bold text-gray-800 mt-6 mb-3">')
+        // Style paragraphs
+        .replace(/<p>/g, '<p class="text-gray-700 text-lg leading-relaxed mb-6">')
+        // Style lists
+        .replace(/<ul>/g, '<ul class="space-y-3 mb-6 ml-6">')
+        .replace(/<ol>/g, '<ol class="space-y-3 mb-6 ml-6 list-decimal">')
+        .replace(/<li>/g, '<li class="text-gray-700 text-lg leading-relaxed pl-2"><span class="inline-block w-2 h-2 bg-blue-600 rounded-full mr-3 -ml-6"></span>')
+        // Style links
+        .replace(/<a /g, '<a class="text-blue-600 hover:text-blue-700 underline font-medium" ')
+        // Style blockquotes
+        .replace(/<blockquote>/g, '<blockquote class="border-l-4 border-blue-600 pl-6 py-4 my-6 bg-gray-50 italic text-gray-700">');
 
-    return formattedContent;
+      return formattedContent;
+    }
+
+    // If content is plain text, convert it to formatted HTML
+    // Split by double line breaks for paragraphs
+    let paragraphs = content.split(/\n\n+/);
+
+    // If no double line breaks, try single line breaks
+    if (paragraphs.length === 1) {
+      paragraphs = content.split(/\n/);
+    }
+
+    // Format each paragraph
+    const formattedParagraphs = paragraphs
+      .filter(p => p.trim().length > 0) // Remove empty paragraphs
+      .map(paragraph => {
+        const trimmed = paragraph.trim();
+
+        // Check if it's a heading (lines that are short and might be titles)
+        if (trimmed.length < 60 && trimmed.length > 0 && !trimmed.endsWith('.') && !trimmed.endsWith(',')) {
+          // Check if it's ALL CAPS or Title Case
+          if (trimmed === trimmed.toUpperCase() || /^[A-Z][a-z]*(\s+[A-Z][a-z]*)*[:]?$/.test(trimmed)) {
+            return `<h2 class="text-3xl font-bold text-gray-900 mt-10 mb-5 leading-tight">${trimmed}</h2>`;
+          }
+        }
+
+        // Check for bullet points
+        if (trimmed.startsWith('•') || trimmed.startsWith('-') || trimmed.startsWith('*')) {
+          const items = trimmed.split(/\n/).filter(item => item.trim());
+          const listItems = items.map(item => {
+            const cleanItem = item.replace(/^[•\-*]\s*/, '').trim();
+            return `<li class="text-gray-700 text-lg leading-relaxed pl-2"><span class="inline-block w-2 h-2 bg-blue-600 rounded-full mr-3 -ml-6"></span>${cleanItem}</li>`;
+          }).join('');
+          return `<ul class="space-y-3 mb-6 ml-6">${listItems}</ul>`;
+        }
+
+        // Regular paragraph
+        return `<p class="text-gray-700 text-lg leading-relaxed mb-6">${trimmed}</p>`;
+      })
+      .join('');
+
+    return formattedParagraphs;
   };
+
   const handleWhatsApp = () => {
     window.open("https://wa.me/919090089708", "_blank");
   };
@@ -355,6 +398,7 @@ const BlogDetail = ({
   const handlePhone = () => {
     window.location.href = "tel:+919090089708";
   };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
@@ -453,9 +497,9 @@ const BlogDetail = ({
               </div>
             </div>
 
-            {/* Content */}
+            {/* Content - Now properly formatted with paragraphs */}
             <div
-              className="blog-content text-black"
+              className="blog-content prose prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: formatContent(blog.content) }}
             />
 
