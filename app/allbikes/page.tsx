@@ -227,11 +227,11 @@ export default function BikeRental() {
                   </p>
 
                   {/* Description */}
-                  {bike.description && (
+                  {/* {bike.description && (
                     <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                       {bike.description}
                     </p>
-                  )}
+                  )} */}
 
                   {/* Features */}
                   <div className="flex flex-wrap gap-2 mb-4">
