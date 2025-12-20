@@ -10,7 +10,7 @@ export interface IBike extends Document {
     rating: number;
     priceFor12Hours: number;
     priceFor24Hours: number;
-    category: "Classic" | "High Speed" | "Premium";
+    category: "Classic" | "Standard" | "Premium";
     available: boolean;
     description: string;   // <-- Added
     createdAt?: Date;
@@ -33,7 +33,7 @@ const BikeSchema = new Schema<IBike>(
         priceFor24Hours: { type: Number, required: true },
         category: {
             type: String,
-            enum: ["Classic", "High Speed", "Premium"],
+            enum: ["Classic", "Standard", "Premium"],
             required: true,
         },
         available: { type: Boolean, default: true },
@@ -46,4 +46,3 @@ const Bike: Model<IBike> =
     mongoose.models.Bike || mongoose.model("Bike", BikeSchema);
 
 export default Bike;
- 

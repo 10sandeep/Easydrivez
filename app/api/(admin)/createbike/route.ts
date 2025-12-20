@@ -53,6 +53,8 @@ export const POST = async (request: NextRequest) => {
                 .end(buffer);
         });
 
+
+        console.log(JSON.stringify(category));
         // ✅ Save bike in MongoDB
         const newBike = new Bike({
             bikeImage: uploadResult.secure_url,

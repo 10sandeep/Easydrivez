@@ -211,12 +211,7 @@ export default function CarRental() {
                     Transmission: {car.transmission}
                   </p>
 
-                  {/* Description */}
-                  {car.description && (
-                    <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                      {car.description}
-                    </p>
-                  )}
+
 
                   {/* Features */}
                   <div className="flex flex-wrap gap-2 mb-4">
