@@ -197,9 +197,9 @@ export default function Home() {
         {/* Content */}
         <div className="relative z-20 flex flex-col justify-center items-start h-full px-6 sm:px-8 md:px-16 lg:px-32 text-white py-24 md:py-32">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight max-w-xl">
-            Drive Beyond Limits
+            Best Self-Drive Car & Bike Rentals
             <br />
-            with Eazydrivez
+            in Bhubaneswar
           </h1>
 
           <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-sm sm:max-w-md leading-relaxed">
