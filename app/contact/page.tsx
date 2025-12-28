@@ -37,7 +37,7 @@ export default function ContactPage() {
       icon: MapPin,
       title: "Address",
       details: [
-        "B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd., Bhubaneswar, Odisha 751015",
+        "N-4/177,IRC Village,Nayapali,Bhubaneswar",
         "38, Keshari Plaza Phase 2, Jadupur, Dumduma, Bhubaneswar 751019",
       ],
     },
