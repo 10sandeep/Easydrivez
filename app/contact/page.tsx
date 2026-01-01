@@ -243,37 +243,38 @@ export default function ContactPage() {
 
             {/* Map and Info Box */}
             <div className="flex flex-col gap-6">
-              <div className="bg-white border border-gray-300 rounded-lg overflow-hidden h-96">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3742.676584445834!2d85.8134525!3d20.2944588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a190954206e2679%3A0x1764c3deee8cf6da!2sEazydrivez%20Self%20drive%20Car%20And%20Bike%20rentals%20service%20in%20Bhubaneswar!5e0!3m2!1sen!2sin!4v1699000000000!5m2!1sen!2sin"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
-              </div>
+  <div className="bg-white border border-gray-300 rounded-lg overflow-hidden h-96">
+    <iframe
+      src="https://www.google.com/maps?q=20.2916243,85.8105307&z=17&output=embed"
+      width="100%"
+      height="100%"
+      style={{ border: 0 }}
+      allowFullScreen
+      loading="lazy"
+      referrerPolicy="no-referrer-when-downgrade"
+    ></iframe>
+  </div>
 
-              <div className="bg-white border border-gray-300 rounded-lg p-6">
-                <h3 className="text-xl font-bold text-black mb-3">
-                  Quick Response          
-                </h3>
-                <p className="text-gray-700 mb-4">
-                  Our team typically responds within 1-2 hours during business
-                  hours. For urgent inquiries, please call us directly.
-                </p>
-                <div className="space-y-2">
-                  <a
-                    href="tel:+918093806834"
-                    className="flex items-center gap-2 text-black font-bold text-lg hover:underline"
-                  >
-                    <Phone className="h-5 w-5" />
-                    +91 8093806834
-                  </a>
-                </div>
-              </div>
-            </div>
+  <div className="bg-white border border-gray-300 rounded-lg p-6">
+    <h3 className="text-xl font-bold text-black mb-3">
+      Quick Response
+    </h3>
+    <p className="text-gray-700 mb-4">
+      Our team typically responds within 1-2 hours during business
+      hours. For urgent inquiries, please call us directly.
+    </p>
+    <div className="space-y-2">
+      <a
+        href="tel:+918093806834"
+        className="flex items-center gap-2 text-black font-bold text-lg hover:underline"
+      >
+        <Phone className="h-5 w-5" />
+        +91 8093806834
+      </a>
+    </div>
+  </div>
+</div>
+
           </div>
         </div>
       </section>

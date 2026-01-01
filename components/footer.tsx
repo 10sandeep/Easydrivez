@@ -147,7 +147,11 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="leading-relaxed hover:underline"
                 >
+<<<<<<< Updated upstream
                  N-4/177,IRC Village,Nayapali,Bhubaneswar-15
+=======
+                  N-4/177,IRC Village,Nayapali,Bhubaneswar,Odisha
+>>>>>>> Stashed changes
                 </a>
               </li>
 

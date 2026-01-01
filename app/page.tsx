@@ -16,6 +16,8 @@ import Gallary from "@/components/gallary";
 import Services from "@/components/service";
 import FeaturedBikesSection from "@/components/featuredbike";
 import FeaturedCarsSection from "@/components/featuredcar";
+import FAQ from "@/components/faq";
+
 
 export default function Home() {
   const [cars, setCars] = useState<any[]>([]);
@@ -199,7 +201,7 @@ export default function Home() {
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight max-w-xl">
             Best Self-Drive Car & Bike Rentals
             <br />
-            in Bhubaneswar
+             in Bhubaneswar
           </h1>
 
           <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-sm sm:max-w-md leading-relaxed">
@@ -508,8 +510,8 @@ export default function Home() {
                         Visit Us
                       </p>
                       <p className="text-sm font-bold text-white hover:text-blue-400 transition max-w-md">
-                        N-4/177,IRC Village,Nayapali,
-                        Bhubaneswar
+                         N-4/177,IRC Village,Nayapali,
+                        Bhubaneswar,Odisha
                       </p>
                     </div>
                   </a>
@@ -525,6 +527,8 @@ export default function Home() {
       <FeaturedBikesSection />
       <Gallary />
       <Testimonials />
+      <FAQ/>
+      {/* <Blog/> */}
       {/* <WhytoChooseUs/> */}
       {/* <AdminPanel/> */}
     </div>
