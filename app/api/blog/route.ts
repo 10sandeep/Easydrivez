@@ -4,6 +4,7 @@ import Blog from "@/models/Blog";
 import cloudinary from "@/lib/cloudinary";
 
 // ✅ POST — Add new blog with image upload
+export const dynamic = "force-dynamic";
 export const POST = async (request: NextRequest) => {
     try {
         await connectToDatabase();

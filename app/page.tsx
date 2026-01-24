@@ -16,6 +16,7 @@ import Gallary from "@/components/gallary";
 import Services from "@/components/service";
 import FeaturedBikesSection from "@/components/featuredbike";
 import FeaturedCarsSection from "@/components/featuredcar";
+import HomeBlogSection from "@/components/homeblog";
 
 export default function Home() {
   const [cars, setCars] = useState<any[]>([]);
@@ -98,7 +99,7 @@ export default function Home() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -525,6 +526,7 @@ export default function Home() {
       <FeaturedCarsSection />
       <FeaturedBikesSection />
       <Gallary />
+      <HomeBlogSection />
       <Testimonials />
       {/* <WhytoChooseUs/> */}
       {/* <AdminPanel/> */}

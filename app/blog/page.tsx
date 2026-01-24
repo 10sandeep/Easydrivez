@@ -16,13 +16,7 @@ interface Blog {
   featured: boolean;
 }
 
-const categories = [
-  "All",
-  "Cars",
-  "Bikes",
-  "Driving ",
-  "Safety ",
-];
+const categories = ["All", "Cars", "Bikes", "Driving ", "Safety "];
 
 const App = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -35,7 +29,7 @@ const App = () => {
     const fetchBlogs = async () => {
       try {
         setLoading(true);
-        const res = await fetch('/api/blog');
+        const res = await fetch("/api/blog", { cache: "no-store" });
         const data = await res.json();
         if (data.status && data.blogs) {
           const transformedBlogs: Blog[] = data.blogs.map((apiBlog: any) => ({
@@ -54,7 +48,7 @@ const App = () => {
             transformedBlogs[0].featured = true;
           }
           setBlogs(transformedBlogs);
-          console.log("blog data", blogs)
+          console.log("blog data", blogs);
         }
       } catch (error) {
         console.error("Error fetching blogs:", error);
@@ -135,7 +129,6 @@ const App = () => {
   };
   return (
     <div className="min-h-screen bg-gray-50">
-
       <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
         {/* WhatsApp Button */}
         <button
@@ -235,10 +228,11 @@ const App = () => {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${selectedCategory === cat
-                  ? "bg-gray-900 text-white"
-                  : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
-                  }`}
+                className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                  selectedCategory === cat
+                    ? "bg-gray-900 text-white"
+                    : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                }`}
               >
                 {cat}
               </button>
@@ -313,7 +307,7 @@ const BlogDetail = ({
   onBack,
   allBlogs,
   onBlogSelect,
-  categories
+  categories,
 }: {
   blog: Blog;
   onBack: () => void;
@@ -322,30 +316,52 @@ const BlogDetail = ({
   categories: string[];
 }) => {
   // Get recent posts (excluding current blog)
-  const recentPosts = allBlogs
-    .filter(b => b.id !== blog.id)
-    .slice(0, 5);
+  const recentPosts = allBlogs.filter((b) => b.id !== blog.id).slice(0, 5);
 
   // Enhanced format content function with better paragraph handling
   const formatContent = (content: string) => {
     // If content already has HTML tags, format them
-    if (content.includes('<')) {
+    if (content.includes("<")) {
       let formattedContent = content
         // Style headings
-        .replace(/<h1>/g, '<h1 class="text-4xl font-bold text-gray-900 mt-12 mb-6 leading-tight">')
-        .replace(/<h2>/g, '<h2 class="text-3xl font-bold text-gray-900 mt-10 mb-5 leading-tight">')
-        .replace(/<h3>/g, '<h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">')
-        .replace(/<h4>/g, '<h4 class="text-xl font-bold text-gray-800 mt-6 mb-3">')
+        .replace(
+          /<h1>/g,
+          '<h1 class="text-4xl font-bold text-gray-900 mt-12 mb-6 leading-tight">',
+        )
+        .replace(
+          /<h2>/g,
+          '<h2 class="text-3xl font-bold text-gray-900 mt-10 mb-5 leading-tight">',
+        )
+        .replace(
+          /<h3>/g,
+          '<h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">',
+        )
+        .replace(
+          /<h4>/g,
+          '<h4 class="text-xl font-bold text-gray-800 mt-6 mb-3">',
+        )
         // Style paragraphs
-        .replace(/<p>/g, '<p class="text-gray-700 text-lg leading-relaxed mb-6">')
+        .replace(
+          /<p>/g,
+          '<p class="text-gray-700 text-lg leading-relaxed mb-6">',
+        )
         // Style lists
         .replace(/<ul>/g, '<ul class="space-y-3 mb-6 ml-6">')
         .replace(/<ol>/g, '<ol class="space-y-3 mb-6 ml-6 list-decimal">')
-        .replace(/<li>/g, '<li class="text-gray-700 text-lg leading-relaxed pl-2"><span class="inline-block w-2 h-2 bg-blue-600 rounded-full mr-3 -ml-6"></span>')
+        .replace(
+          /<li>/g,
+          '<li class="text-gray-700 text-lg leading-relaxed pl-2"><span class="inline-block w-2 h-2 bg-blue-600 rounded-full mr-3 -ml-6"></span>',
+        )
         // Style links
-        .replace(/<a /g, '<a class="text-blue-600 hover:text-blue-700 underline font-medium" ')
+        .replace(
+          /<a /g,
+          '<a class="text-blue-600 hover:text-blue-700 underline font-medium" ',
+        )
         // Style blockquotes
-        .replace(/<blockquote>/g, '<blockquote class="border-l-4 border-blue-600 pl-6 py-4 my-6 bg-gray-50 italic text-gray-700">');
+        .replace(
+          /<blockquote>/g,
+          '<blockquote class="border-l-4 border-blue-600 pl-6 py-4 my-6 bg-gray-50 italic text-gray-700">',
+        );
 
       return formattedContent;
     }
@@ -361,32 +377,46 @@ const BlogDetail = ({
 
     // Format each paragraph
     const formattedParagraphs = paragraphs
-      .filter(p => p.trim().length > 0) // Remove empty paragraphs
-      .map(paragraph => {
+      .filter((p) => p.trim().length > 0) // Remove empty paragraphs
+      .map((paragraph) => {
         const trimmed = paragraph.trim();
 
         // Check if it's a heading (lines that are short and might be titles)
-        if (trimmed.length < 60 && trimmed.length > 0 && !trimmed.endsWith('.') && !trimmed.endsWith(',')) {
+        if (
+          trimmed.length < 60 &&
+          trimmed.length > 0 &&
+          !trimmed.endsWith(".") &&
+          !trimmed.endsWith(",")
+        ) {
           // Check if it's ALL CAPS or Title Case
-          if (trimmed === trimmed.toUpperCase() || /^[A-Z][a-z]*(\s+[A-Z][a-z]*)*[:]?$/.test(trimmed)) {
+          if (
+            trimmed === trimmed.toUpperCase() ||
+            /^[A-Z][a-z]*(\s+[A-Z][a-z]*)*[:]?$/.test(trimmed)
+          ) {
             return `<h2 class="text-3xl font-bold text-gray-900 mt-10 mb-5 leading-tight">${trimmed}</h2>`;
           }
         }
 
         // Check for bullet points
-        if (trimmed.startsWith('•') || trimmed.startsWith('-') || trimmed.startsWith('*')) {
-          const items = trimmed.split(/\n/).filter(item => item.trim());
-          const listItems = items.map(item => {
-            const cleanItem = item.replace(/^[•\-*]\s*/, '').trim();
-            return `<li class="text-gray-700 text-lg leading-relaxed pl-2"><span class="inline-block w-2 h-2 bg-blue-600 rounded-full mr-3 -ml-6"></span>${cleanItem}</li>`;
-          }).join('');
+        if (
+          trimmed.startsWith("•") ||
+          trimmed.startsWith("-") ||
+          trimmed.startsWith("*")
+        ) {
+          const items = trimmed.split(/\n/).filter((item) => item.trim());
+          const listItems = items
+            .map((item) => {
+              const cleanItem = item.replace(/^[•\-*]\s*/, "").trim();
+              return `<li class="text-gray-700 text-lg leading-relaxed pl-2"><span class="inline-block w-2 h-2 bg-blue-600 rounded-full mr-3 -ml-6"></span>${cleanItem}</li>`;
+            })
+            .join("");
           return `<ul class="space-y-3 mb-6 ml-6">${listItems}</ul>`;
         }
 
         // Regular paragraph
         return `<p class="text-gray-700 text-lg leading-relaxed mb-6">${trimmed}</p>`;
       })
-      .join('');
+      .join("");
 
     return formattedParagraphs;
   };
@@ -482,7 +512,9 @@ const BlogDetail = ({
                   <User className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <div className="font-bold text-gray-900 text-lg">{blog.author}</div>
+                  <div className="font-bold text-gray-900 text-lg">
+                    {blog.author}
+                  </div>
                   <div className="flex items-center gap-4 text-sm text-gray-500">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
@@ -555,7 +587,9 @@ const BlogDetail = ({
                           <User className="w-4 h-4" />
                           <span>{post.author.split(" ")[0]}</span>
                         </div>
-                        <span className="text-sm text-gray-400">{post.date}</span>
+                        <span className="text-sm text-gray-400">
+                          {post.date}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -594,14 +628,16 @@ const BlogDetail = ({
                   Categories
                 </h2>
                 <div className="space-y-3">
-                  {categories.filter(cat => cat !== "All").map((category) => (
-                    <button
-                      key={category}
-                      className="w-full text-left px-4 py-2.5 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors font-medium"
-                    >
-                      {category}
-                    </button>
-                  ))}
+                  {categories
+                    .filter((cat) => cat !== "All")
+                    .map((category) => (
+                      <button
+                        key={category}
+                        className="w-full text-left px-4 py-2.5 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors font-medium"
+                      >
+                        {category}
+                      </button>
+                    ))}
                 </div>
               </div>
             </div>
