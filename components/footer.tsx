@@ -147,9 +147,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="leading-relaxed hover:underline"
                 >
-                  B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya
-                  Mandir, Beside Saura Shakti Enterprises Pvt. Ltd.,
-                  Bhubaneswar, Odisha 751015
+                  N-4/177,IRC Village,Nayapali,Bhubaneswar,Odisha
                 </a>
               </li>
 

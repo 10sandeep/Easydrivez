@@ -10,7 +10,13 @@ export const metadata: Metadata = {
     "Car Rental Support",
     "Bike Rental Support",
     "Customer Care",
-    "Business Inquiries",
+    "best car rental",
+    "best bike rental",
+    "best car rental in bhubaneswar",
+    "best bike rental in bhubaneswar",
+    "Car Rental",
+    "Bike Rental",
+
     "Partner with easydrivez",
   ],
   openGraph: {

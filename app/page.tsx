@@ -17,6 +17,7 @@ import Services from "@/components/service";
 import FeaturedBikesSection from "@/components/featuredbike";
 import FeaturedCarsSection from "@/components/featuredcar";
 import HomeBlogSection from "@/components/homeblog";
+import FAQ from "@/components/faq";
 
 export default function Home() {
   const [cars, setCars] = useState<any[]>([]);
@@ -509,9 +510,7 @@ export default function Home() {
                         Visit Us
                       </p>
                       <p className="text-sm font-bold text-white hover:text-blue-400 transition max-w-md">
-                        B-15 ID Market Nayapalli, in front of Saraswati Shishu
-                        Vidya Mandir, Beside Saura Shakti Enterprises Pvt. Ltd.,
-                        Bhubaneswar, Odisha 751015
+                        N-4/177,IRC Village,Nayapali, Bhubaneswar,Odisha
                       </p>
                     </div>
                   </a>
@@ -528,6 +527,8 @@ export default function Home() {
       <Gallary />
       <HomeBlogSection />
       <Testimonials />
+      <FAQ />
+      {/* <Blog/> */}
       {/* <WhytoChooseUs/> */}
       {/* <AdminPanel/> */}
     </div>
