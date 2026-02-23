@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Car, Shield, Clock, Award, Users, MapPin } from "lucide-react";
 import { MessageCircle, Phone } from "lucide-react";
 
@@ -39,33 +39,71 @@ export default function AboutPage() {
 
   const [counts, setCounts] = useState([0, 0, 0, 0]);
   const [hasAnimated, setHasAnimated] = useState(false);
-  const statsRef = useRef(null);
+  const statsRef = useRef<HTMLDivElement | null>(null);
+
+  // ✅ SEO Structured Data
+  const structuredData = useMemo(
+    () => ({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      name: "Eazydrivez",
+      url: "https://easydrivez.com",
+      logo: "https://easydrivez.com/easydrivez-banner.png",
+      image: "https://easydrivez.com/easydrivez-banner.png",
+      description:
+        "Eazydrivez provides premium self drive car rental and bike rental services in Bhubaneswar with affordable pricing and 24/7 support.",
+      telephone: "+91-9090090699",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress:
+          "B-15 ID Market Nayapalli, in front of Saraswati Shishu Vidya Mandir",
+        addressLocality: "Bhubaneswar",
+        addressRegion: "Odisha",
+        postalCode: "751015",
+        addressCountry: "IN",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: "20.2961",
+        longitude: "85.8245",
+      },
+      openingHours: "Mo-Su 00:00-23:59",
+      priceRange: "₹₹",
+      areaServed: {
+        "@type": "City",
+        name: "Bhubaneswar",
+      },
+    }),
+    []
+  );
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !hasAnimated) {
           setHasAnimated(true);
-          
+
           stats.forEach((stat, index) => {
-            if (stat.target === 0) return; // Skip 24/7
-            
+            if (stat.target === 0) return;
+
             let current = 0;
             const increment = stat.target / 50;
+
             const timer = setInterval(() => {
               current += increment;
+
               if (current >= stat.target) {
-                setCounts(prev => {
-                  const newCounts = [...prev];
-                  newCounts[index] = stat.target;
-                  return newCounts;
+                setCounts((prev) => {
+                  const updated = [...prev];
+                  updated[index] = stat.target;
+                  return updated;
                 });
                 clearInterval(timer);
               } else {
-                setCounts(prev => {
-                  const newCounts = [...prev];
-                  newCounts[index] = Math.floor(current);
-                  return newCounts;
+                setCounts((prev) => {
+                  const updated = [...prev];
+                  updated[index] = Math.floor(current);
+                  return updated;
                 });
               }
             }, 30);
@@ -75,17 +113,12 @@ export default function AboutPage() {
       { threshold: 0.5 }
     );
 
-    if (statsRef.current) {
-      observer.observe(statsRef.current);
-    }
-
+    if (statsRef.current) observer.observe(statsRef.current);
     return () => {
-      if (statsRef.current) {
-        observer.unobserve(statsRef.current);
-      }
+      if (statsRef.current) observer.unobserve(statsRef.current);
     };
   }, [hasAnimated]);
-  
+
   const handleWhatsApp = () => {
     window.open("https://wa.me/919090089708", "_blank");
   };
@@ -93,50 +126,48 @@ export default function AboutPage() {
   const handlePhone = () => {
     window.location.href = "tel:+919090089708";
   };
-  
+
   return (
     <div className="min-h-screen bg-white">
+
       {/* Fixed Contact Buttons */}
       <div className="fixed left-6 bottom-8 z-50 flex flex-col gap-4">
-        {/* WhatsApp Button */}
         <button
           onClick={handleWhatsApp}
           className="h-14 w-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
-          title="Chat on WhatsApp"
         >
           <MessageCircle className="h-6 w-6" />
         </button>
 
-        {/* Phone Button */}
         <button
           onClick={handlePhone}
           className="h-14 w-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95"
-          title="Call us"
         >
           <Phone className="h-6 w-6" />
         </button>
       </div>
-      
+
       {/* Hero Section */}
       <div
         className="relative py-24 bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=400&fit=crop')`,
+          backgroundImage:
+            "linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=400&fit=crop')",
           backgroundAttachment: "fixed",
         }}
       >
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
             About eazydrivez
           </h1>
-          <p className="text-lg md:text-xl text-gray-200 drop-shadow-md max-w-3xl mx-auto">
-            Your trusted partner for premium car and bike rental services in
-            Bhubaneswar
+          <p className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto">
+            Your trusted partner for premium car and bike rental services in Bhubaneswar
           </p>
         </div>
       </div>
 
       {/* Stats Section */}
+          {/* Stats Section */}
       <div className="py-16 bg-gray-100" ref={statsRef}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -302,6 +333,16 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
+
+      {/* (Your Story, Features, Location, CTA sections remain EXACTLY SAME — unchanged) */}
+
+      {/* SEO Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
     </div>
   );
 }

@@ -1,65 +1,98 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://easydrivez.com"),
-  title: "All Bikes | easydrivez - Rent Premium Bikes & Motorcycles",
+  metadataBase: new URL("https://eazydrivez.com"),
+
+  title:
+    "Bike Rental in Bhubaneswar | Self Ride Scooty & Royal Enfield on Rent | EazyDrivez",
+
   description:
-    "Explore all bikes available at easydrivez. From scooters to superbikes, find and rent your ideal ride with easy booking, affordable pricing, and doorstep delivery.",
+    "Rent bikes in Bhubaneswar at affordable prices. Choose from scooty, Royal Enfield, sports bikes and two wheelers for daily, weekly or monthly rental. Self ride available with easy booking at EazyDrivez.",
+
   keywords: [
-    "Bike Rental",
-    "Motorcycle Rental",
-    "Self Drive Bike",
-    "Superbike on Rent",
-    "Scooter Hire",
-    "Bike Rental Near Me",
-    "Affordable Bike Rental",
-    "Daily Bike Rental",
-    "Touring Bike Rental",
-    "easydrivez Bikes",
-      "Contact easydrivez",
-    "Car Rental Support",
-    "Bike Rental Support",
-    "Customer Care",
-    "best car rental",
-    "best bike rental",
-    "best car rental in bhubaneswar",
-    "best bike rental in bhubaneswar",
-    "Car Rental",
-    "Bike Rental",
-    "Partner with easydrivez",
+    // Primary Local Keywords
+    "bike rental Bhubaneswar",
+    "rent bike in Bhubaneswar",
+    "self drive bike rental Bhubaneswar",
+    "motorcycle rental Bhubaneswar",
+    "two wheeler rental Bhubaneswar",
+
+    // Commercial Intent
+    "book bike online Bhubaneswar",
+    "cheap bike rental Bhubaneswar",
+    "affordable bike rental Bhubaneswar",
+    "lowest price bike rental Bhubaneswar",
+    "instant bike booking Bhubaneswar",
+
+    // Vehicle Type Keywords
+    "Royal Enfield rental Bhubaneswar",
+    "scooty rental Bhubaneswar",
+    "Activa on rent Bhubaneswar",
+    "sports bike rental Bhubaneswar",
+    "touring bike rental Bhubaneswar",
+
+    // Location Specific
+    "bike rental near airport Bhubaneswar",
+    "Bhubaneswar airport bike rental",
+    "bike rental near railway station Bhubaneswar",
+    "IRC Village bike rental",
+    "Nayapali bike rental",
+
+    // Usage Based
+    "daily bike rental Bhubaneswar",
+    "weekly bike rental Bhubaneswar",
+    "monthly bike rental Bhubaneswar",
+    "bike rental for weekend trip Bhubaneswar",
+
+    // Brand
+    "EazyDrivez bike rental",
+    "EazyDrivez Bhubaneswar",
   ],
+
   openGraph: {
-    title: "All Bikes | easydrivez - Rent Premium Bikes & Motorcycles",
+    title:
+      "Bike Rental in Bhubaneswar | Self Ride Scooty & Royal Enfield | EazyDrivez",
     description:
-      "Choose from a wide range of bikes at easydrivez — from scooters to superbikes. Book online and ride your dream bike today.",
-    url: "https://easydrivez.com/bikes",
-    siteName: "easydrivez",
+      "Affordable bike rental in Bhubaneswar including scooty, Royal Enfield and sports bikes. Easy online booking and self ride available.",
+    url: "https://eazydrivez.com/allbikes",
+    siteName: "EazyDrivez",
+    locale: "en_IN",
     type: "website",
     images: [
       {
         url: "/easydrivez-banner.png",
         width: 1200,
         height: 630,
-        alt: "easydrivez premium bike rentals",
+        alt: "Bike Rental in Bhubaneswar - EazyDrivez",
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
-    site: "@easydrivez",
-    title: "All Bikes | easydrivez - Rent Premium Bikes & Motorcycles",
+    title:
+      "Bike Rental in Bhubaneswar | Self Ride Available | EazyDrivez",
     description:
-      "Explore easydrivez’s complete fleet of bikes for rent — perfect for city rides, trips, or adventure tours.",
+      "Rent scooty, Royal Enfield and motorcycles in Bhubaneswar at best prices.",
     images: ["/easydrivez-banner.png"],
   },
+
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
+
   alternates: {
-    canonical: "https://easydrivez.com/bikes",
+    canonical: "https://eazydrivez.com/allbikes",
   },
-  category: "Vehicle Rentals",
+
+  category: "Bike Rental Bhubaneswar",
 };
 
 export default function BikesLayout({

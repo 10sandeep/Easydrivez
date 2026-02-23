@@ -25,7 +25,7 @@ export async function connectToDatabase() {
     if (!cached.promise) {
         cached.promise = mongoose
             .connect(MONGODB_URI, {
-                dbName: "nextjs_app", // optional: name your DB
+                dbName: "easydrive", 
             })
             .then((mongoose) => mongoose);
     }

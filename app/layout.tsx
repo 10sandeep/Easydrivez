@@ -10,58 +10,85 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://easydrivez.com"),
-  title: "Easydrivez - Premium Car & Bike Rental Services",
+  metadataBase: new URL("https://eazydrivez.com"),
+
+  title: {
+    default:
+      "Self Drive Car & Bike Rental in Bhubaneswar | EazyDrivez",
+    template: "%s | EazyDrivez Bhubaneswar",
+  },
+
   description:
-    "Book premium cars and bikes with Easydrivez — your go-to rental service for luxury rides, airport transfers, and city travel. Easy booking, affordable rates, and top-rated service.",
+    "Affordable self drive car rental and bike rental in Bhubaneswar. Rent cars and bikes without driver, airport pickup available, best prices guaranteed at EazyDrivez.",
+
   keywords: [
-    "Car Rental",
-    "Bike Rental",
-    "Luxury Car Hire",
-    "Self Drive Cars",
-    "Chauffeur Service",
-    "Airport Transfers",
-    "Affordable Car Rental",
-    "Motorbike Hire",
-    "easydrivez",
-    "Car and Bike Rental in India",
-    "Premium Vehicle Rentals",
+    "self drive car rental Bhubaneswar",
+    "bike rental Bhubaneswar",
+    "car rental without driver Bhubaneswar",
+    "rent bike Bhubaneswar",
+    "self drive cars near me",
+    "SUV rental Bhubaneswar",
+    "Royal Enfield rental Bhubaneswar",
+    "airport car rental Bhubaneswar",
+    "cheap car rental Bhubaneswar",
+    "EazyDrivez",
   ],
-  authors: [{ name: "Easydrivez Team", url: "https://easydrivez.com" }],
-  creator: "Easydrivez",
-  publisher: "Easydrivez",
+
+  authors: [
+    {
+      name: "EazyDrivez",
+      url: "https://eazydrivez.com",
+    },
+  ],
+
+  creator: "EazyDrivez",
+  publisher: "EazyDrivez",
+
   openGraph: {
-    title: "Easydrivez - Premium Car & Bike Rental Services",
+    title:
+      "Self Drive Car & Bike Rental in Bhubaneswar | EazyDrivez",
     description:
-      "Drive in style with Easydrivez. Rent cars and bikes effortlessly with flexible pricing, 24/7 support, and seamless online booking.",
-    url: "https://easydrivez.com",
-    siteName: "Easydrivez",
+      "Book self drive cars and bikes in Bhubaneswar with easy online booking, affordable pricing, and reliable service.",
+    url: "https://eazydrivez.com",
+    siteName: "EazyDrivez",
+    locale: "en_IN",
     type: "website",
     images: [
       {
         url: "/easydrivez-banner.png",
         width: 1200,
         height: 630,
-        alt: "easydrivez premium car and bike rentals",
+        alt: "Self Drive Car & Bike Rental in Bhubaneswar - EazyDrivez",
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
-    site: "@easydrivez",
-    title: "easydrivez - Premium Car & Bike Rental Services",
+    title:
+      "Self Drive Car & Bike Rental in Bhubaneswar | EazyDrivez",
     description:
-      "Explore the city in comfort and style. Book premium cars and bikes with easydrivez today!",
+      "Affordable self drive car and bike rental service in Bhubaneswar with instant booking and airport pickup.",
     images: ["/easydrivez-banner.png"],
   },
+
   robots: {
     index: true,
     follow: true,
-    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
+
   alternates: {
-    canonical: "https://easydrivez.com",
+    canonical: "https://eazydrivez.com",
   },
+
   category: "Travel & Transportation",
 };
 

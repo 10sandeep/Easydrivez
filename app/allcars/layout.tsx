@@ -1,65 +1,92 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://easydrivez.com"),
-  title: "All Cars | easydrivez - Rent Premium & Self-Drive Cars",
+  metadataBase: new URL("https://eazydrivez.com"),
+
+  title:
+    "Self Drive Car Rental in Bhubaneswar | Affordable SUV & Hatchback Cars | EazyDrivez",
+
   description:
-    "Browse all available cars at easydrivez. Choose from luxury, economy, and SUV models for rent — perfect for business trips, city drives, or weekend getaways.",
+    "Book self drive car rental in Bhubaneswar at the best price. Choose from SUV, hatchback, automatic and economy cars. Airport pickup and outstation trips available with EazyDrivez.",
+
   keywords: [
-    "Car Rental",
-    "Self Drive Cars",
-    "Luxury Car Hire",
-    "SUV Rental",
-    "Economy Car Rental",
-    "Car Rental Near Me",
-    "Affordable Car Rental",
-    "Daily Car Rental",
-    "Premium Cars for Rent",
-      "Contact easydrivez",
-    "Car Rental Support",
-    "Bike Rental Support",
-    "Customer Care",
-    "best car rental",
-    "best bike rental",
-    "best car rental in bhubaneswar",
-    "best bike rental in bhubaneswar",
-    "Car Rental",
-    "Bike Rental",
-    "Partner with easydrivez",
-    "easydrivez Cars",
+    // Primary Keywords
+    "self drive car rental Bhubaneswar",
+    "car rental without driver Bhubaneswar",
+    "rent car in Bhubaneswar",
+    "self drive cars near me Bhubaneswar",
+
+    // Commercial Intent
+    "book self drive car Bhubaneswar",
+    "cheap car rental Bhubaneswar",
+    "affordable car rental Bhubaneswar",
+    "lowest price car rental Bhubaneswar",
+
+    // Vehicle Types
+    "SUV rental Bhubaneswar",
+    "automatic car rental Bhubaneswar",
+    "hatchback rental Bhubaneswar",
+    "sedan rental Bhubaneswar",
+
+    // Location-Based
+    "airport car rental Bhubaneswar",
+    "car rental near railway station Bhubaneswar",
+    "IRC Village car rental",
+    "Nayapali car rental",
+
+    // Usage-Based
+    "car rental for outstation from Bhubaneswar",
+    "daily car rental Bhubaneswar",
+    "weekly car rental Bhubaneswar",
+    "monthly car rental Bhubaneswar",
+
+    // Brand
+    "EazyDrivez car rental",
+    "EazyDrivez Bhubaneswar",
   ],
+
   openGraph: {
-    title: "All Cars | easydrivez - Rent Premium & Self-Drive Cars",
+    title: "Self Drive Car Rental in Bhubaneswar | EazyDrivez",
     description:
-      "Explore the full range of premium, self-drive, and chauffeur-driven cars at easydrivez. Book easily and enjoy flexible rental options.",
-    url: "https://easydrivez.com/cars",
-    siteName: "easydrivez",
+      "Explore affordable self drive car rental options in Bhubaneswar including SUV, automatic and hatchback cars. Instant booking available.",
+    url: "https://eazydrivez.com/allcars",
+    siteName: "EazyDrivez",
+    locale: "en_IN",
     type: "website",
     images: [
       {
         url: "/easydrivez-banner.png",
         width: 1200,
         height: 630,
-        alt: "easydrivez premium car rentals",
+        alt: "Self Drive Car Rental in Bhubaneswar - EazyDrivez",
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
-    site: "@easydrivez",
-    title: "All Cars | easydrivez - Rent Premium & Self-Drive Cars",
+    title: "Self Drive Car Rental in Bhubaneswar | EazyDrivez",
     description:
-      "Find your perfect car for rent with easydrivez. From luxury sedans to SUVs, experience comfort and convenience on every drive.",
+      "Rent SUV, hatchback and automatic self drive cars in Bhubaneswar at affordable prices.",
     images: ["/easydrivez-banner.png"],
   },
+
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
+
   alternates: {
-    canonical: "https://easydrivez.com/cars",
+    canonical: "https://eazydrivez.com/allcars",
   },
-  category: "Vehicle Rentals",
+
+  category: "Car Rental Bhubaneswar",
 };
 
 export default function CarsLayout({
