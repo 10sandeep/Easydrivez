@@ -16,6 +16,133 @@ interface Blog {
   featured: boolean;
 }
 
+type ContentBlock =
+  | { type: "h2"; text: string }
+  | { type: "h3"; text: string }
+  | { type: "p"; text: string }
+  | { type: "ul"; items: string[] }
+  | { type: "ol"; items: string[] }
+  | { type: "quote"; text: string };
+
+const normalizeContentText = (content: string) => {
+  return (
+    content
+      // Handle literal \r\n strings from API/database (escaped sequences stored as text)
+      .replace(/\\r\\n/g, "\n")
+      // Handle actual carriage return + newline bytes
+      .replace(/\r\n/g, "\n")
+      .replace(/\r/g, "\n")
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<\/(p|div|section|article)>/gi, "\n\n")
+      .replace(/<(h1|h2)[^>]*>/gi, "\n## ")
+      .replace(/<(h3|h4|h5|h6)[^>]*>/gi, "\n### ")
+      .replace(/<\/h[1-6]>/gi, "\n")
+      .replace(/<li[^>]*>/gi, "\n- ")
+      .replace(/<\/(li|ul|ol|blockquote)>/gi, "\n")
+      .replace(/<blockquote[^>]*>/gi, "\n> ")
+      .replace(/<[^>]+>/g, "")
+      .replace(/&nbsp;/gi, " ")
+      .replace(/&amp;/gi, "&")
+      .replace(/&lt;/gi, "<")
+      .replace(/&gt;/gi, ">")
+  );
+};
+
+const parseStructuredContent = (content: string): ContentBlock[] => {
+  const text = normalizeContentText(content);
+  const lines = text.split("\n");
+  const blocks: ContentBlock[] = [];
+  let paragraphBuffer: string[] = [];
+  let listType: "ul" | "ol" | null = null;
+  let listItems: string[] = [];
+
+  const flushParagraph = () => {
+    if (!paragraphBuffer.length) return;
+    const paragraph = paragraphBuffer.join(" ").replace(/\s+/g, " ").trim();
+    if (paragraph) {
+      blocks.push({ type: "p", text: paragraph });
+    }
+    paragraphBuffer = [];
+  };
+
+  const flushList = () => {
+    if (!listType || !listItems.length) return;
+    blocks.push({ type: listType, items: [...listItems] });
+    listType = null;
+    listItems = [];
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+
+    if (!line) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+
+    const headingMatch = line.match(/^#{1,6}\s+(.+)$/);
+    if (headingMatch) {
+      flushParagraph();
+      flushList();
+      const level = (line.match(/^#+/)?.[0].length ?? 2) <= 2 ? "h2" : "h3";
+      blocks.push({ type: level, text: headingMatch[1].trim() });
+      continue;
+    }
+
+    const boldHeadingMatch = line.match(/^\*\*(.+?)\*\*:?\s*$/);
+    if (boldHeadingMatch) {
+      flushParagraph();
+      flushList();
+      blocks.push({ type: "h3", text: boldHeadingMatch[1].trim() });
+      continue;
+    }
+
+    const quoteMatch = line.match(/^>\s+(.+)$/);
+    if (quoteMatch) {
+      flushParagraph();
+      flushList();
+      blocks.push({ type: "quote", text: quoteMatch[1].trim() });
+      continue;
+    }
+
+    const unorderedMatch = line.match(/^[-*•]\s+(.+)$/);
+    if (unorderedMatch) {
+      flushParagraph();
+      if (listType && listType !== "ul") flushList();
+      listType = "ul";
+      listItems.push(unorderedMatch[1].trim());
+      continue;
+    }
+
+    const orderedMatch = line.match(/^\d+\.\s+(.+)$/);
+    if (orderedMatch) {
+      flushParagraph();
+      if (listType && listType !== "ol") flushList();
+      listType = "ol";
+      listItems.push(orderedMatch[1].trim());
+      continue;
+    }
+
+    const colonHeading =
+      line.endsWith(":") && line.length <= 90 && !line.includes(".");
+    if (colonHeading) {
+      flushParagraph();
+      flushList();
+      blocks.push({ type: "h3", text: line.replace(/:+$/, "").trim() });
+      continue;
+    }
+
+    flushList();
+    paragraphBuffer.push(line);
+  }
+
+  flushParagraph();
+  flushList();
+
+  return blocks.length ? blocks : [{ type: "p", text: text.trim() }];
+};
+
 const categories = ["All", "Cars", "Bikes", "Driving ", "Safety "];
 
 const App = () => {
@@ -317,109 +444,10 @@ const BlogDetail = ({
 }) => {
   // Get recent posts (excluding current blog)
   const recentPosts = allBlogs.filter((b) => b.id !== blog.id).slice(0, 5);
-
-  // Enhanced format content function with better paragraph handling
-  const formatContent = (content: string) => {
-    // If content already has HTML tags, format them
-    if (content.includes("<")) {
-      let formattedContent = content
-        // Style headings
-        .replace(
-          /<h1>/g,
-          '<h1 class="text-4xl font-bold text-gray-900 mt-12 mb-6 leading-tight">',
-        )
-        .replace(
-          /<h2>/g,
-          '<h2 class="text-3xl font-bold text-gray-900 mt-10 mb-5 leading-tight">',
-        )
-        .replace(
-          /<h3>/g,
-          '<h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">',
-        )
-        .replace(
-          /<h4>/g,
-          '<h4 class="text-xl font-bold text-gray-800 mt-6 mb-3">',
-        )
-        // Style paragraphs
-        .replace(
-          /<p>/g,
-          '<p class="text-gray-700 text-lg leading-relaxed mb-6">',
-        )
-        // Style lists
-        .replace(/<ul>/g, '<ul class="space-y-3 mb-6 ml-6">')
-        .replace(/<ol>/g, '<ol class="space-y-3 mb-6 ml-6 list-decimal">')
-        .replace(
-          /<li>/g,
-          '<li class="text-gray-700 text-lg leading-relaxed pl-2"><span class="inline-block w-2 h-2 bg-blue-600 rounded-full mr-3 -ml-6"></span>',
-        )
-        // Style links
-        .replace(
-          /<a /g,
-          '<a class="text-blue-600 hover:text-blue-700 underline font-medium" ',
-        )
-        // Style blockquotes
-        .replace(
-          /<blockquote>/g,
-          '<blockquote class="border-l-4 border-blue-600 pl-6 py-4 my-6 bg-gray-50 italic text-gray-700">',
-        );
-
-      return formattedContent;
-    }
-
-    // If content is plain text, convert it to formatted HTML
-    // Split by double line breaks for paragraphs
-    let paragraphs = content.split(/\n\n+/);
-
-    // If no double line breaks, try single line breaks
-    if (paragraphs.length === 1) {
-      paragraphs = content.split(/\n/);
-    }
-
-    // Format each paragraph
-    const formattedParagraphs = paragraphs
-      .filter((p) => p.trim().length > 0) // Remove empty paragraphs
-      .map((paragraph) => {
-        const trimmed = paragraph.trim();
-
-        // Check if it's a heading (lines that are short and might be titles)
-        if (
-          trimmed.length < 60 &&
-          trimmed.length > 0 &&
-          !trimmed.endsWith(".") &&
-          !trimmed.endsWith(",")
-        ) {
-          // Check if it's ALL CAPS or Title Case
-          if (
-            trimmed === trimmed.toUpperCase() ||
-            /^[A-Z][a-z]*(\s+[A-Z][a-z]*)*[:]?$/.test(trimmed)
-          ) {
-            return `<h2 class="text-3xl font-bold text-gray-900 mt-10 mb-5 leading-tight">${trimmed}</h2>`;
-          }
-        }
-
-        // Check for bullet points
-        if (
-          trimmed.startsWith("•") ||
-          trimmed.startsWith("-") ||
-          trimmed.startsWith("*")
-        ) {
-          const items = trimmed.split(/\n/).filter((item) => item.trim());
-          const listItems = items
-            .map((item) => {
-              const cleanItem = item.replace(/^[•\-*]\s*/, "").trim();
-              return `<li class="text-gray-700 text-lg leading-relaxed pl-2"><span class="inline-block w-2 h-2 bg-blue-600 rounded-full mr-3 -ml-6"></span>${cleanItem}</li>`;
-            })
-            .join("");
-          return `<ul class="space-y-3 mb-6 ml-6">${listItems}</ul>`;
-        }
-
-        // Regular paragraph
-        return `<p class="text-gray-700 text-lg leading-relaxed mb-6">${trimmed}</p>`;
-      })
-      .join("");
-
-    return formattedParagraphs;
-  };
+  const contentBlocks = React.useMemo(
+    () => parseStructuredContent(blog.content),
+    [blog.content],
+  );
 
   const handleWhatsApp = () => {
     window.open("https://wa.me/919090089708", "_blank");
@@ -529,11 +557,85 @@ const BlogDetail = ({
               </div>
             </div>
 
-            {/* Content - Now properly formatted with paragraphs */}
-            <div
-              className="blog-content prose prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: formatContent(blog.content) }}
-            />
+            {/* Content */}
+            <div className="blog-content max-w-none">
+              {contentBlocks.map((block, index) => {
+                if (block.type === "h2") {
+                  return (
+                    <h2
+                      key={`h2-${index}`}
+                      className="text-3xl font-bold text-gray-900 mt-10 mb-5 leading-tight"
+                    >
+                      {block.text}
+                    </h2>
+                  );
+                }
+
+                if (block.type === "h3") {
+                  return (
+                    <h3
+                      key={`h3-${index}`}
+                      className="text-2xl font-bold text-gray-800 mt-8 mb-4"
+                    >
+                      {block.text}
+                    </h3>
+                  );
+                }
+
+                if (block.type === "quote") {
+                  return (
+                    <blockquote
+                      key={`quote-${index}`}
+                      className="border-l-4 border-blue-600 pl-6 py-4 my-6 bg-gray-50 italic text-gray-700 text-lg leading-relaxed"
+                    >
+                      {block.text}
+                    </blockquote>
+                  );
+                }
+
+                if (block.type === "ul") {
+                  return (
+                    <ul key={`ul-${index}`} className="space-y-3 mb-6 ml-6">
+                      {block.items.map((item, itemIndex) => (
+                        <li
+                          key={`ul-${index}-${itemIndex}`}
+                          className="text-gray-700 text-lg leading-relaxed list-disc"
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  );
+                }
+
+                if (block.type === "ol") {
+                  return (
+                    <ol
+                      key={`ol-${index}`}
+                      className="space-y-3 mb-6 ml-6 list-decimal"
+                    >
+                      {block.items.map((item, itemIndex) => (
+                        <li
+                          key={`ol-${index}-${itemIndex}`}
+                          className="text-gray-700 text-lg leading-relaxed"
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ol>
+                  );
+                }
+
+                return (
+                  <p
+                    key={`p-${index}`}
+                    className="text-gray-700 text-lg leading-relaxed mb-6"
+                  >
+                    {block.text}
+                  </p>
+                );
+              })}
+            </div>
 
             {/* Share Section */}
             <div className="mt-16 pt-8 border-t-2 border-gray-200">
